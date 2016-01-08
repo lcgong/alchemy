@@ -1,0 +1,52 @@
+formatters:
+    simple:
+        format: '%(levelname)s %(name)s %(asctime)s | %(message)s'
+        datefmt: '%H:%M:%S'
+
+    full:
+        format: '%(levelname)s %(name)s %(asctime)s | %(message)s'
+        datefmt: '%Y-%m-%d %H:%M:%S'
+
+handlers:
+    console:
+        class: logging.StreamHandler
+        formatter: simple
+        level: DEBUG
+        stream: ext://sys.stdout
+
+    file:
+        class : logging.handlers.TimedRotatingFileHandler
+        formatter: full
+        level: DEBUG
+        filename: ../logs/alchemy-base.log
+        when: H
+        interval: 4
+        backupCount: 100
+
+loggers:
+    webapp:
+        level: DEBUG
+        handlers: [console, file]
+        propagate: 0
+
+    tornado.access:
+        level: DEBUG
+        handlers: [console, file]
+        propagate: 0
+
+    tornado.application:
+        level: DEBUG
+        handlers: [console, file]
+        propagate: 0
+
+    tornado.general:
+        level: DEBUG
+        handlers: [console, file]
+        propagate: 0
+
+
+
+root:
+    level: DEBUG
+    handlers: [console, file]
+

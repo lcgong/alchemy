@@ -1,0 +1,8 @@
+# Byte-compiled / optimized / DLL files
+build/
+node_modules/
+bower_components/
+jspm_packages/
+coverage
+__pycache__/
+*.bak
