@@ -1,5 +1,8 @@
 'use strict';
 
+// (O) (V) U+2714 ✔ heavy check mark
+// (X)     U+2718 ✘ HEAVY BALLOT X (bold cross)
+
 var markerStr = '%%%';
 
 function parseSolution(state, startLine, endLine, silent) {
@@ -10,7 +13,7 @@ function parseSolution(state, startLine, endLine, silent) {
     max = state.eMarks[startLine];
 
 
-  if (state.src.substr(start, markerStr.length) !== markerStr) {
+  if (state.src.slice(start, start + markerStr.length) !== markerStr) {
     return false;
   }
 
@@ -54,7 +57,7 @@ function parseSolution(state, startLine, endLine, silent) {
       break;
     }
 
-    if (state.src.substr(start, markerStr.length) !== markerStr) {
+    if (state.src.slice(start, start + markerStr.length) !== markerStr) {
       continue;
     }
 

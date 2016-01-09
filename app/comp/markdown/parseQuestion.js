@@ -23,7 +23,7 @@ function parseQuestion(state, startLine, endLine, silent) {
 
   var matched;
   var ptn = /^(#{1,3})([1-9][0-9]{0,2})\s+(.*)/g;
-  matched = ptn.exec(state.src.substr(pos, max));
+  matched = ptn.exec(state.src.slice(pos, max));
   if (matched == null) {
     return null;
   }
@@ -57,7 +57,7 @@ function parseQuestion(state, startLine, endLine, silent) {
 
     if (state.src[pos] === '#') { // 遇到同级别或高级别的题号，结束本题内容
       var ptn = /^(#{1,3})([1-9][0-9]{0,2})/;
-      matched = ptn.exec(state.src.substr(pos, max));
+      matched = ptn.exec(state.src.slice(pos, max));
 
       if (matched != null && matched[1].length <= levelMarker.length) {
         // 依据'#'的个数判断

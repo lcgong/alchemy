@@ -12,7 +12,7 @@ function parseQuestionOptionMarker(state, startLine) {
 
   // match (A, ....): , chinese parenthesis, chines colon, chinese semicolon.
   var ptn = /^[\(（]([1-9a-zA-Z][0-9a-zA-Z]{0,2})\s*[,，]?\s*(.*)[\)）][:：]/g;
-  var matched = ptn.exec(state.src.substr(start, max));
+  var matched = ptn.exec(state.src.slice(start, max));
   if (matched == null) {
     return null;
   }
@@ -114,8 +114,6 @@ function parseOption(state, startLine, endLine, silent) {
   // skip spaces after ">" and re-calculate offset
   initial = offset = state.sCount[startLine] + pos - (state.bMarks[startLine] + state.tShift[startLine]);
 
-  console.log(88333, startLine, state.bMarks[startLine], pos);
-
   oldBMarks = [state.bMarks[startLine]];
   state.bMarks[startLine] = pos;
 
@@ -192,8 +190,6 @@ function parseOption(state, startLine, endLine, silent) {
   token.map = lines = [startLine, nextLine];
   token.attrPush(['optionNo', marker.optionNo])
   token.attrPush(['settings', marker.settings])
-
-  console.log(state.bMarks[startLine], state.eMarks[startLine], state.src.substr(state.bMarks[startLine], state.eMarks[startLine]));
 
   state.md.block.tokenize(state, startLine, nextLine);
 

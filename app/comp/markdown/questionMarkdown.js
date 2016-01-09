@@ -22,16 +22,20 @@ import questionMarkdownPlugin from "./plugin";
 
 `
 
+
+
 var sample =`\
 
 ##1 选择题
+
+操作系统__(1)__分布系统__(2)__界面
 
 ###1 多选题
 (A): 面向对象
 
 
 ###2 单选题
-涉及
+涉及 __()__
 
 
 (A): this is a
@@ -44,6 +48,7 @@ var sample =`\
 
 
 `;
+
 
 // "    >  ahis is a\n" +
 // "         a\n" +

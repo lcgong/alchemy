@@ -1,5 +1,6 @@
 'use strict';
 
+var parseBlank = require('./parseBlank');
 var parseOption = require('./parseOption');
 var parseQuestion = require('./parseQuestion');
 var parseSolution = require('./parseSolution');
@@ -44,6 +45,7 @@ module.exports = function questionMarkdownPlugin(md) {
     alt: ['paragraph']
   });
 
+  md.inline.ruler.before('emphasis', 'question_blank', parseBlank);
 
   // md.core.ruler.after('linkify', 'abbr_replace', abbr_replace);
   // md.core.ruler.after('linkify', 'abbr_replace', abbr_replace);
