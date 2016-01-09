@@ -4,61 +4,98 @@
 var isSpace = require('markdown-it/lib/common/utils').isSpace;
 
 
-function convertToHex(str) {
-  var hex = '';
-  for (var i = 0; i < str.length; i++) {
-    hex += '\\' + str.charCodeAt(i).toString(16);
-  }
-  return hex;
-}
-
-function skipQuestionOptionMarker(state, startLine) {
+function parseQuestionOptionMarker(state, startLine) {
   var start = state.bMarks[startLine] + state.tShift[startLine];
-  var pos = start;
   var max = state.eMarks[startLine];
 
-  if (state.src[pos] !== '(') {
-    return -1;
+
+
+  // match (A, ....): , chinese parenthesis, chines colon, chinese semicolon.
+  var ptn = /^[\(（]([1-9a-zA-Z][0-9a-zA-Z]{0,2})\s*[,，]?\s*(.*)[\)）][:：]/g;
+  var matched = ptn.exec(state.src.substr(start, max));
+  if (matched == null) {
+    return null;
   }
 
-  while (++pos < max) {
-    var ch = state.src.charCodeAt(pos);
-    if ((ch >= 0x30/* 0 */ && ch <= 0x39/* 9 */) ||
-        (ch >= 0x61/* a */ && ch <= 0x7a/* z */) ||
-        (ch >= 0x41/* A */ && ch <= 0x5a/* Z */)) {
+  var optionNo = matched[1];
+  var endIndex = ptn.lastIndex;
 
-        if (pos - start >= 2) {
-          // Question option marker should have no more than 2 digits
-          return -1;
-        }
-    } else {
-      break;
-    }
-
+  var settings = [];
+  ptn = /(固定|独行)[\,，]?\s*/;
+  while (matched = ptn.exec(matched[2])) {
+    settings.push(matched[1]);
   }
 
-  if (state.src[pos] === ')' && state.src[pos + 1] === ':') {
-    return pos + 1;
+  var markerStr;
+  if (settings.length === 0) {
+    markerStr = '(' + optionNo + ')';
+  } else {
+    markerStr = '(' + optionNo + ', ' + settings.join(', ') + ')';
   }
 
-  return -1;
+  return {
+    nextPos: start + endIndex,
+    optionNo: optionNo,
+    settings: settings,
+    markerStr: markerStr
+  }
 }
 
-function parseOption(state, startLine, endLine, silent) {
-  var nextLine, lastLineEmpty, oldTShift, oldSCount, oldBMarks, oldIndent, oldParentType, lines, initial, offset, ch,
-    terminatorRules, token,
-    i, l, terminate,
-    pos = state.bMarks[startLine] + state.tShift[startLine],
-    max = state.eMarks[startLine];
+// function skipQuestionOptionMarker(state, startLine) {
+//   var start = state.bMarks[startLine] + state.tShift[startLine];
+//   var pos = start;
+//   var max = state.eMarks[startLine];
+//
+//   if (state.src[pos] !== '(') {
+//     return -1;
+//   }
+//
+//   while (++pos < max) {
+//     var ch = state.src.charCodeAt(pos);
+//     if ((ch >= 0x30 /* 0 */ && ch <= 0x39 /* 9 */ ) ||
+//       (ch >= 0x61 /* a */ && ch <= 0x7a /* z */ ) ||
+//       (ch >= 0x41 /* A */ && ch <= 0x5a /* Z */ )) {
+//
+//       if (pos - start >= 2) {
+//         // Question option marker should have no more than 2 digits
+//         return -1;
+//       }
+//     } else {
+//       break;
+//     }
+//   }
+//
+//   if (pos >= max) {
+//     return -1;
+//   }
+//
+//   if (state.src[pos] === ')' && state.src[pos + 1] === ':') {
+//     return pos + 1;
+//   }
+//
+//   return -1;
+// }
 
-  // check the question option marker: '(A):' or '(B):'
-  var posAfterMarker = skipQuestionOptionMarker(state, startLine);
-  if (posAfterMarker < 0) {
+function parseOption(state, startLine, endLine, silent) {
+  var nextLine, lastLineEmpty,
+    oldTShift, oldSCount, oldBMarks, oldIndent, oldParentType,
+    lines, initial, offset, ch, terminatorRules, token, i, l, terminate;
+
+  var pos = state.bMarks[startLine] + state.tShift[startLine];
+  var max = state.eMarks[startLine];
+
+  var ch = state.src[pos];
+  if (ch !== '(' && ch !== '（') {
     return false;
   }
 
-  var marker = state.src.substr(pos, posAfterMarker - pos + 1);
-  pos = posAfterMarker + 1;
+  // check the question option marker: '(A):' or '(B):'
+  var marker = parseQuestionOptionMarker(state, startLine);
+  if (marker == null) {
+    return false;
+  }
+
+  pos = marker.nextPos;
 
   // we know that it's going to be a valid blockquote,
   // so no point trying to find the end of it in silent mode
@@ -77,8 +114,11 @@ function parseOption(state, startLine, endLine, silent) {
   // skip spaces after ">" and re-calculate offset
   initial = offset = state.sCount[startLine] + pos - (state.bMarks[startLine] + state.tShift[startLine]);
 
+  console.log(88333, startLine, state.bMarks[startLine], pos);
+
   oldBMarks = [state.bMarks[startLine]];
   state.bMarks[startLine] = pos;
+
 
   while (pos < max) {
     ch = state.src.charCodeAt(pos);
@@ -125,10 +165,8 @@ function parseOption(state, startLine, endLine, silent) {
 
     // Case 3: another tag found.
     terminate = false;
-    console.log(666655, terminatorRules)
     for (i = 0, l = terminatorRules.length; i < l; i++) {
       if (terminatorRules[i](state, nextLine, endLine, true)) {
-        console.log(666666, nextLine)
         terminate = true;
         break;
       }
@@ -148,17 +186,22 @@ function parseOption(state, startLine, endLine, silent) {
   oldParentType = state.parentType;
   state.parentType = 'question_option';
 
-  token = state.push('question_option_open', 'question_option', 1);
-  token.markup = marker;
-  token.map = lines = [startLine, 0];
+
+  token = state.push('question_option_open', 'div', 1);
+  token.markup = marker.markerStr;
+  token.map = lines = [startLine, nextLine];
+  token.attrPush(['optionNo', marker.optionNo])
+  token.attrPush(['settings', marker.settings])
+
+  console.log(state.bMarks[startLine], state.eMarks[startLine], state.src.substr(state.bMarks[startLine], state.eMarks[startLine]));
 
   state.md.block.tokenize(state, startLine, nextLine);
 
-  token = state.push('question_option_close', 'question_option', -1);
-  token.markup = marker;
+  token = state.push('question_option_close', 'div', -1);
+  token.markup = marker.markerStr;
 
   state.parentType = oldParentType;
-  lines[1] = state.line;
+  // lines[1] = state.line;
 
   // Restore original tShift; this might not be necessary since the parser
   // has already been here, but just to make sure we can do that.
@@ -172,14 +215,4 @@ function parseOption(state, startLine, endLine, silent) {
   return true;
 };
 
-
-module.exports = function question_option_plugin(md) {
-
-
-  md.block.ruler.before('blockquote', 'question_option', parseOption, {
-    alt: ['paragraph']
-  });
-
-
-  // md.core.ruler.after('linkify', 'abbr_replace', abbr_replace);
-};
+module.exports = parseOption;

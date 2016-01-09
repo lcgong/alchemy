@@ -86,6 +86,7 @@ function parseSolution(state, startLine, endLine, silent) {
   token.block = true;
   token.info = resolvedOptions;
   token.map = [startLine, nextLine];
+  token.attrPush(['solution', resolvedOptions]);
 
   state.md.block.tokenize(state, startLine + 1, nextLine);
 
@@ -101,11 +102,4 @@ function parseSolution(state, startLine, endLine, silent) {
 }
 
 
-module.exports = function question_option_plugin(md) {
-
-  md.block.ruler.before('blockquote', 'question_solution', parseSolution, {
-    alt: ['paragraph']
-  });
-
-  // md.core.ruler.after('linkify', 'abbr_replace', abbr_replace);
-};
+module.exports = parseSolution;

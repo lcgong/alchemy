@@ -1,32 +1,47 @@
 "use strict";
 
-import parseOptionPlugin from "./parseOption";
-import parseSolutionPlugin from "./parseSolution";
+
 // console.log(q);
-
-import MarkdownIt from "markdown-it";
-
 let app = angular.module('mainapp');
 
+import MarkdownIt from "markdown-it";
+import questionMarkdownPlugin from "./plugin";
+
+
 // console.log(332);
-
-var sample =`\
-~~~
-dddd
-~~~
-
+`
 ###1 设计
-(A): this is a
-  dss
-(B): The following is
 
-(C): an apple.
+###2 涉及
 
 %%% (B) (C)
 
 应该这样...
 
 %%%
+
+`
+
+var sample =`\
+
+##1 选择题
+
+###1 多选题
+(A): 面向对象
+
+
+###2 单选题
+涉及
+
+
+(A): this is a
+  dss
+(B): The following is
+
+(C): an apple.
+
+（D，固定）： 以上都错误
+
 
 `;
 
@@ -62,10 +77,7 @@ function questionMarkdown($templateRequest) {
     link: function(scope, element, attrs) {
 
       var md = new MarkdownIt();
-      md.use(parseOptionPlugin);
-      md.use(parseSolutionPlugin);
-
-
+      md.use(questionMarkdownPlugin);
 
 
       console.log(332, md);
