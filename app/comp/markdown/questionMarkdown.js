@@ -6,7 +6,9 @@ let app = angular.module('mainapp');
 
 import MarkdownIt from "markdown-it";
 import questionMarkdownPlugin from "./plugin";
+import transform from './json';
 
+console.log(transform);
 
 // console.log(332);
 `
@@ -14,24 +16,19 @@ import questionMarkdownPlugin from "./plugin";
 
 ###2 涉及
 
-%%% (B) (C)
 
-应该这样...
-
-%%%
 
 `
 
 
 
-var sample =`\
-
+var sample = `\
 ##1 选择题
 
 操作系统__(1)__分布系统__(2)__界面
 
 ###1 多选题
-(A): 面向对象
+(A): 面向**对象**
 
 
 ###2 单选题
@@ -46,7 +43,13 @@ var sample =`\
 
 （D，固定）： 以上都错误
 
+  %%% (B) (C)
 
+  应该这样...
+
+ %%%
+
+dd
 `;
 
 
@@ -85,7 +88,25 @@ function questionMarkdown($templateRequest) {
       md.use(questionMarkdownPlugin);
 
 
-      console.log(332, md);
+      // var text = unindent(text || '');
+
+      var text = sample;
+
+      var env = {};
+      var options = {};
+      var tokens = md.parse(text, env);
+
+      // var tokens = transform.encode(tokens);
+
+      var htmlstr = md.renderer.render(tokens, options, env);
+      // var htmlstr = JSON.stringify(tokens, null, Number(4));
+
+      // console.log(htmlstr);
+
+      element.html('<pre>\n' + htmlstr + '\n</pre>');
+
+
+      return;
 
       set(sample);
 
@@ -108,16 +129,18 @@ function questionMarkdown($templateRequest) {
 
       function set(text) {
         var text = unindent(text || '');
-        var tokens = md.parse(text, {});
 
-        var jsonstr = JSON.stringify(tokens, null, Number(4));
+        var env = {};
+        var options = {};
+        var tokens = md.parse(text, env);
+
+        var htmlstr = md.renderer.render(tokens, options, env);
+        // var jsonstr = JSON.stringify(tokens, null, Number(4));
+
         // console.log(jsonstr);
 
-
-
-        // var html = md.render('');
-
-        element.html('<pre>\n'+jsonstr+'\n</pre>');
+        // element.html('<pre>\n' + jsonstr + '\n</pre>');
+        element.html('<pre>\n' + htmlstr + '\n</pre>');
       }
     }
   };

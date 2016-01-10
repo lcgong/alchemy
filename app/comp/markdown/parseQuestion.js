@@ -71,23 +71,85 @@ function parseQuestion(state, startLine, endLine, silent) {
   var oldParentType = state.parentType;
   state.parentType = 'question';
 
-  token = state.push('question_open', 'div', 1);
-  token.markup = levelMarker + questionNo;
+  var beginTagName, endTagName;
+  var level = levelMarker.length;
+  if (level === 1) {
+    beginTagName = 'section_open';
+    endTagName = 'section_close';
+  } else if (level === 2) {
+    beginTagName = 'question_open';
+    endTagName = 'question_close';
+  } else if (level === 3) {
+    beginTagName = 'subquestion_open';
+    endTagName = 'subquestion_close';
+  }
+
+  var markerStr = levelMarker + questionNo;
+  token = state.push(beginTagName, 'div', 1);
+  token.markup = markerStr;
   token.block = true;
   token.map = [startLine, nextLine];
-  token.attrPush(['level', levelMarker.length]);
-  token.attrPush(['settings', questionSettings]);
+  token.meta = {};
+  parseSettings(token, questionSettings);
 
   state.md.block.tokenize(state, startLine + 1, nextLine);
 
-  token = state.push('question_close', 'div', -1);
-  token.markup = levelMarker + questionNo;
+  token = state.push(endTagName, 'div', -1);
+  token.markup = markerStr;
 
   state.parentType = oldParentType;
 
   return true;
 
 };
+
+
+function parseSettings(token, settings) {
+
+  var fixed = false;
+
+  for (var i = 0, n = settings.length; i < n; i++) {
+    var item = settings[i];
+
+    var attrName = 'questionType';
+
+    if (item === '单选题' || item === '多选题' ||
+      item === '判断题' || item === '填空题') {
+
+      token.meta[attrName] = item;
+      continue;
+    }
+
+    if (item === '选择题') {
+      token.meta[attrName] = '单选题';
+      continue;
+    }
+
+    var attrName = 'columnCount';
+    if (item === '一行一项') {
+      token.meta[attrName] = 1;
+      continue;
+
+    } else if (item === '一行两项') {
+      token.meta[attrName] = 2;
+      continue;
+
+    } else if (item === '一行四项') {
+      token.meta[attrName] = 4;
+      continue;
+
+    }
+
+    if (item === '固定') {
+      fixed = true;
+      continue;
+
+    }
+  }
+
+  token.meta['fixed'] = fixed;
+}
+
 
 
 module.exports = parseQuestion;

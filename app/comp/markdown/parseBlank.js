@@ -1,6 +1,5 @@
 'use strict';
 
-
 function parseQuestionBlank(state, silent) {
   var pos, token;
   var max = state.posMax;
@@ -27,8 +26,10 @@ function parseQuestionBlank(state, silent) {
 
   if (!silent) {
     token = state.push('question_blank_open', 'span', 1);
-    token.attrPush(['questionNo', questionNo]);
-
+    token.meta = {
+      width: pos - start + 1,
+      questionNo: questionNo,
+    }
     token = state.push('question_blank_close', 'span', -1);
   }
 

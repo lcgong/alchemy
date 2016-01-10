@@ -27,7 +27,6 @@ function parseSolution(state, startLine, endLine, silent) {
     resolvedOptions.push(matched[1]);
   }
 
-  console.log(resolvedOptions);
 
   // Since start is found, we can report success here in validation mode
   //
@@ -36,26 +35,11 @@ function parseSolution(state, startLine, endLine, silent) {
   }
 
   // Search for the end of the block
-  //
-  nextLine = startLine;
 
-  for (;;) {
-    nextLine++;
-    if (nextLine >= endLine) {
-      // unclosed block should be autoclosed by end of document.
-      // also block seems to be autoclosed by end of parent
-      break;
-    }
+  for (nextLine = startLine + 1; nextLine < endLine; nextLine++) {
 
     start = state.bMarks[nextLine] + state.tShift[nextLine];
     max = state.eMarks[nextLine];
-
-    if (start < max && state.sCount[nextLine] < state.blkIndent) {
-      // non-empty line with negative indent should stop the list:
-      // - ```
-      //  test
-      break;
-    }
 
     if (state.src.slice(start, start + markerStr.length) !== markerStr) {
       continue;
@@ -65,7 +49,6 @@ function parseSolution(state, startLine, endLine, silent) {
 
     // make sure tail has spaces only
     pos = state.skipSpaces(pos);
-
     if (pos < max) {
       continue;
     }
@@ -74,8 +57,6 @@ function parseSolution(state, startLine, endLine, silent) {
     auto_closed = true;
     break;
   }
-
-  console.log(7777, startLine, nextLine);
 
   old_parent = state.parentType;
   old_line_max = state.lineMax;
@@ -98,6 +79,7 @@ function parseSolution(state, startLine, endLine, silent) {
   token.block = true;
 
   state.parentType = old_parent;
+  
   state.lineMax = old_line_max;
   state.line = nextLine + (auto_closed ? 1 : 0);
 

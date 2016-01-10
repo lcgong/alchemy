@@ -1,9 +1,6 @@
 'use strict';
 
-var parseBlank = require('./parseBlank');
-var parseOption = require('./parseOption');
-var parseQuestion = require('./parseQuestion');
-var parseSolution = require('./parseSolution');
+
 
 /**
 
@@ -31,6 +28,16 @@ var parseSolution = require('./parseSolution');
 
 */
 
+
+var parseQuestionBlank = require('./parseBlank');
+var parseOption = require('./parseOption');
+var parseQuestion = require('./parseQuestion');
+var parseSolution = require('./parseSolution');
+
+var render = require('./render');
+
+
+
 module.exports = function questionMarkdownPlugin(md) {
 
   md.block.ruler.before('heading', 'question', parseQuestion, {
@@ -45,7 +52,13 @@ module.exports = function questionMarkdownPlugin(md) {
     alt: ['paragraph']
   });
 
-  md.inline.ruler.before('emphasis', 'question_blank', parseBlank);
+  md.inline.ruler.before('emphasis', 'question_blank', parseQuestionBlank);
+
+  md.renderer.rules.question_blank_open  = render.question_blank_open;
+  md.renderer.rules.question_blank_close = render.question_blank_close;
+
+  md.renderer.rules.question_open = render.question_open;
+  md.renderer.rules.question_close = render.question_close;
 
   // md.core.ruler.after('linkify', 'abbr_replace', abbr_replace);
   // md.core.ruler.after('linkify', 'abbr_replace', abbr_replace);

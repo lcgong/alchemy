@@ -1,0 +1,10 @@
+.question-blank {
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    min-width: 4em;
+    background-color: #eee;
+    cursor: help;
+}
