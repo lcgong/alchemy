@@ -1,6 +1,7 @@
 'use strict';
 
 var isSpace = require('markdown-it/lib/common/utils').isSpace;
+var optionMarkerRegex = require('./parseOption').markerRegex;
 
 
 var settingsPattern = ['(', [
@@ -42,8 +43,14 @@ function parseQuestion(state, startLine, endLine, silent) {
     return true;
   }
 
+  var level = levelMarker.length;
+
   var oldIndent = state.blkIndent;
   state.blkIndent = 0;
+
+
+  var sublevelStartLine = null;
+  var optionStartLine = null;
 
   endLine = state.lineMax;
   var nextLine;
@@ -55,14 +62,30 @@ function parseQuestion(state, startLine, endLine, silent) {
     pos = state.bMarks[nextLine] + state.tShift[nextLine];
     max = state.eMarks[nextLine];
 
-    if (state.src[pos] === '#') { // 遇到同级别或高级别的题号，结束本题内容
+    var ch = state.src[pos];
+    if (ch === '#') { // 遇到同级别或高级别的题号，结束本题内容
       var ptn = /^(#{1,3})([1-9][0-9]{0,2})/;
       matched = ptn.exec(state.src.slice(pos, max));
 
-      if (matched != null && matched[1].length <= levelMarker.length) {
-        // 依据'#'的个数判断
+      if (matched != null && matched[1].length <= level) {
+        // 依据'#'的个数判断，遇到高级的结束
         break;
+
+      } else if (matched[1].length > level) {
+        // 找到第一次出现的小题或子题的行号位置
+        if (sublevelStartLine == null) {
+          sublevelStartLine = nextLine;
+        }
       }
+
+    } else if (optionStartLine == null && (ch === '(' || ch === '（')) {
+      // 找到第一次出现选项的行号
+      var ptn = new RegExp(optionMarkerRegex, 'g');
+      matched = ptn.exec(state.src.slice(pos, max));
+      if (matched != null) {
+        optionStartLine = nextLine;
+      }
+
     }
   }
 
@@ -72,7 +95,6 @@ function parseQuestion(state, startLine, endLine, silent) {
   state.parentType = 'question';
 
   var beginTagName, endTagName;
-  var level = levelMarker.length;
   if (level === 1) {
     beginTagName = 'section_open';
     endTagName = 'section_close';
@@ -92,7 +114,27 @@ function parseQuestion(state, startLine, endLine, silent) {
   token.meta = {};
   parseSettings(token, questionSettings);
 
-  state.md.block.tokenize(state, startLine + 1, nextLine);
+  var stemEndLine = null;
+  if (sublevelStartLine != null && optionStartLine != null) {
+    stemEndLine = Math.min(sublevelStartLine, optionStartLine);
+  } else if (sublevelStartLine != null) {
+    stemEndLine = sublevelStartLine;
+  } else if (optionStartLine != null) {
+    stemEndLine = optionStartLine;
+  } else {
+    stemEndLine = nextLine;
+  }
+
+  pushQuestionNoTokens(state, questionNo, startLine, startLine + 1);
+
+  // question-stem
+  if (startLine + 1 < stemEndLine) {
+    pushQuestionStemTokens(state, startLine + 1, stemEndLine);
+  }
+
+  if (stemEndLine, nextLine) {
+    state.md.block.tokenize(state, stemEndLine, nextLine);
+  }
 
   token = state.push(endTagName, 'div', -1);
   token.markup = markerStr;
@@ -102,6 +144,45 @@ function parseQuestion(state, startLine, endLine, silent) {
   return true;
 
 };
+
+function pushQuestionNoTokens(state, questionNo, startLine, endLine) {
+  var token;
+  var oldParentType = state.parentType;
+
+  state.parentType = 'question_no';
+  token = state.push('question_no_open', 'div', 1);
+  token.block = true;
+  token.map = [startLine, endLine];
+  token.meta = {
+    questionNo: questionNo
+  };
+
+  token = state.push('question_no_close', 'div', -1);
+
+  state.parentType = oldParentType;
+}
+
+function pushQuestionStemTokens(state, startLine, endLine) {
+  var token;
+  var oldParentType = state.parentType;
+
+  state.parentType = 'question_stem';
+  token = state.push('question_stem_open', 'div', 1);
+  token.block = true;
+  token.map = [startLine, endLine];
+
+  state.md.block.tokenize(state, startLine, endLine);
+
+  token = state.push('question_stem_close', 'div', -1);
+
+  state.parentType = oldParentType;
+}
+
+/** parse question stem from question.
+ */
+function parseQuestionStem(state, startLine, endLine) {
+
+}
 
 
 function parseSettings(token, settings) {

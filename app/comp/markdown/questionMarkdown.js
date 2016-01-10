@@ -96,15 +96,15 @@ function questionMarkdown($templateRequest) {
       var options = {};
       var tokens = md.parse(text, env);
 
+      var htmlstr = md.renderer.render(tokens, options, env);
+      element.html(htmlstr);
+
       // var tokens = transform.encode(tokens);
 
-      var htmlstr = md.renderer.render(tokens, options, env);
       // var htmlstr = JSON.stringify(tokens, null, Number(4));
+      // element.html('<pre>\n' + htmlstr + '\n</pre>');
 
       // console.log(htmlstr);
-
-      element.html('<pre>\n' + htmlstr + '\n</pre>');
-
 
       return;
 

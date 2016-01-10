@@ -4,14 +4,16 @@
 var isSpace = require('markdown-it/lib/common/utils').isSpace;
 
 
+var questionOptionMarkerRegex =
+  '^[\(（]([1-9a-zA-Z][0-9a-zA-Z]{0,2})\s*[,，]?\s*(.*)[\)）][:：]';
+
 function parseQuestionOptionMarker(state, startLine) {
   var start = state.bMarks[startLine] + state.tShift[startLine];
   var max = state.eMarks[startLine];
 
 
-
   // match (A, ....): , chinese parenthesis, chines colon, chinese semicolon.
-  var ptn = /^[\(（]([1-9a-zA-Z][0-9a-zA-Z]{0,2})\s*[,，]?\s*(.*)[\)）][:：]/g;
+  var ptn = new RegExp(questionOptionMarkerRegex, 'g');
   var matched = ptn.exec(state.src.slice(start, max));
   if (matched == null) {
     return null;
@@ -211,4 +213,7 @@ function parseOption(state, startLine, endLine, silent) {
   return true;
 };
 
-module.exports = parseOption;
+module.exports = {
+  parseTokens: parseOption,
+  markerRegex: questionOptionMarkerRegex
+};

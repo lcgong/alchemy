@@ -30,7 +30,7 @@
 
 
 var parseQuestionBlank = require('./parseBlank');
-var parseOption = require('./parseOption');
+var questionOption = require('./parseOption');
 var parseQuestion = require('./parseQuestion');
 var parseSolution = require('./parseSolution');
 
@@ -44,9 +44,10 @@ module.exports = function questionMarkdownPlugin(md) {
     alt: ['paragraph']
   });
 
-  md.block.ruler.before('blockquote', 'question_option', parseOption, {
-    alt: ['paragraph']
-  });
+  md.block.ruler.before('blockquote', 'question_option',
+    questionOption.parseTokens, {
+      alt: ['paragraph']
+    });
 
   md.block.ruler.before('blockquote', 'question_solution', parseSolution, {
     alt: ['paragraph']
@@ -54,11 +55,23 @@ module.exports = function questionMarkdownPlugin(md) {
 
   md.inline.ruler.before('emphasis', 'question_blank', parseQuestionBlank);
 
-  md.renderer.rules.question_blank_open  = render.question_blank_open;
+  md.renderer.rules.question_blank_open = render.question_blank_open;
   md.renderer.rules.question_blank_close = render.question_blank_close;
+
+  md.renderer.rules.question_no_open = render.question_no_open;
+  md.renderer.rules.question_no_close = render.question_no_close;
+
+  md.renderer.rules.question_stem_open = render.question_stem_open;
+  md.renderer.rules.question_stem_close = render.question_stem_close;
+
+  md.renderer.rules.section_open = render.section_open;
+  md.renderer.rules.section_close = render.section_close;
 
   md.renderer.rules.question_open = render.question_open;
   md.renderer.rules.question_close = render.question_close;
+
+  md.renderer.rules.subquestion_open = render.subquestion_open;
+  md.renderer.rules.subquestion_close = render.subquestion_close;
 
   // md.core.ruler.after('linkify', 'abbr_replace', abbr_replace);
   // md.core.ruler.after('linkify', 'abbr_replace', abbr_replace);
