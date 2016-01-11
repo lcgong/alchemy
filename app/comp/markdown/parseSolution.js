@@ -12,7 +12,6 @@ function parseSolution(state, startLine, endLine, silent) {
     start = state.bMarks[startLine] + state.tShift[startLine],
     max = state.eMarks[startLine];
 
-
   if (state.src.slice(start, start + markerStr.length) !== markerStr) {
     return false;
   }
@@ -20,22 +19,19 @@ function parseSolution(state, startLine, endLine, silent) {
   pos = start + markerStr.length;
 
   var paramsStr = state.src.slice(pos, max);
-  var optionPattern = /\(([0-9a-zA-Z]+)\)/g;
   var resolvedOptions = [];
   var matched;
-  while( ( matched = optionPattern.exec(paramsStr) ) != null ) {
+  var optionPattern = /\(([0-9a-zA-Z]+)\)/g;
+  while ((matched = optionPattern.exec(paramsStr)) != null) {
     resolvedOptions.push(matched[1]);
   }
 
-
   // Since start is found, we can report success here in validation mode
-  //
   if (silent) {
     return true;
   }
 
   // Search for the end of the block
-
   for (nextLine = startLine + 1; nextLine < endLine; nextLine++) {
 
     start = state.bMarks[nextLine] + state.tShift[nextLine];
@@ -79,8 +75,8 @@ function parseSolution(state, startLine, endLine, silent) {
   token.block = true;
 
   state.parentType = old_parent;
-  
   state.lineMax = old_line_max;
+  
   state.line = nextLine + (auto_closed ? 1 : 0);
 
   return true;

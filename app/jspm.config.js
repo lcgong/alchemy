@@ -1,5 +1,4 @@
 System.config({
-  // baseURL: "/",
   defaultJSExtensions: true,
   transpiler: "babel",
   babelOptions: {
@@ -49,8 +48,9 @@ System.config({
     "d3": "github:mbostock/d3@3.5.12",
     "jasmine": "npm:jasmine@2.4.1",
     "jquery": "npm:jquery@2.1.4",
-    "markdown-it": "npm:markdown-it@5.0.3",
+    "markdown-it": "npm:markdown-it@5.1.0",
     "marked": "npm:marked@0.3.5",
+    "mathjax": "npm:mathjax@2.5.1",
     "mathjax/MathJax": "github:mathjax/MathJax@2.6.0",
     "nvd3": "npm:nvd3@1.8.1",
     "ts": "github:frankwallis/plugin-typescript@2.4.5",
@@ -179,7 +179,7 @@ System.config({
     "npm:lodash@3.10.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:markdown-it@5.0.3": {
+    "npm:markdown-it@5.1.0": {
       "argparse": "npm:argparse@1.0.3",
       "buffer": "github:jspm/nodelibs-buffer@0.1.0",
       "entities": "npm:entities@1.1.1",
@@ -190,6 +190,9 @@ System.config({
       "punycode": "github:jspm/nodelibs-punycode@0.1.0",
       "systemjs-json": "github:systemjs/plugin-json@0.1.0",
       "uc.micro": "npm:uc.micro@1.0.0"
+    },
+    "npm:mathjax@2.5.1": {
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:minimatch@0.3.0": {
       "lru-cache": "npm:lru-cache@2.7.3",

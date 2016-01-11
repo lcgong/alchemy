@@ -48,7 +48,7 @@ function question_no_open(tokens, idx, options, env, renderer) {
   var token = tokens[idx];
 
   var html = [
-    '<div class="question-no">', token.meta.questionNo
+    '<div class="question-no">', token.meta.questionNo, '.'
   ].join('');
 
   return html;
@@ -57,6 +57,7 @@ function question_no_open(tokens, idx, options, env, renderer) {
 function question_no_close(tokens, idx, options, env, renderer) {
   return '</div>';
 }
+
 
 function question_stem_open(tokens, idx, options, env, renderer) {
   return '<div class="question-stem">';
@@ -86,22 +87,57 @@ function question_blank_open(tokens, idx, options, env, renderer) {
   return h.join('');
 }
 
+function question_option_open(cssClass, tokens, idx, options, env, renderer) {
+  // var token = tokens[idx];
+  // var meta = token.meta;
+
+  return '<div class="question_option">';
+}
+
+function question_option_close(tokens, idx, options, env, renderer) {
+  return '</div>';
+}
+
+
+function option_no_open(tokens, idx, options, env, renderer) {
+  var token = tokens[idx];
+
+  var html = [
+    '<div class="option-no">', token.meta.optionNo, '.'
+  ].join('');
+
+  return html;
+}
+
+function option_no_close(tokens, idx, options, env, renderer) {
+  return '</div>';
+}
+
+
 
 function question_blank_close(tokens, idx, options, env, renderer) {
   return '</span>';
 }
 
 module.exports = {
-  question_blank_open: question_blank_open,
-  question_blank_close: question_blank_close,
-  question_no_open: question_no_open,
-  question_no_close: question_no_close,
-  question_stem_open: question_stem_open,
-  question_stem_close: question_stem_close,
+  section_open: section_open,
+  section_close: section_close,
   question_open: question_open,
   question_close: question_close,
   subquestion_open: subquestion_open,
   subquestion_close: subquestion_close,
-  section_open: section_open,
-  section_close: section_close,
+
+  question_no_open: question_no_open,
+  question_no_close: question_no_close,
+
+  question_stem_open: question_stem_open,
+  question_stem_close: question_stem_close,
+  question_blank_open: question_blank_open,
+  question_blank_close: question_blank_close,
+
+  question_option_open: question_option_open,
+  question_option_close: question_option_close,
+  option_no_open: option_no_open,
+  option_no_close: option_no_close,
+
 };

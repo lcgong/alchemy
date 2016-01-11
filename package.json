@@ -31,6 +31,7 @@
   "jspm": {
     "configFile": "app/jspm.config.js",
     "dependencies": {
+      "markdown-it": "npm:markdown-it@^5.1.0",
       "mathjax": "npm:mathjax@^2.5.1"
     },
     "devDependencies": {

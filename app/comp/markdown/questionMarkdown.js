@@ -37,21 +37,48 @@ var sample = `\
 
 (A): this is a
   dss
+
 (B): The following is
 
 (C): an apple.
 
 （D，固定）： 以上都错误
 
-  %%% (B) (C)
+%%% (B) (C)
 
   应该这样...
 
- %%%
+%%%
 
 dd
 `;
 
+var sample = `
+##1 单选题
+为验证程序模块A是否正确实现了规定的功能，需要进行 __(1)__；
+为验证模块A能否与其他模块按照规定方式正确工作，需要进行__(2)__。
+
+###1 单选题 一行四项
+
+  (A): 单元测试
+  (B): 集成测试
+  (C): 确认测试
+  (D): 系统测试
+
+  ::: 答案：(A)
+  :::
+
+###2 单选题 一行四项
+
+  (A): 单元测试
+  (B): 集成测试
+  (C): 确认测试
+  (D): 系统测试
+
+  ::: 答案：(B)
+  :::
+
+`
 
 // "    >  ahis is a\n" +
 // "         a\n" +
@@ -96,6 +123,8 @@ function questionMarkdown($templateRequest) {
       var options = {};
       var tokens = md.parse(text, env);
 
+      console.log(tokens);
+
       var htmlstr = md.renderer.render(tokens, options, env);
       element.html(htmlstr);
 
@@ -133,6 +162,9 @@ function questionMarkdown($templateRequest) {
         var env = {};
         var options = {};
         var tokens = md.parse(text, env);
+
+
+        console.log(rules);
 
         var htmlstr = md.renderer.render(tokens, options, env);
         // var jsonstr = JSON.stringify(tokens, null, Number(4));

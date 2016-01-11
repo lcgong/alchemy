@@ -21,7 +21,6 @@ function parseQuestion(state, startLine, endLine, silent) {
     return false;
   }
 
-
   var matched;
   var ptn = /^(#{1,3})([1-9][0-9]{0,2})\s+(.*)/g;
   matched = ptn.exec(state.src.slice(pos, max));
@@ -132,7 +131,7 @@ function parseQuestion(state, startLine, endLine, silent) {
     pushQuestionStemTokens(state, startLine + 1, stemEndLine);
   }
 
-  if (stemEndLine, nextLine) {
+  if (stemEndLine < nextLine) {
     state.md.block.tokenize(state, stemEndLine, nextLine);
   }
 
@@ -142,7 +141,6 @@ function parseQuestion(state, startLine, endLine, silent) {
   state.parentType = oldParentType;
 
   return true;
-
 };
 
 function pushQuestionNoTokens(state, questionNo, startLine, endLine) {
