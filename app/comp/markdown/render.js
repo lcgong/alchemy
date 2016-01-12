@@ -87,6 +87,10 @@ function question_blank_open(tokens, idx, options, env, renderer) {
   return h.join('');
 }
 
+function question_blank_close(tokens, idx, options, env, renderer) {
+  return '</span>';
+}
+
 function question_option_open(cssClass, tokens, idx, options, env, renderer) {
   // var token = tokens[idx];
   // var meta = token.meta;
@@ -125,11 +129,20 @@ function option_no_close(tokens, idx, options, env, renderer) {
   return '</div>';
 }
 
+function question_notes_open(tokens, idx, options, env, renderer) {
+  var token = tokens[idx];
 
+  var html = [
+    '<div class="question-notes">'
+  ].join('');
 
-function question_blank_close(tokens, idx, options, env, renderer) {
-  return '</span>';
+  return html;
 }
+
+function question_notes_close(tokens, idx, options, env, renderer) {
+  return '</div>';
+}
+
 
 module.exports = {
   section_open: section_open,

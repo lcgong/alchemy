@@ -8,12 +8,12 @@ function printBlockTokenState(title, state, startLine, endLine) {
 
   var lines = [title,
     'state.line=', state.line.toString(),
-    ', blkIndent=', state.blkIndent.toString(), '\n'
+    ', blkIndent=', state.blkIndent.toString(), '; \n'
   ];
 
   for (var ln = startLine; ln < endLine; ln++) {
     lines.splice(lines.length, 0,
-      '> ln=', ln,
+      title, 'ln=', ln,
       ', beMarks=', state.bMarks[ln].toString(),
       ':', state.eMarks[ln].toString(),
       ', tShift=', state.tShift[ln].toString(),

@@ -34,34 +34,34 @@ function parseSolution(state, startLine, endLine, silent) {
   // Search for the end of the block
   for (nextLine = startLine + 1; nextLine < endLine; nextLine++) {
 
-    start = state.bMarks[nextLine] + state.tShift[nextLine];
+    pos = state.bMarks[nextLine] + state.tShift[nextLine];
     max = state.eMarks[nextLine];
 
-    if (state.src.slice(start, start + markerStr.length) !== markerStr) {
-      continue;
+    if (state.src.slice(pos, pos + markerStr.length) === markerStr) {
+      break;
     }
 
-    pos = start + markerStr.length;
-
-    // make sure tail has spaces only
-    pos = state.skipSpaces(pos);
-    if (pos < max) {
-      continue;
-    }
-
-    // found!
-    auto_closed = true;
-    break;
+    // pos = start + markerStr.length;
+    //
+    // // make sure tail has spaces only
+    // pos = state.skipSpaces(pos);
+    // if (pos < max) {
+    //   continue;
+    // }
+    //
+    // // found!
+    // auto_closed = true;
+    // break;
   }
 
-  old_parent = state.parentType;
   old_line_max = state.lineMax;
-  state.parentType = 'question_solution';
+  old_parent = state.parentType;
+  state.parentType = 'question_notes';
 
   // this will prevent lazy continuations from ever going past our end marker
   state.lineMax = nextLine;
 
-  token = state.push('question_solution_open', 'div', 1);
+  token = state.push('question_notes_open', 'div', 1);
   token.markup = markerStr;
   token.block = true;
   token.info = resolvedOptions;
@@ -70,7 +70,7 @@ function parseSolution(state, startLine, endLine, silent) {
 
   state.md.block.tokenize(state, startLine + 1, nextLine);
 
-  token = state.push('question_solution_close', 'div', -1);
+  token = state.push('question_notes_close', 'div', -1);
   token.markup = markerStr;
   token.block = true;
 
@@ -80,7 +80,7 @@ function parseSolution(state, startLine, endLine, silent) {
 
   console.log('sol', state.line, nextLine);
 
-  state.line = nextLine + (auto_closed ? 1 : 0);
+  state.line = nextLine; // + (auto_closed ? 1 : 0);
 
   return true;
 }

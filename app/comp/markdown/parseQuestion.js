@@ -24,8 +24,8 @@ function parseQuestion(state, startLine, endLine, silent) {
   }
 
   console.log('!: ', startLine, state.bMarks[startLine], state.tShift[startLine],
-              state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
-              state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
+    state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
+    state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
 
 
 
@@ -57,7 +57,7 @@ function parseQuestion(state, startLine, endLine, silent) {
 
 
   var sublevelStartLine = null;
-  var optionStartLine = null;
+  var stemBlockEndLine = null;
 
   endLine = state.lineMax;
   var nextLine;
@@ -80,19 +80,25 @@ function parseQuestion(state, startLine, endLine, silent) {
 
       } else if (matched[1].length > level) {
         // 找到第一次出现的小题或子题的行号位置
-        if (sublevelStartLine == null) {
-          sublevelStartLine = nextLine;
+        if (stemBlockEndLine == null) {
+          stemBlockEndLine = nextLine;
         }
       }
 
-    } else if (optionStartLine == null && (ch === '(' || ch === '（')) {
+    } else if (stemBlockEndLine == null && (ch === '(' || ch === '（')) {
       // 找到第一次出现选项的行号
       var ptn = new RegExp(optionMarkerRegex, 'g');
       matched = ptn.exec(state.src.slice(pos, max));
       if (matched != null) {
-        optionStartLine = nextLine;
+        if (stemBlockEndLine == null) {
+          stemBlockEndLine = nextLine;
+        }
       }
 
+    } else if (ch === '%' && state.src.slice(pos + 1, pos + 3) === '%%') {
+      if (stemBlockEndLine == null) {
+        stemBlockEndLine = nextLine;
+      }
     }
   }
 
@@ -121,36 +127,44 @@ function parseQuestion(state, startLine, endLine, silent) {
   token.meta = {};
   parseSettings(token, questionSettings);
 
-  var stemEndLine = null;
-  if (sublevelStartLine != null && optionStartLine != null) {
-    stemEndLine = Math.min(sublevelStartLine, optionStartLine);
-  } else if (sublevelStartLine != null) {
-    stemEndLine = sublevelStartLine;
-  } else if (optionStartLine != null) {
-    stemEndLine = optionStartLine;
-  } else {
-    stemEndLine = nextLine;
+  if (stemBlockEndLine == null) {
+    stemBlockEndLine = nextLine;
   }
+  // var stemEndLine = (stemBlockEndLine != null) ? stemBlockEndLine: nextLine;
+  // if (sublevelStartLine != null && stemBlockEndLine != null) {
+  //   stemEndLine = Math.min(sublevelStartLine, stemBlockEndLine);
+  // } else if (sublevelStartLine != null) {
+  //   stemEndLine = sublevelStartLine;
+  // } else if (stemBlockEndLine != null) {
+  //   stemEndLine = stemBlockEndLine;
+  // } else {
+  //   stemEndLine = nextLine;
+  // }
 
   pushQuestionNoTokens(state, questionNo, startLine, startLine + 1);
 
-  debug.printBlockTokenState('k: ', state, startLine, stemEndLine);
+  debug.printBlockTokenState('k: ', state, startLine, stemBlockEndLine);
 
   // 题干生成 question stem
-  if (startLine + 1 < stemEndLine) {
+  if (startLine + 1 < stemBlockEndLine) {
     // 忽略连续空行，只有非空行才生产题干
-    if (state.getLines(startLine+1, stemEndLine, 0).trim().length > 0) {
-      pushQuestionStemTokens(state, startLine + 1, stemEndLine);
+
+    if (state.getLines(startLine + 1, stemBlockEndLine, 0).trim().length > 0) {
+
+      pushQuestionStemTokens(state, startLine + 1, stemBlockEndLine);
     }
   }
 
-  console.log('---+++++++++++++++++++++++++----', stemEndLine, nextLine);
+  console.log('---++++++++++++++++++++++----', stemBlockEndLine, nextLine);
 
-  if (stemEndLine < nextLine) {
-    state.md.block.tokenize(state, stemEndLine, nextLine);
+  if (stemBlockEndLine < nextLine) {
+
+
+    // 前面是题干，解析选项和答案
+    state.md.block.tokenize(state, stemBlockEndLine, nextLine);
   }
 
-  console.log('--------'+endTagName+'----------', stemEndLine, nextLine);
+  console.log('--------'+endTagName+'--------', stemBlockEndLine, nextLine);
 
   token = state.push(endTagName, 'div', -1);
   token.markup = markerStr;
@@ -180,8 +194,8 @@ function pushQuestionNoTokens(state, questionNo, startLine, endLine) {
 function pushQuestionStemTokens(state, startLine, endLine) {
 
   console.log('>: ', startLine, state.bMarks[startLine], state.tShift[startLine],
-              state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
-              state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
+    state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
+    state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
 
 
   var token;

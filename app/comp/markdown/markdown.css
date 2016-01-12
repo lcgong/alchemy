@@ -1,3 +1,7 @@
+.question, .section, .subquestion{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 .question .question-blank {
     display: inline-block;
     text-align: center;
@@ -21,15 +25,31 @@
     font-weight: bold;
     padding: 1px 5px 2px 2px;
 }
+
+.options {
+    display: flex;
+    flex-wrap: wrap;
+}
+.options .option-item {
+    flex: 1 0 calc(25% );
+    padding-left: 2em;
+
+    box-sizing: border-box;
+}
 .question .option-item > .option-no {
+    width: 2em;
     border-color: transparent;
     color: #333;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
-    /*box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.3);*/
-    min-width: 2ex;
-    min-height: 1ex;
     text-align: center;
-    float: left;
+
+    position: absolute;
+    margin-left: -2em;
+
     font-weight: bold;
     padding: 1px 5px 2px 2px;
+}
+.options .option-item > p {
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
 }

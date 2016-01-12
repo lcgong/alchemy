@@ -2,6 +2,7 @@
 
 
 var isSpace = require('markdown-it/lib/common/utils').isSpace;
+var debug = require('./debug');
 
 
 var questionOptionMarkerRegex =
@@ -33,11 +34,11 @@ function parseQuestionOptionMarker(state, startLine) {
     solo: false
   };
 
-  ptn = /(固定|独行)[\,，]?\s*/g;
+  ptn = /(固定|独行|整行)[\,，]?\s*/g;
   while ((matched = ptn.exec(settingsStr)) != null) {
     if (matched[1] === '固定') {
       settings.fixed = true;
-    } else if (matched[1] === '独行') {
+    } else if (matched[1] === '独行', matched[1] === '整行') {
       settings.solo = true;
     }
   }
@@ -74,22 +75,13 @@ function parseOption(state, startLine, endLine, silent) {
     return true;
   }
 
-  // skip one optional space (but not tab, check cmark impl) after '>'
-  // if (state.src.charCodeAt(pos) === 0x20) {
-  //   pos++;
-  // }
+  // 跳过多余的空格
+  if (state.src.charCodeAt(pos) === 0x20) {
+    pos++;
+  }
 
   oldIndent = state.blkIndent;
   state.blkIndent = 0; // 设置所需要的缩进为零
-
-  // console.log(123, state.src[state.bMarks[startLine] -1].charCodeAt(0),  state.bMarks[startLine]);
-
-  // var offset;
-  // skip spaces after ">" and re-calculate offset
-  // initial = offset = state.sCount[startLine] + pos - (state.bMarks[startLine] + state.tShift[startLine]);
-
-  // console.log('s: ', marker.markerStr, state.bMarks[startLine], state.tShift[startLine], state.sCount[startLine], pos , offset)
-
 
   var oldBMarks = [state.bMarks[startLine]];
   var oldSCount = [state.sCount[startLine]];
@@ -125,8 +117,6 @@ function parseOption(state, startLine, endLine, silent) {
 
   // console.log(333, pos, offset, initial, pos, state.bMarks[startLine]);
 
-  // var lastLineEmpty = pos >= max;
-
 
   // state.sCount[startLine] = offset - initial;
   state.tShift[startLine] = pos - state.bMarks[startLine];
@@ -153,31 +143,30 @@ function parseOption(state, startLine, endLine, silent) {
 
   for (nextLine = startLine + 1; nextLine < endLine; nextLine++) {
 
-    console.log('*: ', nextLine, optionItemStartLine, state.bMarks[nextLine],
-      state.tShift[nextLine], state.sCount[nextLine], 's', state.sCount[startLine], state.src[state.eMarks[nextLine]].charCodeAt(0).toString(16),
-                state.src.slice(state.bMarks[nextLine], state.eMarks[nextLine]))
+    debug.printBlockTokenState('==: ', state, nextLine);
+    // console.log('*: ', nextLine, optionItemStartLine, state.bMarks[nextLine],
+    //   state.tShift[nextLine], state.sCount[nextLine], 's', state.sCount[startLine], state.src[state.eMarks[nextLine]].charCodeAt(0).toString(16),
+    //             state.src.slice(state.bMarks[nextLine], state.eMarks[nextLine]))
 
     // if (state.sCount[nextLine] < oldIndent) {
     //   break;
     // }
 
 
-
-
     var newMarker = parseQuestionOptionMarker(state, nextLine);
     if (newMarker != null) {
 
-
       // 遇到新的选项，结束旧的标签，开始新的标签
-
       optionOpenToken.map = [optionItemStartLine, nextLine];
 
-      if (optionItemStartLine + 1 < nextLine) {
-        // 相接两行的两个选项，无需进行解析，直接关闭
-        // console.log(4444, optionItemStartLine, nextLine);
-        state.md.block.tokenize(state, optionItemStartLine, nextLine);
-        // console.log(5555);/
-      }
+      // if (optionItemStartLine < nextLine) {
+      //   // 相接两行的两个选项，无需进行解析，直接关闭
+      //
+      //   debug.printBlockTokenState('++++: ', state,
+      //     optionItemStartLine, nextLine);
+      //
+      // }
+      state.md.block.tokenize(state, optionItemStartLine, nextLine);
 
       var optionItemCloseToken;
       optionItemCloseToken = state.push('option_item_close', 'div', -1);
@@ -204,18 +193,10 @@ function parseOption(state, startLine, endLine, silent) {
       continue;
     }
 
-    // if (state.src[pos] === '(' || state.src[pos] === '（') {
-    //   var ptn = new RegExp(questionOptionMarkerRegex, 'g');
-    //   var matched = ptn.exec(state.src.slice(pos, max));
-    //   if (matched != null) {
-    //     break;
-    //   }
-    // }
-
     pos = state.bMarks[nextLine] + state.tShift[nextLine];
     max = state.eMarks[nextLine];
 
-    // question/section/subquestion marker: #1 ##1 ###1
+    // 判断是否遇到新题号 question/section/subquestion marker: #1 ##1 ###1
     if (ch === '#') { // 遇到题号则结束本选项
       var ptn = /^(#{1,3})([1-9][0-9]{0,2})/;
       matched = ptn.exec(state.src.slice(pos, max));
@@ -224,7 +205,7 @@ function parseOption(state, startLine, endLine, silent) {
       }
     }
 
-    // solution marker: %%%
+    // 判断是否遇到答案和分析等 notes marker: %%%
     if (state.src[pos] === '%' && state.src.slice(pos + 1, pos + 3) === '%%') {
       break;
     }
