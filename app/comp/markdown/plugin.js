@@ -72,6 +72,10 @@ module.exports = function questionMarkdownPlugin(md) {
 
   md.renderer.rules.question_option_open = render.question_option_open;
   md.renderer.rules.question_option_close = render.question_option_close;
+
+  md.renderer.rules.option_item_open = render.option_item_open;
+  md.renderer.rules.option_item_close = render.option_item_close;
+
   md.renderer.rules.option_no_open = render.option_no_open;
   md.renderer.rules.option_no_close = render.option_no_close;
 };

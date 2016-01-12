@@ -11,6 +11,10 @@ function parseQuestionOptionMarker(state, startLine) {
   var start = state.bMarks[startLine] + state.tShift[startLine];
   var max = state.eMarks[startLine];
 
+  var ch = state.src[start];
+  if (ch !== '(' && ch !== '（') {
+    return null;
+  }
 
   // match (A, ....): , chinese parenthesis, chines colon, chinese semicolon.
   var ptn = new RegExp(questionOptionMarkerRegex, 'g');
@@ -47,18 +51,9 @@ function parseQuestionOptionMarker(state, startLine) {
 }
 
 function parseOption(state, startLine, endLine, silent) {
-  var nextLine, lastLineEmpty,
+  var nextLine,
     oldTShift, oldSCount, oldBMarks, oldIndent, oldParentType,
-    lines, initial, offset, ch, terminatorRules, token, i, l, terminate;
-
-  var pos = state.bMarks[startLine] + state.tShift[startLine];
-  var max = state.eMarks[startLine];
-
-  var ch = state.src[pos];
-  if (ch !== '(' && ch !== '（') {
-    return false;
-  }
-
+    initial, ch, terminatorRules, token, i, l, terminate;
 
   // check the question option marker: '(A):' or '(B):'
   var marker = parseQuestionOptionMarker(state, startLine);
@@ -66,80 +61,159 @@ function parseOption(state, startLine, endLine, silent) {
     return false;
   }
 
+  console.log('O: ', startLine, state.bMarks[startLine], state.tShift[startLine],
+              state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
+              state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
+
+  var pos = state.bMarks[startLine] + state.tShift[startLine];
+  var max = state.eMarks[startLine];
 
   pos = marker.nextPos;
 
-  // we know that it's going to be a valid blockquote,
-  // so no point trying to find the end of it in silent mode
   if (silent) {
     return true;
   }
 
   // skip one optional space (but not tab, check cmark impl) after '>'
-  if (state.src.charCodeAt(pos) === 0x20) {
-    pos++;
-  }
+  // if (state.src.charCodeAt(pos) === 0x20) {
+  //   pos++;
+  // }
 
   oldIndent = state.blkIndent;
-  state.blkIndent = 0;
+  state.blkIndent = 0; // 设置所需要的缩进为零
 
+  // console.log(123, state.src[state.bMarks[startLine] -1].charCodeAt(0),  state.bMarks[startLine]);
+
+  // var offset;
   // skip spaces after ">" and re-calculate offset
-  initial = offset = state.sCount[startLine] + pos - (state.bMarks[startLine] + state.tShift[startLine]);
+  // initial = offset = state.sCount[startLine] + pos - (state.bMarks[startLine] + state.tShift[startLine]);
 
-  oldBMarks = [state.bMarks[startLine]];
+  // console.log('s: ', marker.markerStr, state.bMarks[startLine], state.tShift[startLine], state.sCount[startLine], pos , offset)
+
+
+  var oldBMarks = [state.bMarks[startLine]];
+  var oldSCount = [state.sCount[startLine]];
+  var oldTShift = [state.tShift[startLine]];
+
   state.bMarks[startLine] = pos;
 
+  // -------------------------------------------------------------------------
+  oldParentType = state.parentType;
+  state.parentType = 'question_option';
 
-  while (pos < max) {
-    ch = state.src.charCodeAt(pos);
+  var optionOpenToken = state.push('question_option_open', 'div', 1);
+  // optionOpenToken.markup = marker.markerStr;
+  // optionOpenToken.map = [startLine, 0];
+  // optionOpenToken.meta = marker.settings;
 
-    if (isSpace(ch)) {
-      if (ch === 0x09) {
-        offset += 4 - offset % 4;
-      } else {
-        offset++;
-      }
-    } else {
-      break;
-    }
 
-    pos++;
-  }
+  // while (pos < max) {
+  //   ch = state.src.charCodeAt(pos);
+  //
+  //   if (isSpace(ch)) {
+  //     if (ch === 0x09) {
+  //       offset += 4 - offset % 4;
+  //     } else {
+  //       offset++;
+  //     }
+  //   } else {
+  //     break;
+  //   }
+  //
+  //   pos++;
+  // }
 
-  lastLineEmpty = pos >= max;
+  // console.log(333, pos, offset, initial, pos, state.bMarks[startLine]);
 
-  oldSCount = [state.sCount[startLine]];
-  state.sCount[startLine] = offset - initial;
+  // var lastLineEmpty = pos >= max;
 
-  oldTShift = [state.tShift[startLine]];
+
+  // state.sCount[startLine] = offset - initial;
   state.tShift[startLine] = pos - state.bMarks[startLine];
+
+  var oldOptionItemParentType = state.parentType;
+
+
+  var optionItemStartLine = startLine;
+
+  var optionItemOpenToken;
+  optionItemOpenToken = state.push('option_item_open', 'div', 1);
+  optionItemOpenToken.markup = marker.markerStr;
+  optionItemOpenToken.meta = marker.settings;
+
+  // 解析选项号
+  pushOptionNoTokens(state, marker.optionNo,
+      optionItemStartLine, optionItemStartLine + 1);
+
+
+  // console.log('~~~~~~~~~~~~~~~~~');
+
 
   // terminatorRules = state.md.block.ruler.getRules('blockquote');
 
   for (nextLine = startLine + 1; nextLine < endLine; nextLine++) {
-    if (state.sCount[nextLine] < oldIndent) {
-      break;
+
+    console.log('*: ', nextLine, optionItemStartLine, state.bMarks[nextLine],
+      state.tShift[nextLine], state.sCount[nextLine], 's', state.sCount[startLine], state.src[state.eMarks[nextLine]].charCodeAt(0).toString(16),
+                state.src.slice(state.bMarks[nextLine], state.eMarks[nextLine]))
+
+    // if (state.sCount[nextLine] < oldIndent) {
+    //   break;
+    // }
+
+
+
+
+    var newMarker = parseQuestionOptionMarker(state, nextLine);
+    if (newMarker != null) {
+
+
+      // 遇到新的选项，结束旧的标签，开始新的标签
+
+      optionOpenToken.map = [optionItemStartLine, nextLine];
+
+      if (optionItemStartLine + 1 < nextLine) {
+        // 相接两行的两个选项，无需进行解析，直接关闭
+        // console.log(4444, optionItemStartLine, nextLine);
+        state.md.block.tokenize(state, optionItemStartLine, nextLine);
+        // console.log(5555);/
+      }
+
+      var optionItemCloseToken;
+      optionItemCloseToken = state.push('option_item_close', 'div', -1);
+      optionItemCloseToken.markup = marker.markerStr;
+
+      // 开始新标签
+      optionItemStartLine = nextLine;
+      marker = newMarker;
+
+      oldBMarks.push(state.bMarks[nextLine]);
+      oldTShift.push(state.tShift[nextLine]);
+      oldSCount.push(state.sCount[nextLine]);
+
+      state.bMarks[nextLine] = marker.nextPos;
+
+      var optionItemOpenToken;
+      optionItemOpenToken = state.push('option_item_open', 'div', 1);
+      optionItemOpenToken.markup = marker.markerStr;
+      optionItemOpenToken.meta = marker.settings;
+
+      // 解析选项号
+      pushOptionNoTokens(state, marker.optionNo,
+          optionItemStartLine, optionItemStartLine + 1);
+      continue;
     }
+
+    // if (state.src[pos] === '(' || state.src[pos] === '（') {
+    //   var ptn = new RegExp(questionOptionMarkerRegex, 'g');
+    //   var matched = ptn.exec(state.src.slice(pos, max));
+    //   if (matched != null) {
+    //     break;
+    //   }
+    // }
 
     pos = state.bMarks[nextLine] + state.tShift[nextLine];
     max = state.eMarks[nextLine];
-
-    // console.log(111, state.src[pos]);
-
-
-    if (pos >= max) {
-      // Case 1: line is not inside the blockquote, and this line is empty.
-      break;
-    }
-
-
-    if (state.src[pos] === '(' || state.src[pos] === '（') {
-      var ptn = new RegExp(questionOptionMarkerRegex, 'g');
-      var matched = ptn.exec(state.src.slice(pos, max));
-      if (matched != null) {
-        break;
-      }
-    }
 
     // question/section/subquestion marker: #1 ##1 ###1
     if (ch === '#') { // 遇到题号则结束本选项
@@ -155,44 +229,33 @@ function parseOption(state, startLine, endLine, silent) {
       break;
     }
 
-    // Case 3: another tag found.
-    // terminate = false;
-    // for (i = 0, l = terminatorRules.length; i < l; i++) {
-    //   if (terminatorRules[i](state, nextLine, endLine, true)) {
-    //     terminate = true;
-    //     break;
-    //   }
-    // }
-    // if (terminate) {
-    //   break;
-    // }
-
     oldBMarks.push(state.bMarks[nextLine]);
     oldTShift.push(state.tShift[nextLine]);
     oldSCount.push(state.sCount[nextLine]);
 
     // A negative indentation means that this is a paragraph continuation
-    state.sCount[nextLine] = -1;
+    // state.sCount[nextLine] = -1;
   }
 
-  oldParentType = state.parentType;
-  state.parentType = 'question_option';
+  optionOpenToken.map = [optionItemStartLine, nextLine];
 
-  token = state.push('question_option_open', 'div', 1);
-  token.markup = marker.markerStr;
-  token.map = lines = [startLine, nextLine];
-  token.meta = marker.settings;
+  state.md.block.tokenize(state, optionItemStartLine, nextLine);
 
-  // 解析选项号
-  pushOptionNoTokens(state, marker.optionNo, startLine, startLine + 1);
+  var optionItemCloseToken;
+  optionItemCloseToken = state.push('option_item_close', 'div', -1);
+  optionItemCloseToken.markup = marker.markerStr;
 
-  state.md.block.tokenize(state, startLine, nextLine);
+  state.parentType = oldOptionItemParentType;
+
+  //----------------------------------------------------------------------
+
+  // 设置question_option_open 开始和结束行号
+  optionOpenToken.map = [startLine, nextLine];
 
   token = state.push('question_option_close', 'div', -1);
   token.markup = marker.markerStr;
 
   state.parentType = oldParentType;
-  // lines[1] = state.line;
 
   // Restore original tShift; this might not be necessary since the parser
   // has already been here, but just to make sure we can do that.
@@ -203,7 +266,7 @@ function parseOption(state, startLine, endLine, silent) {
   }
   state.blkIndent = oldIndent;
 
-  state.line = nextLine;
+  state.line = nextLine ;
 
   return true;
 }

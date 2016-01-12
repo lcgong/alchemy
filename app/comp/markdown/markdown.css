@@ -1,4 +1,4 @@
-.question-blank {
+.question .question-blank {
     display: inline-block;
     text-align: center;
     font-weight: bold;
@@ -8,8 +8,20 @@
     background-color: #eee;
     cursor: help;
 }
-.question-no {
+.question .question-no {
     /*background: #dc3022;*/
+    border-color: transparent;
+    color: #333;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+    /*box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.3);*/
+    min-width: 2ex;
+    min-height: 1ex;
+    text-align: center;
+    float: left;
+    font-weight: bold;
+    padding: 1px 5px 2px 2px;
+}
+.question .option-item > .option-no {
     border-color: transparent;
     color: #333;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);

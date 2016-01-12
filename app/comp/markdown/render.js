@@ -91,10 +91,22 @@ function question_option_open(cssClass, tokens, idx, options, env, renderer) {
   // var token = tokens[idx];
   // var meta = token.meta;
 
-  return '<div class="question_option">';
+  return '<div class="options">';
 }
 
 function question_option_close(tokens, idx, options, env, renderer) {
+  return '</div>';
+}
+
+
+function option_item_open(cssClass, tokens, idx, options, env, renderer) {
+  // var token = tokens[idx];
+  // var meta = token.meta;
+
+  return '<div class="option-item">';
+}
+
+function option_item_close(tokens, idx, options, env, renderer) {
   return '</div>';
 }
 
@@ -137,6 +149,10 @@ module.exports = {
 
   question_option_open: question_option_open,
   question_option_close: question_option_close,
+
+  option_item_open: option_item_open,
+  option_item_close: option_item_close,
+
   option_no_open: option_no_open,
   option_no_close: option_no_close,
 

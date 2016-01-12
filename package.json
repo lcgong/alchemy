@@ -31,6 +31,8 @@
   "jspm": {
     "configFile": "app/jspm.config.js",
     "dependencies": {
+      "highlight": "npm:highlight@^0.2.4",
+      "highlightjs": "github:components/highlightjs@^9.0.0",
       "markdown-it": "npm:markdown-it@^5.1.0",
       "mathjax": "npm:mathjax@^2.5.1"
     },

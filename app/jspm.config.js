@@ -46,6 +46,8 @@ System.config({
     "bootstrap": "github:twbs/bootstrap@3.3.6",
     "core-js": "npm:core-js@1.2.6",
     "d3": "github:mbostock/d3@3.5.12",
+    "highlight": "npm:highlight@0.2.4",
+    "highlightjs": "github:components/highlightjs@9.0.0",
     "jasmine": "npm:jasmine@2.4.1",
     "jquery": "npm:jquery@2.1.4",
     "markdown-it": "npm:markdown-it@5.1.0",
@@ -154,6 +156,11 @@ System.config({
       "path": "github:jspm/nodelibs-path@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "systemjs-json": "github:systemjs/plugin-json@0.1.0"
+    },
+    "npm:highlight@0.2.4": {
+      "assert": "github:jspm/nodelibs-assert@0.1.0",
+      "fs": "github:jspm/nodelibs-fs@0.1.2",
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"

@@ -2,6 +2,7 @@
 
 var isSpace = require('markdown-it/lib/common/utils').isSpace;
 var optionMarkerRegex = require('./parseOption').markerRegex;
+var debug = require('./debug');
 
 
 var settingsPattern = ['(', [
@@ -14,12 +15,19 @@ var settingsPattern = ['(', [
 function parseQuestion(state, startLine, endLine, silent) {
   var ch, level, tmp, token;
 
+
   var pos = state.bMarks[startLine] + state.tShift[startLine];
   var max = state.eMarks[startLine];
 
   if (state.src[pos] !== '#') { // tentatively probe
     return false;
   }
+
+  console.log('!: ', startLine, state.bMarks[startLine], state.tShift[startLine],
+              state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
+              state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
+
+
 
   var matched;
   var ptn = /^(#{1,3})([1-9][0-9]{0,2})\s+(.*)/g;
@@ -126,14 +134,23 @@ function parseQuestion(state, startLine, endLine, silent) {
 
   pushQuestionNoTokens(state, questionNo, startLine, startLine + 1);
 
-  // question-stem
+  debug.printBlockTokenState('k: ', state, startLine, stemEndLine);
+
+  // 题干生成 question stem
   if (startLine + 1 < stemEndLine) {
-    pushQuestionStemTokens(state, startLine + 1, stemEndLine);
+    // 忽略连续空行，只有非空行才生产题干
+    if (state.getLines(startLine+1, stemEndLine, 0).trim().length > 0) {
+      pushQuestionStemTokens(state, startLine + 1, stemEndLine);
+    }
   }
+
+  console.log('---+++++++++++++++++++++++++----', stemEndLine, nextLine);
 
   if (stemEndLine < nextLine) {
     state.md.block.tokenize(state, stemEndLine, nextLine);
   }
+
+  console.log('--------'+endTagName+'----------', stemEndLine, nextLine);
 
   token = state.push(endTagName, 'div', -1);
   token.markup = markerStr;
@@ -161,6 +178,12 @@ function pushQuestionNoTokens(state, questionNo, startLine, endLine) {
 }
 
 function pushQuestionStemTokens(state, startLine, endLine) {
+
+  console.log('>: ', startLine, state.bMarks[startLine], state.tShift[startLine],
+              state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
+              state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
+
+
   var token;
   var oldParentType = state.parentType;
 
@@ -175,13 +198,6 @@ function pushQuestionStemTokens(state, startLine, endLine) {
 
   state.parentType = oldParentType;
 }
-
-/** parse question stem from question.
- */
-function parseQuestionStem(state, startLine, endLine) {
-
-}
-
 
 function parseSettings(token, settings) {
 

@@ -53,30 +53,46 @@ var sample = `\
 dd
 `;
 
+
+
+
 var sample = `
 ##1 单选题
 为验证程序模块A是否正确实现了规定的功能，需要进行 __(1)__；
 为验证模块A能否与其他模块按照规定方式正确工作，需要进行__(2)__。
+  ~~~python
+  def f():
+    a = 1
+  ~~~
 
-###1 单选题 一行四项
+  ###1 单选题 一行四项
 
   (A): 单元测试
+
   (B): 集成测试
+
+    > ddd
+    > ddd
+
+  设置
+
   (C): 确认测试
   (D): 系统测试
 
-  ::: 答案：(A)
-  :::
+  %%% 答案：(A)
+  %%%
 
 ###2 单选题 一行四项
 
-  (A): 单元测试
-  (B): 集成测试
-  (C): 确认测试
-  (D): 系统测试
 
-  ::: 答案：(B)
-  :::
+
+  (A): 1单元测试
+  (B): 2集成测试
+  (C): 3确认测试
+  (D): 4系统测试
+
+  %%% 答案：(B)
+  %%%
 
 `
 
@@ -112,6 +128,7 @@ function questionMarkdown($templateRequest) {
     link: function(scope, element, attrs) {
 
       var md = new MarkdownIt();
+      md.disable([ 'code'])
       md.use(questionMarkdownPlugin);
 
 
@@ -126,11 +143,11 @@ function questionMarkdown($templateRequest) {
       console.log(tokens);
 
       var htmlstr = md.renderer.render(tokens, options, env);
-      element.html(htmlstr);
+      var jsonstr = JSON.stringify(tokens, null, Number(4));
+      element.html(htmlstr + '<hr><pre><code>\n' + jsonstr + '\n</code></pre>');
 
       // var tokens = transform.encode(tokens);
 
-      // var htmlstr = JSON.stringify(tokens, null, Number(4));
       // element.html('<pre>\n' + htmlstr + '\n</pre>');
 
       // console.log(htmlstr);

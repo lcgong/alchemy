@@ -76,7 +76,10 @@ function parseSolution(state, startLine, endLine, silent) {
 
   state.parentType = old_parent;
   state.lineMax = old_line_max;
-  
+
+
+  console.log('sol', state.line, nextLine);
+
   state.line = nextLine + (auto_closed ? 1 : 0);
 
   return true;
