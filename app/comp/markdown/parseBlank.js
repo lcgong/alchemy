@@ -19,10 +19,12 @@ function parseQuestionBlank(state, silent) {
     return false;
   }
 
+
   pos = start + ptn.lastIndex;
   var questionNoStr = matched[1];
   var questionNo = (questionNoStr.length > 0) ? parseInt(questionNoStr) : null;
 
+  console.log('blank: pos:%d, len:%d', start, ptn.lastIndex);
 
   if (!silent) {
     token = state.push('question_blank_open', 'span', 1);

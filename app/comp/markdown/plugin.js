@@ -78,4 +78,8 @@ module.exports = function questionMarkdownPlugin(md) {
 
   md.renderer.rules.option_no_open = render.option_no_open;
   md.renderer.rules.option_no_close = render.option_no_close;
+
+  md.renderer.rules.question_notes_open = render.question_notes_open;
+  md.renderer.rules.question_notes_close = render.question_notes_close;
+
 };

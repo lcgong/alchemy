@@ -7,6 +7,7 @@ let app = angular.module('mainapp');
 import MarkdownIt from "markdown-it";
 import questionMarkdownPlugin from "./plugin";
 import transform from './json';
+import analyze from "./analyze"
 
 console.log(transform);
 
@@ -76,11 +77,6 @@ var sample = `\
 
   %%% 答案 (A)
 
-  %%% 分析
-
-  %%%评阅
-
-
 ###2 单选题 一行四项
 
 
@@ -91,8 +87,6 @@ var sample = `\
   (D): 系统测试
 
   %%% 答案：(B)
-  %%%
-
 `
 
 
@@ -149,7 +143,9 @@ function questionMarkdown($templateRequest) {
       var options = {};
       var tokens = md.parse(text, env);
 
-      console.log(tokens);
+      // console.log(tokens);
+      var sobj = {questionList: []}
+      analyze(sobj, tokens, 0, 0, tokens.length);
 
       var htmlstr = md.renderer.render(tokens, options, env);
       var jsonstr = JSON.stringify(tokens, null, Number(4));

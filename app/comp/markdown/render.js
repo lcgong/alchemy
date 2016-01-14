@@ -119,7 +119,7 @@ function option_no_open(tokens, idx, options, env, renderer) {
   var token = tokens[idx];
 
   var html = [
-    '<div class="option-no">', token.meta.optionNo, '.'
+    '<div class="option-no">', token.meta.optionNo,
   ].join('');
 
   return html;
@@ -169,4 +169,6 @@ module.exports = {
   option_no_open: option_no_open,
   option_no_close: option_no_close,
 
+  question_notes_open: question_notes_open,
+  question_notes_close: question_notes_close
 };
