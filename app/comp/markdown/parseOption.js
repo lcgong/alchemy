@@ -62,9 +62,9 @@ function parseOption(state, startLine, endLine, silent) {
     return false;
   }
 
-  console.log('O: ', startLine, state.bMarks[startLine], state.tShift[startLine],
-              state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
-              state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
+  // console.log('O: ', startLine, state.bMarks[startLine], state.tShift[startLine],
+  //             state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
+  //             state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
 
   var pos = state.bMarks[startLine] + state.tShift[startLine];
   var max = state.eMarks[startLine];
@@ -143,7 +143,7 @@ function parseOption(state, startLine, endLine, silent) {
 
   for (nextLine = startLine + 1; nextLine < endLine; nextLine++) {
 
-    debug.printBlockTokenState('==: ', state, nextLine);
+    // debug.printBlockTokenState('==: ', state, nextLine);
     // console.log('*: ', nextLine, optionItemStartLine, state.bMarks[nextLine],
     //   state.tShift[nextLine], state.sCount[nextLine], 's', state.sCount[startLine], state.src[state.eMarks[nextLine]].charCodeAt(0).toString(16),
     //             state.src.slice(state.bMarks[nextLine], state.eMarks[nextLine]))

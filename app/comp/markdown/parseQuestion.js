@@ -23,10 +23,10 @@ function parseQuestion(state, startLine, endLine, silent) {
     return false;
   }
 
-  console.log('!: ', startLine, state.bMarks[startLine], state.tShift[startLine],
-    state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
-    state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
-
+  // console.log('!: ', startLine, state.bMarks[startLine], state.tShift[startLine],
+  //   state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
+  //   state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
+  //
 
 
   var matched;
@@ -143,7 +143,7 @@ function parseQuestion(state, startLine, endLine, silent) {
 
   pushQuestionNoTokens(state, questionNo, startLine, startLine + 1);
 
-  debug.printBlockTokenState('k: ', state, startLine, stemBlockEndLine);
+  // debug.printBlockTokenState('k: ', state, startLine, stemBlockEndLine);
 
   // 题干生成 question stem
   if (startLine + 1 < stemBlockEndLine) {
@@ -155,7 +155,7 @@ function parseQuestion(state, startLine, endLine, silent) {
     }
   }
 
-  console.log('---++++++++++++++++++++++----', stemBlockEndLine, nextLine);
+  // console.log('---++++++++++++++++++++++----', stemBlockEndLine, nextLine);
 
   if (stemBlockEndLine < nextLine) {
 
@@ -164,7 +164,7 @@ function parseQuestion(state, startLine, endLine, silent) {
     state.md.block.tokenize(state, stemBlockEndLine, nextLine);
   }
 
-  console.log('--------'+endTagName+'--------', stemBlockEndLine, nextLine);
+  // console.log('--------'+endTagName+'--------', stemBlockEndLine, nextLine);
 
   token = state.push(endTagName, 'div', -1);
   token.markup = markerStr;
@@ -193,9 +193,9 @@ function pushQuestionNoTokens(state, questionNo, startLine, endLine) {
 
 function pushQuestionStemTokens(state, startLine, endLine) {
 
-  console.log('>: ', startLine, state.bMarks[startLine], state.tShift[startLine],
-    state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
-    state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
+  // console.log('>: ', startLine, state.bMarks[startLine], state.tShift[startLine],
+  //   state.sCount[startLine], state.src[state.eMarks[startLine]].charCodeAt(0).toString(16),
+  //   state.src.slice(state.bMarks[startLine], state.eMarks[startLine]))
 
 
   var token;

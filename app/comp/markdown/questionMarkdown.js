@@ -7,7 +7,7 @@ let app = angular.module('mainapp');
 import MarkdownIt from "markdown-it";
 import questionMarkdownPlugin from "./plugin";
 import transform from './json';
-import analyze from "./analyze"
+import {analyze} from "./analyze"
 
 console.log(transform);
 
@@ -20,9 +20,6 @@ console.log(transform);
 
 
 `
-
-
-
 var sample = `\
 ##1 选择题
 
@@ -55,18 +52,18 @@ dd
 `;
 
 
-
-
 var sample = `\
 ##1 单选题
 为验证程序模块A是否正确实现了规定的功能，需要进行 __(1)__；
 为验证模块A能否与其他模块按照规定方式正确工作，需要进行__(2)__。
+
   ~~~python
   def f():
     a = 1
   ~~~
 
-  ###1 单选题 一行四项
+###1 单选题 一行四项
+ __(1)__
 
   (A): 单元测试
 
@@ -75,7 +72,7 @@ var sample = `\
   (C, 整行): 确认测试
   (D): 系统测试
 
-  %%% 答案 (A)
+  %%% 答案  (A)
 
 ###2 单选题 一行四项
 
@@ -145,7 +142,10 @@ function questionMarkdown($templateRequest) {
 
       // console.log(tokens);
       var sobj = {questionList: []}
-      analyze(sobj, tokens, 0, 0, tokens.length);
+
+      let questions = analyze(tokens);
+
+      console.log(questions);
 
       var htmlstr = md.renderer.render(tokens, options, env);
       var jsonstr = JSON.stringify(tokens, null, Number(4));

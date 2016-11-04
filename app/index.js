@@ -16,12 +16,12 @@ import "angular-smart-table";
 import "d3"
 import "nvd3"
 
-
 var app = angular.module('mainapp', [
   'ngResource', 'ngSanitize', 'ngAnimate', 'ui.router', 'ui.bootstrap',
   'ui.select', 'smart-table'
 ]);
 
+// import "app/ttt.ts";
 
 angular.element(document).ready(function() {
   System.import('app/main').then((main) => {
