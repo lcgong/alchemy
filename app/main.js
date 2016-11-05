@@ -6,8 +6,6 @@
 
 // var marked;
 
-console.log(12,23)
-//
 import "app/comp/index"
 
 // import "app/comp/index"

@@ -13,14 +13,14 @@ function questionMarked($templateRequest) {
     replace: true,
     scope: {
       opts: '=',
-      marked: '=',
+      content: '=',
       src: '='
     },
     link: function(scope, element, attrs) {
       set(scope.marked || element.text() || '');
 
-      if (attrs.marked) {
-        scope.$watch('marked', set);
+      if (attrs.content) {
+        scope.$watch('content', set);
       }
 
       if (attrs.src) {

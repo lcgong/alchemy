@@ -2,5 +2,4 @@
 
 
 
-
-import "./markdown/questionMarkdown"
+import "./markdown/index"
