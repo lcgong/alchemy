@@ -8,6 +8,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" href="jspm_packages/npm/animate.css@3.4.0/animate.min.css">
+    <link rel="stylesheet" href="jspm_packages/github/twbs/bootstrap@3.3.6/css/bootstrap.min.css">
+
+
     <link rel="stylesheet" href="app/comp/markdown/markdown.css">
 
     <script src="jspm_packages/system.js"></script>
@@ -20,11 +24,32 @@
 </head>
 
 <body ng-controller="QuestionMarkdownTestCtrl as testCtrl">
-  <div style="width:40em" >
-      <button class="btn btn-sm btn-warning" ng-click="testCtrl.clear()">Clear</button>
-      <button class="btn btn-sm btn-warning" ng-click="testCtrl.setSample(1)">Sample1</button>
 
-      <question-markdown content="testCtrl.sample"></question-markdown>
+  <div class="panel panel-default" style="margin:10px">
+    <div class="row" >
+      <div class="col-xs-6">
+        <button class="btn btn-sm btn-warning" ng-click="testCtrl.clear()">Clear</button>
+        <button class="btn btn-sm btn-warning" ng-click="testCtrl.setSample(1)">Sample1</button>
+      </div>
+    </div>
+    <hr>
+    <div class="row" >
+      <div class="col-xs-6">
+        <question-markdown mode="testCtrl.mode" content="testCtrl.markdownContent">
+        </question-markdown>
+      </div>
+      <div class="col-xs-6"           style="min-height:16em; height:100%">
+        <textarea type="text" class="form-control"
+          style="min-height:16em; height:100%"
+          ng-model="testCtrl.markdownContent">
+        </textarea>
+      </div>
+    </div>
+  </div>
+
+  <div style="width:40em" >
+
+
   </div>
 </body>
 

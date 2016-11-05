@@ -14,16 +14,13 @@ function QuestionMarkdownTestCtrl($scope, $timeout, $injector) {
   // console.log('QuestionMarkdownTestCtrl started');
   var ctrl = this;
 
-  ctrl.sample = sample1;
+  ctrl.markdownContent = '';
 
   ctrl.setSample = function(sampleNo) {
-    console.log('set');
-      ctrl.sample = sample1;
+    ctrl.markdownContent = sample1;
   }
 
   ctrl.clear = function() {
-    console.log('clear');
-
-      ctrl.sample = '';
+    ctrl.markdownContent = '';
   }
 }

@@ -23,35 +23,27 @@ function questionMarkdown($templateRequest) {
     controller: questionMarkdownCtrl,
     link: function($scope, $element, $attrs, $ctrl) {
 
-      var md = new MarkdownIt();
-
-      md.disable([ 'code'])
-      md.use(questionMarkdownPlugin);
-
-      if ($attrs.content) {
+      if ($attrs.content) { // 从变量读取
         $scope.$watch('content', function(newValue, oldValue) {
           renderMarkdownContent(newValue);
         });
       }
 
-      // setContent(sample);
-
-
-      if (attrs.content) {
-
+      if ($attrs.src) { // 从文件读取
+        scope.$watch('src', function(src) {
+          $templateRequest(src, true).then(function(response) {
+            set(response);
+          });
+        });
       }
 
-      console.log(ctrl);
+      let md = new MarkdownIt();
 
-      // if (attrs.src) {
-      //   scope.$watch('src', function(src) {
-      //     $templateRequest(src, true).then(function(response) {
-      //       set(response);
-      //     });
-      //   });
-      // }
+      md.disable([ 'code'])
+      md.use(questionMarkdownPlugin);
 
-      ctrl.setContent = function(text) {
+
+      function renderMarkdownContent(text) {
         text = unindent(text || '');
 
         let env = {};
@@ -61,7 +53,7 @@ function questionMarkdown($templateRequest) {
         let htmlstr = md.renderer.render(tokens, options, env);
 
         console.log('QuestionMarkdown: tokens=%O, questions=%O', tokens, questions);
-        element.html(htmlstr);
+        $element.html(htmlstr);
 
         // var jsonstr = JSON.stringify(tokens, null, Number(4));
         // element.html(htmlstr + '<hr><pre><code>\n' + jsonstr + '\n</code></pre>');
