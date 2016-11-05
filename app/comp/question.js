@@ -1,10 +1,9 @@
-'use strict';
 
 class Blank {
   constructor(blank_no) {
     this._blank_no = blank_no;
     this._answer = null;
-    this._solution = null;
+    this.solution = null;
   }
 
   get blank_no() {
@@ -119,6 +118,27 @@ class OptionGroup {
 }
 
 
+class Solution {
+  constructor(result) {
+    this.blank = null;
+    this.result = result;
+  }
+
+}
+
+class Notes {
+  constructor(question) {
+    this._question = question;
+    this.solutions = [];
+  }
+
+  makeSolution(solution) {
+    let obj = new Solution(solution);
+    this.solutions.push(obj);
+    return obj;
+  }
+}
+
 /**
  * 每题的题空和选项是一组，选项顺序和题空的答案的变化顺序是一致的
  */
@@ -126,11 +146,20 @@ class BaseQuestion {
   constructor() {
     this._boundBlanks = [];
     this._optionGroup = null;
+
+    this.notes = [];
+    this.errors = [];
   }
 
   makeOptionGroup() {
     this._optionGroup = new OptionGroup();
     return this._optionGroup;
+  }
+
+  makeNotes() {
+    let notes = new Notes(this);
+    this.notes.push(notes);
+    return notes;
   }
 
   get optionGroup() {
@@ -142,30 +171,11 @@ class BaseQuestion {
   }
 }
 
-class Subquestion extends BaseQuestion {
-
-  constructor(question) {
-    super();
-    this._question = question;
-  }
-
-  bindBlank(blank_no) {
-    let blank = this._question._makeBlank(blank_no);
-    for (obj of this._boundBlanks) {
-      if (obj == blank) {
-        return blank; // 如果已经绑定过，无需重复绑定
-      }
-    }
-
-    this._boundBlanks.push(blank);
-  }
-}
 
 export class Question extends BaseQuestion {
 
   constructor() {
     super();
-
     this._blanks = {};
     this._subquestions = [];
   }
@@ -177,15 +187,25 @@ export class Question extends BaseQuestion {
     return subquestion;
   }
 
+  get subquestions() {
+    return this._subquestions;
+  }
+
+  /**
+    */
   bindBlank(blank_no) {
+
     let blank = this._makeBlank(blank_no);
-    for (obj of this._boundBlanks) {
+
+    for (let obj of this._boundBlanks) {
       if (obj == blank) {
         return blank; // 如果已经绑定过，无需重复绑定
       }
     }
 
     this._boundBlanks.push(blank);
+
+    return blank;
   }
 
   /**
@@ -203,10 +223,38 @@ export class Question extends BaseQuestion {
     } else {
       let blank = new Blank(blank_no);
       this._blanks[blank_no] = blank;
+
       return blank;
     }
   }
 }
+
+class Subquestion extends BaseQuestion {
+
+  constructor(question) {
+    super();
+    this._question = question;
+  }
+
+  /**
+    */
+  bindBlank(blank_no) {
+
+    let blank = this._question._makeBlank(blank_no);
+
+    for (let obj of this._boundBlanks) {
+      if (obj == blank) {
+        return blank; // 如果已经绑定过，无需重复绑定
+      }
+    }
+
+    this._boundBlanks.push(blank);
+
+    return blank;
+  }
+
+}
+
 
 /** Fisher–Yates shuffle
  * https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
