@@ -1,5 +1,5 @@
 
-import {debug} from './debug';
+import {debug} from '../debug';
 import {isSpace} from 'markdown-it/lib/common/utils';
 
 

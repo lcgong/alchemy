@@ -1,4 +1,12 @@
-'use strict';
+
+// import CSS
+// System.import('bootstrap/css/bootstrap.min.css!');
+// System.import('animate.css/animate.min.css!');
+// System.import('app/comp/markdown/markdown.css!');
+// import "bootstrap/css/bootstrap.min.css!";
+// import "animate.css/animate.min.css!";
+//
+// import "app/comp/markdown/markdown.css!";
 
 import "jquery"
 import "bootstrap"

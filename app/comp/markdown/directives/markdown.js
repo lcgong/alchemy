@@ -1,19 +1,18 @@
 
 import MarkdownIt from "markdown-it";
-import transform from './json';
-import {questionMarkdownPlugin} from "./plugin";
-import {analyze} from "./analyze"
+import transform from '../json';
+import {plugin as questionMarkdownPlugin} from "../plugin";
+import {analyze} from "../analyzer/analyze"
 
 
 let app = angular.module('mainapp');
 
 
 app.directive('questionMarkdown', ['$templateRequest', questionMarkdown]);
-
 function questionMarkdown($templateRequest) {
 
   return {
-    restrict: 'AE',
+    restrict: 'E',
     replace: true,
     scope: {
       opts: '=',
@@ -21,7 +20,8 @@ function questionMarkdown($templateRequest) {
       src: '='
     },
     controller: questionMarkdownCtrl,
-    link: function($scope, $element, $attrs, $ctrl) {
+    controllerAs: '$sheet',
+    link: function($scope, $element, $attrs, $sheet) {
 
       if ($attrs.content) { // 从变量读取
         $scope.$watch('content', function(newValue, oldValue) {
@@ -50,6 +50,9 @@ function questionMarkdown($templateRequest) {
         let options = {};
         let tokens = md.parse(text, env);
         let questions = analyze(tokens);
+
+        $sheet.model = questions;
+
         let htmlstr = md.renderer.render(tokens, options, env);
 
         console.log('QuestionMarkdown: tokens=%O, questions=%O', tokens, questions);
@@ -64,14 +67,11 @@ function questionMarkdown($templateRequest) {
 
 questionMarkdownCtrl.$inject = ['$scope', '$element', '$attrs'];
 function questionMarkdownCtrl($scope, $element, $attrs) {
-  // var state = $attrs.menuActive;
+  // console.log('QuestionMarkdownCtrl');
 
-  var ctrl = this;
-
-
+  let $sheet = this;
 
 
-  console.log('QuestionMarkdownCtrl');
 }
 
 function unindent(text) {

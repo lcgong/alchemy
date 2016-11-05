@@ -1,5 +1,3 @@
-'use strict';
-
 import "jquery"
 import "bootstrap"
 import angular from "angular";
@@ -7,8 +5,8 @@ import "angular-animate";
 import "angular-resource";
 import "angular-sanitize";
 import "angular-i18n/angular-locale_zh-hans-cn";
-import "angular-bootstrap/ui-bootstrap.min.js";
-import "angular-bootstrap/ui-bootstrap-tpls.min.js";
+// import "angular-bootstrap/ui-bootstrap.min.js";
+// import "angular-bootstrap/ui-bootstrap-tpls.min.js";
 import "angular-ui-router";
 import "angular-ui-select";
 import "angular-smart-table";
@@ -20,10 +18,6 @@ var app = angular.module('mainapp', [
   'ngResource', 'ngSanitize', 'ngAnimate', 'ui.router', 'ui.bootstrap',
   'ui.select', 'smart-table'
 ]);
-
-// import "app/ttt.ts";
-
-import "app/test"
 
 angular.element(document).ready(function() {
   System.import('app/main').then((main) => {

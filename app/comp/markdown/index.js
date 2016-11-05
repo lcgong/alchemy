@@ -1,3 +1,4 @@
 
 
-import "./questionMarkdown"
+import "./directives/markdown";
+import "./directives/blank";

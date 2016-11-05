@@ -8,17 +8,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="jspm_packages/npm/animate.css@3.4.0/animate.min.css">
-    <link rel="stylesheet" href="jspm_packages/github/twbs/bootstrap@3.3.6/css/bootstrap.min.css">
-
-
-    <link rel="stylesheet" href="app/comp/markdown/markdown.css">
-
     <script src="jspm_packages/system.js"></script>
     <script src="app/jspm.config.js"></script>
+    <script src="build/thirdparty.js"></script>
+
     <!-- <script src="build/app.js"></script> -->
     <script>
-        System.import('app/comp/markdown/test/index').catch(console.error.bind(console));
+      System.import('bootstrap/css/bootstrap.min.css!');
+      System.import('animate.css/animate.min.css!');
+      System.import('app/comp/markdown/markdown.css!');
+
+      System.import('app/comp/markdown/test/index').catch(console.error.bind(console));
     </script>
 
 </head>

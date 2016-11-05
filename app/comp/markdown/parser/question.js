@@ -1,9 +1,9 @@
 
 
-import {debug} from './debug';
+import {debug} from '../debug';
 import {isSpace} from 'markdown-it/lib/common/utils';
 
-import {questionOptionMarkerRegex} from './parseOption';
+import {questionOptionMarkerRegex} from './option';
 
 var settingsPattern = ['(', [
   '选择题', '单选题', '多选题', '判断题', '填空题',

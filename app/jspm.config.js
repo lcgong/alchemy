@@ -1,8 +1,6 @@
 System.config({
   defaultJSExtensions: true,
   transpiler: "babel",
-  "presets": ["es2015"],
-
   babelOptions: {
     "optional": [
       "runtime",
@@ -16,6 +14,7 @@ System.config({
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
   },
+
   packages: {
     "app": {
       "defaultExtension": "js"
@@ -25,6 +24,9 @@ System.config({
   meta: {
     "*.ts": {
       "loader": "ts"
+    },
+    "*.css": {
+      "loader": "css"
     }
   },
 
@@ -38,18 +40,18 @@ System.config({
     "angular-smart-table": "github:lorenzofox3/Smart-Table@2.1.8",
     "angular-ui-router": "github:angular-ui/angular-ui-router-bower@0.3.1",
     "angular-ui-select": "github:angular-ui/ui-select@0.19.6",
-    "animate.css": "npm:animate.css@3.4.0",
+    "animate.css": "npm:animate.css@3.5.2",
     "babel": "npm:babel-core@5.8.34",
     "babel-runtime": "npm:babel-runtime@5.8.34",
     "bootstrap": "github:twbs/bootstrap@3.3.6",
     "core-js": "npm:core-js@1.2.6",
+    "css": "github:systemjs/plugin-css@0.1.32",
     "d3": "github:mbostock/d3@3.5.12",
     "highlight": "npm:highlight@0.2.4",
     "highlightjs": "github:components/highlightjs@9.0.0",
     "jasmine": "npm:jasmine@2.4.1",
-    "jquery": "npm:jquery@2.1.4",
+    "jquery": "npm:jquery@2.2.4",
     "markdown-it": "npm:markdown-it@5.1.0",
-    "marked": "npm:marked@0.3.5",
     "mathjax": "npm:mathjax@2.5.1",
     "mathjax/MathJax": "github:mathjax/MathJax@2.6.0",
     "nvd3": "npm:nvd3@1.8.1",
