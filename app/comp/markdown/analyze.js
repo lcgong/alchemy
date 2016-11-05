@@ -75,7 +75,14 @@ function analyzeSubquestion(question, section) {
 
   let optgrpSection = analyzeOptionGroup(subquestion, section);
 
-  analyzeAllBlank(subquestion, section.bgnIndex, optgrpSection.bgnIndex - 1);
+  let endIndex;
+  if (optgrpSection) {
+    endIndex = optgrpSection.bgnIndex - 1
+  } else {
+    endIndex = section.endIndex;
+  }
+
+  analyzeAllBlank(subquestion, section.bgnIndex, endIndex);
 
   analyzeNotes(subquestion, section)
 }

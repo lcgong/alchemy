@@ -74,14 +74,16 @@ export function parseQuestion(state, startLine, endLine, silent) {
       var ptn = /^(#{1,3})([1-9][0-9]{0,2})/;
       matched = ptn.exec(state.src.slice(pos, max));
 
-      if (matched != null && matched[1].length <= level) {
-        // 依据'#'的个数判断，遇到高级的结束
-        break;
+      if (matched != null) {
+        if (matched[1].length <= level) {
+          // 依据'#'的个数判断，遇到高级的结束
+          break;
 
-      } else if (matched[1].length > level) {
-        // 找到第一次出现的小题或子题的行号位置
-        if (stemBlockEndLine == null) {
-          stemBlockEndLine = nextLine;
+        } else if (matched[1].length > level) {
+          // 找到第一次出现的小题或子题的行号位置
+          if (stemBlockEndLine == null) {
+            stemBlockEndLine = nextLine;
+          }
         }
       }
 
