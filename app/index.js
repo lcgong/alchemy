@@ -23,6 +23,8 @@ var app = angular.module('mainapp', [
 
 // import "app/ttt.ts";
 
+import "app/test"
+
 angular.element(document).ready(function() {
   System.import('app/main').then((main) => {
     // console.log("module 'main' loaded");

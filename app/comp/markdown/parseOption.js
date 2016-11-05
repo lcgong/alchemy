@@ -1,11 +1,9 @@
-'use strict';
+
+import {debug} from './debug';
+import {isSpace} from 'markdown-it/lib/common/utils';
 
 
-var isSpace = require('markdown-it/lib/common/utils').isSpace;
-var debug = require('./debug');
-
-
-var questionOptionMarkerRegex =
+export let questionOptionMarkerRegex =
   '^[\(（]([1-9a-zA-Z][0-9a-zA-Z]{0,2})\s*[,，]?\s*(.*)[\)）][:：]';
 
 function parseQuestionOptionMarker(state, startLine) {
@@ -51,7 +49,7 @@ function parseQuestionOptionMarker(state, startLine) {
   }
 }
 
-function parseOption(state, startLine, endLine, silent) {
+export function parseOption(state, startLine, endLine, silent) {
   var nextLine,
     oldTShift, oldSCount, oldBMarks, oldIndent, oldParentType,
     initial, ch, terminatorRules, token, i, l, terminate;
@@ -268,8 +266,3 @@ function pushOptionNoTokens(state, optionNo, startLine, endLine) {
 
   state.parentType = oldParentType;
 }
-
-module.exports = {
-  parseTokens: parseOption,
-  markerRegex: questionOptionMarkerRegex
-};

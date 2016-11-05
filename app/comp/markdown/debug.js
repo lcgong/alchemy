@@ -1,5 +1,3 @@
-'use strict';
-
 
 function printBlockTokenState(title, state, startLine, endLine) {
   if (endLine === undefined) {
@@ -22,8 +20,4 @@ function printBlockTokenState(title, state, startLine, endLine) {
   }
 
   console.log(lines.join(''));
-}
-
-module.exports = {
-  printBlockTokenState: printBlockTokenState,
 }

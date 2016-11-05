@@ -1,6 +1,5 @@
-'use strict';
 
-function parseQuestionBlank(state, silent) {
+export function parseQuestionBlank(state, silent) {
   var pos, token;
   var max = state.posMax;
 
@@ -24,7 +23,7 @@ function parseQuestionBlank(state, silent) {
   var questionNoStr = matched[1];
   var questionNo = (questionNoStr.length > 0) ? parseInt(questionNoStr) : null;
 
-  console.log('blank: pos:%d, len:%d', start, ptn.lastIndex);
+  // console.log('blank: pos:%d, len:%d', start, ptn.lastIndex);
 
   if (!silent) {
     token = state.push('question_blank_open', 'span', 1);
@@ -40,6 +39,3 @@ function parseQuestionBlank(state, silent) {
 
   return true;
 };
-
-
-module.exports = parseQuestionBlank;

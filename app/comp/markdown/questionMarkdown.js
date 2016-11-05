@@ -5,8 +5,8 @@
 let app = angular.module('mainapp');
 
 import MarkdownIt from "markdown-it";
-import questionMarkdownPlugin from "./plugin";
 import transform from './json';
+import {questionMarkdownPlugin} from "./plugin";
 import {analyze} from "./analyze"
 
 console.log(transform);
@@ -130,7 +130,6 @@ function questionMarkdown($templateRequest) {
       var md = new MarkdownIt();
       md.disable([ 'code'])
       md.use(questionMarkdownPlugin);
-
 
       // var text = unindent(text || '');
 

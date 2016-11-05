@@ -1,9 +1,9 @@
-'use strict';
 
-var isSpace = require('markdown-it/lib/common/utils').isSpace;
-var optionMarkerRegex = require('./parseOption').markerRegex;
-var debug = require('./debug');
 
+import {debug} from './debug';
+import {isSpace} from 'markdown-it/lib/common/utils';
+
+import {questionOptionMarkerRegex} from './parseOption';
 
 var settingsPattern = ['(', [
   '选择题', '单选题', '多选题', '判断题', '填空题',
@@ -12,7 +12,7 @@ var settingsPattern = ['(', [
 ].join('|'), ')\s*'].join('');
 
 
-function parseQuestion(state, startLine, endLine, silent) {
+export function parseQuestion(state, startLine, endLine, silent) {
   var ch, level, tmp, token;
 
 
@@ -87,7 +87,7 @@ function parseQuestion(state, startLine, endLine, silent) {
 
     } else if (stemBlockEndLine == null && (ch === '(' || ch === '（')) {
       // 找到第一次出现选项的行号
-      var ptn = new RegExp(optionMarkerRegex, 'g');
+      var ptn = new RegExp(questionOptionMarkerRegex, 'g');
       matched = ptn.exec(state.src.slice(pos, max));
       if (matched != null) {
         if (stemBlockEndLine == null) {
@@ -258,7 +258,3 @@ function parseSettings(token, settings) {
 
   token.meta['fixed'] = fixed;
 }
-
-
-
-module.exports = parseQuestion;
