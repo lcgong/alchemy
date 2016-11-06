@@ -4,10 +4,8 @@ import {parseOption} from './parser/option';
 import {parseSolution} from './parser/solution';
 import {parseQuestionBlank} from './parser/blank';
 
-import {register as registerBlankRenderer } from './renderer/blank';
-import {register as registerOptionRenderer } from './renderer/option';
-import {register as registerQuestionRenderer } from './renderer/question';
-import {register as registerSolutionRenderer } from './renderer/solution';
+import {register as rendererRegister } from './renderer/index';
+
 
 export function plugin(md) {
 
@@ -15,7 +13,7 @@ export function plugin(md) {
     alt: ['paragraph']
   });
 
-  md.block.ruler.before('blockquote', 'question_option',
+  md.block.ruler.before('blockquote', 'option_group',
     parseOption, {
       alt: ['paragraph']
     });
@@ -26,8 +24,5 @@ export function plugin(md) {
 
   md.inline.ruler.before('emphasis', 'question_blank', parseQuestionBlank);
 
-  registerBlankRenderer(md.renderer.rules);
-  registerOptionRenderer(md.renderer.rules);
-  registerQuestionRenderer(md.renderer.rules);
-  registerSolutionRenderer(md.renderer.rules);
+  rendererRegister(md.renderer.rules);
 };
