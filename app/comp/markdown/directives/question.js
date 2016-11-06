@@ -1,0 +1,32 @@
+
+let app = angular.module('mainapp');
+
+app.directive('question', questionDirective);
+questionDirective.$inject = ['$parse', '$window', '$timeout'];
+function questionDirective($parse, $window, $timeout) {
+
+  return {
+    restrict: 'E',
+    require: '^questionMarkdown',
+    replace: true,
+    transclude: true,
+    scope: true,
+    templateUrl: 'app/comp/markdown/directives/question.html',
+
+    link: function($scope, $element, $attrs, $sheet) {
+
+      if($attrs.xpath) {
+        $scope.xpath = $scope.$eval($attrs.xpath)
+      }
+      let xpath = $scope.xpath;
+      if (!xpath) {
+        console.log('no xpath found');
+        return;
+      }
+
+      let question = $sheet.questions[xpath[0]];
+
+      $scope.displayNo = question.displayNo;
+    }
+  };
+}

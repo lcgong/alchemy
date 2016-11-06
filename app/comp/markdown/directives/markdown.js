@@ -8,18 +8,27 @@ import {analyze} from "../analyzer/analyze"
 let app = angular.module('mainapp');
 
 
-app.directive('questionMarkdown', ['$templateRequest', questionMarkdown]);
-function questionMarkdown($templateRequest) {
+app.controller('questionMarkdownCtrl', questionMarkdownCtrl);
+questionMarkdownCtrl.$inject = ['$scope', '$element', '$attrs'];
+function questionMarkdownCtrl($scope, $element, $attrs) {
+  $scope.thisSheet = {};
+}
+
+
+app.directive('questionMarkdown', questionMarkdownDirective);
+questionMarkdownDirective.$inject = ['$templateRequest', '$compile'];
+function questionMarkdownDirective($templateRequest, $compile) {
 
   return {
     restrict: 'E',
     replace: true,
     scope: {
-      opts: '=',
+      startQuestionNo: '=',
       content: '=',
-      src: '='
+      mode: '='
     },
-    controller: questionMarkdownCtrl,
+    template: '<div include-template="$sheet.htmlContent"></div>',
+    controller: 'questionMarkdownCtrl',
     controllerAs: '$sheet',
     link: function($scope, $element, $attrs, $sheet) {
 
@@ -29,16 +38,23 @@ function questionMarkdown($templateRequest) {
         });
       }
 
-      if ($attrs.src) { // 从文件读取
-        scope.$watch('src', function(src) {
-          $templateRequest(src, true).then(function(response) {
-            set(response);
-          });
+      if ($attrs.startQuestionNo) {
+        $scope.$watch('startQuestionNo', function(newValue, oldValue) {
+          renderMarkdownContent($scope.content);
         });
       }
 
-      let md = new MarkdownIt();
+      if ($attrs.mode) {
+        $sheet.mode = 'listing';
+      }
+      $scope.$watch('$scope.mode', function(newValue, oldValue) {
+        if (newValue) {
+          $sheet.mode = newValue;
+        }
+      });
 
+
+      let md = new MarkdownIt();
       md.disable([ 'code'])
       md.use(questionMarkdownPlugin);
 
@@ -49,29 +65,22 @@ function questionMarkdown($templateRequest) {
         let env = {};
         let options = {};
         let tokens = md.parse(text, env);
-        let questions = analyze(tokens);
+        let questions = [];
+        // let questions = analyze(tokens);
 
-        $sheet.model = questions;
+        let startQuestionNo = $scope.startQuestionNo;
+        for (q of questions) {
+          q.displayNo = startQuestionNo;
+          startQuestionNo += 1;
+        }
 
-        let htmlstr = md.renderer.render(tokens, options, env);
+        $sheet.questions = questions;
+        $sheet.htmlContent = md.renderer.render(tokens, options, env);
 
         console.log('QuestionMarkdown: tokens=%O, questions=%O', tokens, questions);
-        $element.html(htmlstr);
-
-        // var jsonstr = JSON.stringify(tokens, null, Number(4));
-        // element.html(htmlstr + '<hr><pre><code>\n' + jsonstr + '\n</code></pre>');
       }
     }
   };
-}
-
-questionMarkdownCtrl.$inject = ['$scope', '$element', '$attrs'];
-function questionMarkdownCtrl($scope, $element, $attrs) {
-  // console.log('QuestionMarkdownCtrl');
-
-  let $sheet = this;
-
-
 }
 
 function unindent(text) {

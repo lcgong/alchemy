@@ -1,0 +1,7 @@
+<div class="question"
+  ng-class="{editing: $sheet.mode=='editing', testing: $sheet.mode=='testing', listing: $sheet.mode=='listing', checking: $sheet.mode=='checking'}"
+  >
+  <span class="question-no">{{displayNo}}</span>
+
+  <ng-transclude></ng-transclude>
+</div>

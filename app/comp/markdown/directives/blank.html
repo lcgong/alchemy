@@ -1,0 +1,8 @@
+<span class="question-blank" style="width: 4ex">
+  {{blank.blankNo}}
+  <span class="blank-solution" ng-if="solution">
+    <span class="option-no solution" ng-repeat="item in blank.solution.result" >
+      {{item}}
+    </span>
+  </span>
+</span>
