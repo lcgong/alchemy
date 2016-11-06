@@ -19,11 +19,6 @@ function subquestionDirective($parse, $window, $timeout) {
         $scope.xpath = $scope.$eval($attrs.xpath)
       }
       let xpath = $scope.xpath;
-      if (!xpath) {
-        console.log('no xpath found');
-        return;
-      }
-
       let question = $sheet.questions[xpath[1]];
       let subquestion = question.subquestions[xpath[0]];
 

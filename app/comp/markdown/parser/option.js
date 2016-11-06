@@ -89,9 +89,9 @@ export function parseOption(state, startLine, endLine, silent) {
 
   // -------------------------------------------------------------------------
   oldParentType = state.parentType;
-  state.parentType = 'question_option';
+  state.parentType = 'option_group';
 
-  var optionOpenToken = state.push('question_option_open', 'div', 1);
+  var optionOpenToken = state.push('option_group_open', 'div', 1);
   // optionOpenToken.markup = marker.markerStr;
   // optionOpenToken.map = [startLine, 0];
   // optionOpenToken.meta = marker.settings;
@@ -125,7 +125,7 @@ export function parseOption(state, startLine, endLine, silent) {
   var optionItemStartLine = startLine;
 
   var optionItemOpenToken;
-  optionItemOpenToken = state.push('option_item_open', 'div', 1);
+  optionItemOpenToken = state.push('blank_option_open', 'div', 1);
   optionItemOpenToken.markup = marker.markerStr;
   optionItemOpenToken.meta = marker.settings;
 
@@ -167,7 +167,7 @@ export function parseOption(state, startLine, endLine, silent) {
       state.md.block.tokenize(state, optionItemStartLine, nextLine);
 
       var optionItemCloseToken;
-      optionItemCloseToken = state.push('option_item_close', 'div', -1);
+      optionItemCloseToken = state.push('blank_option_close', 'div', -1);
       optionItemCloseToken.markup = marker.markerStr;
 
       // 开始新标签
@@ -181,7 +181,7 @@ export function parseOption(state, startLine, endLine, silent) {
       state.bMarks[nextLine] = marker.nextPos;
 
       var optionItemOpenToken;
-      optionItemOpenToken = state.push('option_item_open', 'div', 1);
+      optionItemOpenToken = state.push('blank_option_open', 'div', 1);
       optionItemOpenToken.markup = marker.markerStr;
       optionItemOpenToken.meta = marker.settings;
 
@@ -221,17 +221,17 @@ export function parseOption(state, startLine, endLine, silent) {
   state.md.block.tokenize(state, optionItemStartLine, nextLine);
 
   var optionItemCloseToken;
-  optionItemCloseToken = state.push('option_item_close', 'div', -1);
+  optionItemCloseToken = state.push('blank_option_close', 'div', -1);
   optionItemCloseToken.markup = marker.markerStr;
 
   state.parentType = oldOptionItemParentType;
 
   //----------------------------------------------------------------------
 
-  // 设置question_option_open 开始和结束行号
+  // 设置option_group_open 开始和结束行号
   optionOpenToken.map = [startLine, nextLine];
 
-  token = state.push('question_option_close', 'div', -1);
+  token = state.push('option_group_close', 'div', -1);
   token.markup = marker.markerStr;
 
   state.parentType = oldParentType;

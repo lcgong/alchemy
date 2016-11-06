@@ -25,46 +25,12 @@ subquestion: {
 
 */
 
-//
-// function QuestionState() {
-//   this.blanks = [];
-//   this.questions = [];
-// }
-//
-// Token.prototype.pushQuestion = function() {
-//   this.questions.push({
-//     blanks : [],
-//     subquestionList : [],
-//     notesList : []
-//   });
-// }
-//
-// Token.prototype.blankIndex = function blankIndex(blankNo) {
-//   if (!this.blanks) {
-//     return -1;
-//   }
-//
-//   var blanks = this.blanks;
-//
-//   for (var i = 0, len = blanks.length; i < len; i++) {
-//     if (blanks[i] === blankNo) {
-//       return i;
-//     }
-//   }
-//
-//   return -1;
-// }
-//
-
 
 function encode(tokens) {
-  console.log(99999, tokens.length)
   return parseTokenList(tokens, 0, tokens.length - 1);
 }
 
 function parseTokenList(tokens, start, stop) {
-
-  console.log(8888, stop - start + 1, tokens.slice(start, stop + 1))
 
   var item = null;
   var items = [];
@@ -118,7 +84,7 @@ var blockTokenTypes = {
   'section_open': 'section',
   'question_open': 'question',
   'subquestion_open': 'subquestion',
-  'question_option_open': 'question_option',
+  'option_group_open': 'option_group',
   'question_solution_open': 'question_solution',
   'paragraph_open': 'paragraph',
 }

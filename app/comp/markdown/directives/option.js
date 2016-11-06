@@ -1,9 +1,9 @@
 
 let app = angular.module('mainapp');
 
-app.directive('questionOption', questionOptionDirective);
-questionOptionDirective.$inject = ['$parse', '$window', '$timeout'];
-function questionOptionDirective($parse, $window, $timeout) {
+app.directive('blankOption', blankOptionDirective);
+blankOptionDirective.$inject = [];
+function blankOptionDirective() {
 
   return {
     restrict: 'E',
@@ -18,16 +18,22 @@ function questionOptionDirective($parse, $window, $timeout) {
       if($attrs.xpath) {
         $scope.xpath = $scope.$eval($attrs.xpath)
       }
+
       let xpath = $scope.xpath;
       if (!xpath) {
-        console.warn('no xpath found');
+        console.error('no xpath found');
         return;
       }
 
+
+
       let question = $sheet.questions[xpath[2]];
-      if (xpath[2] != null) {
-        question = question.subquestion[xpath[1]];
+
+      if (xpath[1] != null) { // xpath: ['A', 0, 0] or ['A', null, 0]
+        question = question.subquestions[xpath[1]];
       }
+
+      console.assert(question, 'question required', xpath);
 
       let optionGroup = question.optionGroup;
       let option = optionGroup.options[xpath[0]]

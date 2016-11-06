@@ -1,7 +1,8 @@
-import {Question} from "./model";
+import {Question, Subquestion} from "./model";
 import {TokenSection, findTokenSections} from "./token";
 import {analyzeNotes, reformSolutions} from "./solution";
-
+import {analyzeOptionGroup} from "./option";
+import {analyzeAllBlank} from "./blank";
 
 export function analyze(tokens) {
 
@@ -14,6 +15,11 @@ export function analyze(tokens) {
     let question = new Question();
     question.xpath = xpath.slice(); // cloned
     question.tokens = questionSection;
+
+    questionSection.first.meta.xpath = question.xpath;
+
+    question.displayNo = 1;
+
     questions.push(question);
 
     analyzeQuestion(question, questionSection);
@@ -25,6 +31,7 @@ export function analyze(tokens) {
 }
 
 function analyzeQuestion(question, section) {
+  console.log(888888888883);
 
   let bgnIdx;
 
@@ -32,16 +39,26 @@ function analyzeQuestion(question, section) {
 
   let xpath = [0].concat(question.xpath); // [0, question_path_num]
 
+  let displayNo = 1;
   for(let subquestionSection of subquestionSections) {
     // subquestionSection.first.meta. = idx;
 
     let subquestion = question.makeSubquestion();
     subquestion.tokens = subquestionSection;
     subquestion.xpath = xpath.slice();
+    subquestion.displayNo = displayNo;
+
+    let tokenMeta = subquestionSection.first.meta;
+
+    subquestion.columnCount = tokenMeta.columnCount
+    subquestion.questionType = tokenMeta.questionType
+
+    tokenMeta.xpath = subquestion.xpath;
 
     analyzeSubquestion(subquestion);
 
     xpath[0] += 1;
+    displayNo += 1;
   }
 
   if (subquestionSections.length > 0) {
@@ -71,6 +88,7 @@ function analyzeQuestion(question, section) {
 }
 
 function analyzeSubquestion(subquestion) {
+  console.log('33dddfffffffffffff')
 
   let section = subquestion.tokens;
 
@@ -85,65 +103,5 @@ function analyzeSubquestion(subquestion) {
 
   analyzeAllBlank(subquestion, section.bgnIndex, endIndex);
 
-  analyzeNotes(subquestion, section)
-}
-
-/** 解析question和subquestion问中的题空
- */
-function analyzeAllBlank(question, bgnIdx, endIdx) {
-
-  let section = question.tokens.new(bgnIdx, endIdx);
-
-  let xpath = [0].concat(question.xpath); // [0, question_path_num]
-
-  for(let blankSection of findTokenSections('question_blank', section, true)) {
-
-    let token = blankSection.get(blankSection.bgnIndex);
-
-    let blank = question.bindBlank(token.meta.questionNo);
-    blank.tokens = blankSection;
-    blank.xpath = xpath.slice();
-
-    xpath[0] += 1;
-  }
-}
-
-function analyzeOptionGroup(question, section) {
-
-  // 因为解析问题，可能存在多个OptionGroup，需要将多个合并
-  let groupSections = [...findTokenSections('question_option', section)];
-  if (groupSections.length > 0) {
-    let optionGroup = question.makeOptionGroup()
-
-    optionGroup.tokens = section.new(groupSections[0].bgnIndex,
-                            groupSections[groupSections.length-1].endIndex);
-
-    for(groupSection of groupSections) {
-      for(let optionSection of findTokenSections('option_item', groupSection)) {
-         analyzeOption(optionGroup, optionSection);
-      }
-    }
-  }
-
-  if (groupSections.length == 0) {
-    return;
-  }
-
-  let theLast = groupSections[groupSections.length - 1];
-
-  return theLast.new(groupSections[0].bgnIndex, theLast.endIndex);
-}
-
-function analyzeOption(optionGroup, optionSection) {
-
-  let token;
-  token = findTokenSections('option_no', optionSection).next().value;
-
-  token = optionSection.get(token.bgnIndex);
-  let optionNo = token.meta.optionNo;
-
-  let option = optionGroup.makeOption(optionNo);
-  option.tokens = optionSection;
-
-  return optionSection;
+  analyzeNotes(subquestion, section);
 }

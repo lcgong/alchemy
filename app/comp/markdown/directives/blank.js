@@ -18,11 +18,6 @@ function questionBlankDirective($parse, $window, $timeout) {
       }
       let xpath = $scope.xpath
 
-      if (!xpath) {
-        console.log('no xpath found');
-        return;
-      }
-
       $scope.blank =$sheet.questions[xpath[1]]._blanks[xpath[0]];
     }
   };

@@ -25,16 +25,18 @@
     font-weight: bold;
     padding: 1px 5px 2px 2px;
 }
-.options {
+.option-group > div {
     display: flex;
     flex-wrap: wrap;
 }
-.options .option-item {
+
+.option-group .blank-option {
+    display: inline-block;
     flex: 1 0 calc(25%);
     padding-left: 2em;
     box-sizing: border-box;
 }
-.question .option-item > .option-no {
+.question .blank-option > .option-no {
     display: block;
     display: flex;
     align-items: center;
@@ -54,7 +56,7 @@
 
     float: left;
 }
-.options .option-item > p {
+.option-group .blank-option > p {
     -webkit-margin-before: 0em;
     -webkit-margin-after: 0em;
     line-height: 22px;

@@ -1,3 +1,6 @@
+
+import {quoteattr} from "../util";
+
 export function register(rules) {
   tagXpathRenderer(rules, 'question');
   tagXpathRenderer(rules, 'subquestion');
@@ -15,14 +18,14 @@ export function register(rules) {
       return '</div>';
     }
   );
-}
+};
 
 
 
 export function tagRendererFn(rules, tag, openFn, closeFn) {
   rules[tag + '_open'] = openFn;
   rules[tag + '_close'] = closeFn;
-}
+};
 
 
 export function tagXpathRenderer(rules, tag) {
@@ -30,8 +33,8 @@ export function tagXpathRenderer(rules, tag) {
   tagRendererFn(rules, tag,
     // openFn
     (tokens, idx, options, env, renderer) => {
-      let xpath = xpathStr(tokens, idx);
-      return `<${tag} xpath="${xpath}">`;
+      let xpathstr = quoteattr(xpathStr(tokens, idx));
+      return `<${tag} xpath="${xpathstr}">`;
     },
     // closeFn
     (tokens, idx, options, env, renderer) => {
@@ -56,7 +59,8 @@ export function tagXpathRenderer(rules, tag) {
   //
   //   return `</${tag}">`;
   // }
-}
+};
+
 
 function xpathStr(tokens, idx) {
 

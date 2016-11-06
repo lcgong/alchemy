@@ -19,11 +19,6 @@ function questionDirective($parse, $window, $timeout) {
         $scope.xpath = $scope.$eval($attrs.xpath)
       }
       let xpath = $scope.xpath;
-      if (!xpath) {
-        console.log('no xpath found');
-        return;
-      }
-
       let question = $sheet.questions[xpath[0]];
 
       $scope.displayNo = question.displayNo;

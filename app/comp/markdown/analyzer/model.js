@@ -6,7 +6,7 @@ class Blank {
     this.solution = null;
   }
 
-  get blank_no() {
+  get blankNo() {
       return this._blank_no;
   }
 
@@ -34,12 +34,16 @@ class Option {
   }
 }
 
-class OptionGroup {
+export class OptionGroup {
   //
   constructor() {
     this._permutation = null;
     this._translate = null;
     this._options = {};
+  }
+
+  get options() {
+    return this._options;
   }
 
   makeOption(optionNo) {
@@ -115,18 +119,18 @@ class OptionGroup {
 
     return permutatedOptionNoList.map(x => this._translation[x]);
   }
-}
+};
 
 
-class Solution {
+export class Solution {
   constructor(result) {
     this.blank = null;
     this.result = result;
   }
 
-}
+};
 
-class Notes {
+export class Notes {
   constructor(question) {
     this._question = question;
     this.solutions = [];
@@ -137,7 +141,7 @@ class Notes {
     this.solutions.push(obj);
     return obj;
   }
-}
+};
 
 /**
  * 每题的题空和选项是一组，选项顺序和题空的答案的变化顺序是一致的
@@ -178,6 +182,7 @@ export class Question extends BaseQuestion {
     super();
     this._blanks = {};
     this._subquestions = [];
+    this.displayNo = 1;
   }
 
   makeSubquestion() {
@@ -224,12 +229,14 @@ export class Question extends BaseQuestion {
       let blank = new Blank(blank_no);
       this._blanks[blank_no] = blank;
 
+      blank.xpath = [blank_no].concat(this.xpath);
+
       return blank;
     }
   }
-}
+};
 
-class Subquestion extends BaseQuestion {
+export class Subquestion extends BaseQuestion {
 
   constructor(question) {
     super();
@@ -253,7 +260,7 @@ class Subquestion extends BaseQuestion {
     return blank;
   }
 
-}
+};
 
 
 /** Fisher–Yates shuffle

@@ -1,4 +1,5 @@
 
+import {unindent} from "../util";
 import MarkdownIt from "markdown-it";
 import transform from '../json';
 import {plugin as questionMarkdownPlugin} from "../plugin";
@@ -65,8 +66,9 @@ function questionMarkdownDirective($templateRequest, $compile) {
         let env = {};
         let options = {};
         let tokens = md.parse(text, env);
-        let questions = [];
-        // let questions = analyze(tokens);
+        let questions = analyze(tokens);
+
+        $sheet.questions = questions;
 
         let startQuestionNo = $scope.startQuestionNo;
         for (q of questions) {
@@ -74,40 +76,15 @@ function questionMarkdownDirective($templateRequest, $compile) {
           startQuestionNo += 1;
         }
 
+        let html =  md.renderer.render(tokens, options, env);
+        // $element.html(html);
+        // console.log(html);
+
         $sheet.questions = questions;
-        $sheet.htmlContent = md.renderer.render(tokens, options, env);
+        $sheet.htmlContent = html;
 
         console.log('QuestionMarkdown: tokens=%O, questions=%O', tokens, questions);
       }
     }
   };
-}
-
-function unindent(text) {
-  if (!text) {
-    return text;
-  }
-
-  var lines = text
-    .replace(/\t/g, '  ')
-    .split(/\r?\n/);
-
-  var min = null;
-  var len = lines.length;
-
-  for (var i = 0; i < len; i++) {
-    var line = lines[i];
-    var l = line.match(/^(\s*)/)[0].length;
-    if (l === line.length) {
-      continue;
-    }
-    min = (l < min || min === null) ? l : min;
-  }
-
-  if (min !== null && min > 0) {
-    for (i = 0; i < len; i++) {
-      lines[i] = lines[i].substr(min);
-    }
-  }
-  return lines.join('\n');
 }
