@@ -24,12 +24,12 @@ var sample =`\
 `;
 
 import MarkdownIt from "markdown-it";
-import question_option from "app/comp/markdown/question";
+import option_group from "app/comp/markdown/question";
 
 
 
 var md = new MarkdownIt();
-md.use(question_option);
+md.use(option_group);
 
 var tokens = md.parse(sample, {});
 
