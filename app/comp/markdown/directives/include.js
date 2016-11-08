@@ -87,10 +87,20 @@ let includeTemplateFillContentDirective = ['$compile', function($compile) {
       restrict: 'A',
       priority: -400,
       require: 'includeTemplate',
-      link: function(scope, $element, $attr, ctrl) {
+      link: function($scope, $element, $attr, ctrl) {
 
         $element.html(ctrl.template);
-        $compile($element.contents())(scope);
+
+        if ($attr.onPrecompileFunc) {
+          let func = $scope.$eval($attr.onPrecompileFunc);
+          if (typeof func === 'function') {
+            func($element);
+          } else {
+            console.warn('on-precompile-func should be a function');
+          }
+        }
+
+        $compile($element.contents())($scope);
       }
     };
   }];
