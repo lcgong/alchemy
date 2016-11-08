@@ -1,4 +1,4 @@
-import {Question, Subquestion} from "./model";
+import {Question, Subquestion} from "../model/question";
 import {TokenSection, findTokenSections} from "./token";
 
 export function analyzeOptionGroup(question, section) {

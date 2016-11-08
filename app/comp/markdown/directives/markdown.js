@@ -77,9 +77,8 @@ function questionMarkdownDirective($templateRequest, $compile) {
       // 替换成<question-blank>.
       $sheet.precompileSheet = function($element) {
         // 装配MathJax
-        if (MathJax) {
+        if (typeof MathJax !== 'undefined') {
           MathJax.Hub.Queue(["Typeset", MathJax.Hub, $element[0]]);
-          console.log(123);
         } else {
           console.warn('MathJax is not found');
         }

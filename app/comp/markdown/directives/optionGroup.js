@@ -15,12 +15,25 @@ function optionGroupDirective($parse, $window, $timeout) {
 
     link: function($scope, $element, $attrs, $sheet) {
 
-      // if($attrs.xpath) {
-      //   $scope.xpath = $scope.$eval($attrs.xpath)
-      // }
-      // let xpath = $scope.xpath;
-      // let question = $sheet.questions[xpath[1]];
-      // let subquestion = question.subquestions[xpath[0]];
+      let xpath;
+      if($attrs.xpath) {
+        xpath = $scope.xpath = $scope.$eval($attrs.xpath)
+      }
+      console.assert(xpath);
+
+      let question = $sheet.questions[xpath[1]];
+      let subquestion;
+      if (xpath[0]) {
+        let subquestion = question.subquestions[xpath[0]];
+      }
+
+      let optionGroup = (subquestion) ? subquestion : question;
+      $sheet.optionGroup = optionGroup;
+
+      $scope.$watch('optionGroup.targetedBlank', function(blank){
+        console.log('option-group %s is targeting to %o', xpath, blank);
+      });
+
     }
   };
 }

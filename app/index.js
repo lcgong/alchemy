@@ -11,12 +11,18 @@ import "angular-ui-router";
 import "angular-ui-select";
 import "angular-smart-table";
 
+import "markdown-it";
+import "markdown-it-mathjax";
+import "angular-ui-codemirror";
+import "codemirror";
+
+
 import "d3"
 import "nvd3"
 
 var app = angular.module('mainapp', [
   'ngResource', 'ngSanitize', 'ngAnimate', 'ui.router', 'ui.bootstrap',
-  'ui.select', 'smart-table'
+  'ui.select', 'smart-table', 'ui.codemirror'
 ]);
 
 angular.element(document).ready(function() {

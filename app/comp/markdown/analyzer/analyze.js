@@ -1,4 +1,5 @@
-import {Question, Subquestion} from "./model";
+import {Question, Subquestion} from "../model/question";
+
 import {TokenSection, findTokenSections} from "./token";
 import {analyzeNotes, reformSolutions} from "./solution";
 import {analyzeOptionGroup} from "./option";
@@ -31,8 +32,6 @@ export function analyze(tokens) {
 }
 
 function analyzeQuestion(question, section) {
-  console.log(888888888883);
-
   let bgnIdx;
 
   let subquestionSections = [...findTokenSections('subquestion', section)];
@@ -68,7 +67,15 @@ function analyzeQuestion(question, section) {
     section = section.new(prevSection.endIndex + 1, section.endIndex);
   }
 
-  analyzeNotes(question, section) // 解析题目的解答说明
+  let optgrpSection = analyzeOptionGroup(question, section);
+  // if (optgrpSection) {
+  //   endIndex = optgrpSection.bgnIndex - 1;
+  // } else {
+  //   endIndex = section.endIndex;
+  // }
+
+
+  let notesSections = analyzeNotes(question, section) // 解析题目的解答说明
 
   // -------------------------------------------------------------------------
   // 解析一开头的题目正文部分，所有出现的"题空"
@@ -76,7 +83,7 @@ function analyzeQuestion(question, section) {
   let topicEndIdx; // 判断题目正文结束的位置
   if (subquestionSections.length > 0) {
     topicEndIdx = subquestionSections[0].bgnIndex - 1;
-  } else if (notesSections.length > 0) {
+  } else if (notesSections && notesSections.length > 0) { // TODO
     topicEndIdx = notesSections[0].bgnIndex - 1;
   } else {
     topicEndIdx = section.endIndex;
