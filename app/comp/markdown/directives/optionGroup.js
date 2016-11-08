@@ -23,15 +23,29 @@ function optionGroupDirective($parse, $window, $timeout) {
 
       let question = $sheet.questions[xpath[1]];
       let subquestion;
-      if (xpath[0]) {
-        let subquestion = question.subquestions[xpath[0]];
+      if (xpath[0] !== null) {
+        subquestion = question.subquestions[xpath[0]];
       }
 
-      let optionGroup = (subquestion) ? subquestion : question;
-      $sheet.optionGroup = optionGroup;
+      $scope.targeted = false;
 
-      $scope.$watch('optionGroup.targetedBlank', function(blank){
-        console.log('option-group %s is targeting to %o', xpath, blank);
+      let optionGroup = ((subquestion) ? subquestion : question).optionGroup;
+      $scope.optionGroup = optionGroup;
+
+      console.log('option-group: ', optionGroup.xpath, optionGroup);
+
+      $scope.$watch('optionGroup.getTargetedBlank()', function(blank, oldBlank){
+        if (blank) {
+          console.log('option-group %o is targeting to blank %d',
+            xpath, (blank) ? blank.blankNo : null );
+
+          $scope.targeted = true;
+        } else {
+          console.log('option-group %o unset a target from blank %d',
+            xpath, (oldBlank) ? oldBlank.blankNo : null);
+
+          $scope.targeted = false;
+        }
       });
 
     }

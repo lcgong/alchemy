@@ -15,10 +15,15 @@ class Option {
 
 export class OptionGroup {
   //
-  constructor() {
+  constructor(question) {
+    this._question = question; // subquestion or question
+
     this._permutation = null;
     this._translate = null;
     this._options = {};
+
+    // this.targetedBlank = null; // 这是个坑
+    this.targetableCandidates = []; // option所对应的blank候选
   }
 
   get options() {
@@ -37,6 +42,30 @@ export class OptionGroup {
     for (option_no of Object.keys(this._options).sort()) {
       yield this._options[option_no];
     }
+  }
+
+  getTargetedBlank() {
+
+    // 不能在optionGroup里建立targetedBlank属性，
+    // 这会与blank的targetingOptionGroup形成循环引用，会导致angularjs的堆栈溢出
+    // 如Maximum call stack size exceeded
+
+    let allBlanks;
+    if (this._question._question) { // this is from subquestion
+      allBlanks = this._question._question._blanks;
+    } else { // this is from question
+      allBlanks = this._question._blanks;
+    }
+
+    for (let blankNo in allBlanks) {
+      let blank = allBlanks[blankNo];
+
+      if (blank.targetingOptionGroup === this ) {
+        return blank;
+      }
+    }
+
+    return null;
   }
 
 

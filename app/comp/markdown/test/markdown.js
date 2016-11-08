@@ -24,7 +24,7 @@ function QuestionMarkdownTestCtrl($scope, $timeout, $injector) {
   // console.log(sample2);
 
 
-  ctrl.sample = ctrl.samples[1];
+  ctrl.sample = ctrl.samples[0];
 
   $scope.$watch('testCtrl.sample', function(sample, oldValue) {
     ctrl.markdownContent = sample.data;

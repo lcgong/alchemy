@@ -25,12 +25,7 @@ app.directive('questionBlank',
         console.assert(question);
 
         let blank = question.blanks[xpath[0]];
-
-        $scope.model = {};
-
         $scope.blank = blank;
-        $scope.blank = blank;
-
         console.assert(blank);
 
         $scope.targeted = false;
@@ -38,49 +33,38 @@ app.directive('questionBlank',
         $scope.click = function() {
           $scope.targeted = !$scope.targeted;
         };
-        //
-        // $scope.$watch('model.blank', function(newValue, oldValue){
-        //   console.log(66666, newValue, oldValue);
-        // });
 
         $scope.$watch('blank.targetingOptionGroup', function(newValue, oldValue){
-          console.log('targing changed: new=%o, old=%o', newValue, oldValue);
+
+          console.log('Blank-%d\'s target is changed: %o => %o', blank.blankNo,
+            (oldValue) ? oldValue.xpath : null,
+            (newValue) ? newValue.xpath : null);
+
           if (!newValue) {
             $scope.targeted = false;
           }
+
         });
 
         $scope.$watch('targeted', function(targeted){
 
-
-          // console.log('targeted', $scope.targeted, xpath,
-          //   blank.targetingOptionGroup,
-          //   $scope.model.blank.targetingOptionGroup);
-
           if (targeted) {
-            // 寻找一个目标
-            let optionGroup = blank.getTargetingOptionGroup();
-            console.assert(optionGroup);
+            // 在答题过程中只允许一个处于targeded状态，因此需要先要解除其他关系
+            for (blank_no in question.blanks) {
+              let otherTarget = question.blanks[blank_no];
+              if (otherTarget === blank) {
+                continue;
+              }
 
-            if (optionGroup) {
-              setTarget(blank, optionGroup);
-              console.log('set a target from option-group %o to blank %o',
-              optionGroup.xpath, blank.xpath);
-            } else {
-              console.error('cannot find option group, blank:', blank);
+              if (otherTarget.targetingOptionGroup) {
+                otherTarget.unsetTarget();
+              }
             }
 
-          } else {
-            if (blank.targetingOptionGroup) {
-              let optionGroup = blank.targetingOptionGroup;
-              unsetTarget(blank, optionGroup);
-              console.log('unset a target: option-group=%o, blank=%o',
-                          optionGroup.xpath, blank.xpath);
-            } else {
-              unsetTarget(blank, null);
-              console.log('unset a target: option-group=null, blank=%o',
-                          blank.xpath);
-            }
+            blank.setTarget();
+
+          } else if (blank.targetingOptionGroup != null) {
+              blank.unsetTarget();
           }
         });
       }

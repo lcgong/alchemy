@@ -1,4 +1,5 @@
 import {Question, Subquestion} from "../model/question";
+import {collectTargingBlankCandidates} from "../model/blank";
 
 import {TokenSection, findTokenSections} from "./token";
 import {analyzeNotes, reformSolutions} from "./solution";
@@ -92,6 +93,8 @@ function analyzeQuestion(question, section) {
   analyzeAllBlank(question, question.tokens.bgnIndex, topicEndIdx);
 
   reformSolutions(question);
+
+  collectTargingBlankCandidates(question);
 }
 
 function analyzeSubquestion(subquestion) {

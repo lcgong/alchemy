@@ -17,7 +17,7 @@ class BaseQuestion {
   }
 
   makeOptionGroup() {
-    this._optionGroup = new OptionGroup();
+    this._optionGroup = new OptionGroup(this);
     return this._optionGroup;
   }
 
