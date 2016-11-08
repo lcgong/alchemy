@@ -1,5 +1,5 @@
 <span class="question-blank" style="width: 4ex"
-  ng-class="{targeted: targeted}"
+  ng-class="{targeted: blank.targeted, targetable: !blank.targeted && blank.targetable}"
   ng-click="click()";
   >
   <span>{{blank.blankNo}}</span>

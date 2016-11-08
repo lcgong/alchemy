@@ -7,6 +7,7 @@ export class Blank {
     this._answer = null;
     this.solution = null;
 
+    this.targetable = false; // 参见option-group directive里的使用方法
     this.targetingOptionGroup = null;
   }
 
@@ -42,7 +43,7 @@ export class Blank {
 
     for (let blank of this._question.optionGroup.targetableCandidates) {
       if (blank === this) {
-        return subquestion.optionGroup;
+        return this._question.optionGroup;
       }
     }
 

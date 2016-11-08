@@ -28,10 +28,10 @@ app.directive('questionBlank',
         $scope.blank = blank;
         console.assert(blank);
 
-        $scope.targeted = false;
+        blank.targeted = false;
 
         $scope.click = function() {
-          $scope.targeted = !$scope.targeted;
+          blank.targeted = !blank.targeted;
         };
 
         $scope.$watch('blank.targetingOptionGroup', function(newValue, oldValue){
@@ -41,12 +41,12 @@ app.directive('questionBlank',
             (newValue) ? newValue.xpath : null);
 
           if (!newValue) {
-            $scope.targeted = false;
+            blank.targeted = false;
           }
 
         });
 
-        $scope.$watch('targeted', function(targeted){
+        $scope.$watch('blank.targeted', function(targeted, oldTargeted){
 
           if (targeted) {
             // 在答题过程中只允许一个处于targeded状态，因此需要先要解除其他关系
@@ -64,7 +64,30 @@ app.directive('questionBlank',
             blank.setTarget();
 
           } else if (blank.targetingOptionGroup != null) {
-              blank.unsetTarget();
+            let otherTarget;
+            for (let thisblank of blank.targetingOptionGroup.targetableCandidates) {
+              if (thisblank != blank && blank.targeted) {
+                otherTarget = blank;
+                break;
+              }
+            }
+
+            if (!otherTarget) {
+              // 不是因为从该题空到其他候选题空的选择，完全没有被选的
+              // 自动取消候选选择。因为此时target关系已经取消，需要重新找打
+
+              let oldOptionGroup = blank.getTargetingOptionGroup();
+              oldOptionGroup.targetable = false;
+
+              for (let thisblank of oldOptionGroup.targetableCandidates) {
+                thisblank.targetable = false;
+              }
+            }
+
+            blank.unsetTarget();
+          } else {
+            // 从选择此blank到选择其他，已经没有option group
+            blank.targetable = false;
           }
         });
       }

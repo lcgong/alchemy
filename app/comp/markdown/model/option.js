@@ -60,11 +60,14 @@ export class OptionGroup {
     for (let blankNo in allBlanks) {
       let blank = allBlanks[blankNo];
 
+      // console.trace('33 getTargetedBlank', this.xpath, blank.blankNo,
+        // (blank.targetingOptionGroup) ? blank.targetingOptionGroup.xpath : null);
       if (blank.targetingOptionGroup === this ) {
         return blank;
       }
     }
 
+    // console.trace('44 getTargetedBlank', this.xpath, null);
     return null;
   }
 

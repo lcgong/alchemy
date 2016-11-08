@@ -1,4 +1,5 @@
 <div class="option-group"
-  ng-class="{targeted: targeted}">
+  ng-class="{targeted: optionGroup.targeted, targetable: !optionGroup.targeted && optionGroup.targetable}"
+  ng-click="click()">
   <div ng-transclude></div>
 </div>
