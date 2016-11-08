@@ -24,21 +24,20 @@ function questionDirective($parse, $window, $timeout) {
       $scope.displayNo = question.displayNo;
 
 
-      $scope.click = function() {
+      $scope.click = function($event) {
 
         // 点击题目，也就是各选项和题空之外，则清除所有选择和候选标志
-        // for (let blankNo in question._blanks) {
-        //   let blank = question._blanks[blankNo];
-        //
-        //   blank.targetable = false;
-        //   blank.targeted = false;
-        //
-        //   if (blank.targetingOptionGroup) {
-        //     blank.targetingOptionGroup.targetable = false;
-        //     blank.targetingOptionGroup.targeted = false;
-        //   }
-        // }
-        console.log('question clicked')
+        for (let blankNo in question._blanks) {
+          let blank = question._blanks[blankNo];
+
+          blank.targetable = false;
+          blank.targeted = false;
+
+          if (blank.targetingOptionGroup) {
+            blank.targetingOptionGroup.targetable = false;
+            blank.targetingOptionGroup.targeted = false;
+          }
+        }
       }
     }
   };

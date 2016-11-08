@@ -1,11 +1,42 @@
-<span class="question-blank" style="width: 4ex"
+<span class="question-blank"
   ng-class="{targeted: blank.targeted, targetable: !blank.targeted && blank.targetable}"
-  ng-click="click()";
+  ng-click="click($event)";
   >
-  <span>{{blank.blankNo}}</span>
-  <span class="blank-solution" ng-if="['editing', 'checking'].includes($sheet.mode) && blank.solution">
-    <span class="option-no solution" ng-repeat="item in blank.solution.result" >
-      {{item}}
+  <span class="blank-no">{{blank.blankNo}}</span>
+
+  <span class="" ng-if="$sheet.mode==='testing'">
+    <span class="question-result blank-resolved" ng-if="blank.resolved.length > 0">
+      <span class="" ng-repeat="solution_option_no in blank.resolved" >
+        {{solution_option_no}}
+      </span>
     </span>
   </span>
+
+  <span class="" ng-if="$sheet.mode==='editing'">
+    <span class="question-result blank-solution" ng-if="blank.solution.length > 0">
+      <span class="" ng-repeat="solution_option_no in blank.solution" >
+        {{solution_option_no}}
+      </span>
+    </span>
+  </span>
+
+  <span  class="" ng-if="$sheet.mode==='checking'">
+    <span class="question-result blank-resolved" ng-if="blank.resolved.length > 0">
+      <span class="" ng-repeat="solution_option_no in blank.resolved" >
+        {{solution_option_no}}
+      </span>
+    </span>
+    <b>(</b>
+    <span class="question-result blank-solution" ng-if="blank.solution.length > 0">
+
+      <span class="" ng-repeat="solution_option_no in blank.solution" >
+        {{solution_option_no}}
+      </span>
+    </span>
+    <b>)</b>
+  </span>
+
+
+
+
 </span>

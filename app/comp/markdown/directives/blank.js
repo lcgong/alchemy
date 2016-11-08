@@ -30,7 +30,12 @@ app.directive('questionBlank',
 
         blank.targeted = false;
 
-        $scope.click = function() {
+        $scope.click = function($event) {
+          if ($sheet.mode === 'listing') {
+            return;
+          }
+          $event.stopPropagation();
+
           blank.targeted = !blank.targeted;
         };
 

@@ -1,21 +1,22 @@
 
-export class Solution {
-  constructor(result) {
-    this.blank = null;
-    this.result = result;
-  }
-
-};
+// export class Solution {
+//   constructor(result) {
+//     this.blank = null;
+//     this.result = result;
+//   }
+//
+// };
 
 export class Notes {
   constructor(question) {
     this._question = question;
-    this.solutions = [];
+    this.boundBlanks = [];
+    // this.solutions = [];
   }
 
-  makeSolution(solution) {
-    let obj = new Solution(solution);
-    this.solutions.push(obj);
-    return obj;
-  }
+  // makeSolution(solution) {
+  //   let obj = new Solution(solution);
+  //   this.solutions.push(obj);
+  //   return obj;
+  // }
 };

@@ -33,7 +33,12 @@ function optionGroupDirective($parse, $window, $timeout) {
       optionGroup.targeted = false;
       optionGroup.targetable = false;
 
-      $scope.click = function() {
+      $scope.click = function($event) {
+        if ($sheet.mode === 'listing') {
+          return;
+        }
+        $event.stopPropagation();
+
         // 点击option group，如果已经有blank的targeted，则取消target
         // 如果没有targeted，则选择候选的targetable的，
         // 如果唯一的targetable，则将其作为targeted

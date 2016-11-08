@@ -4,8 +4,9 @@ export class Blank {
     this._question = question;
 
     this._blank_no = blank_no;
-    this._answer = null;
-    this.solution = null;
+
+    this.resolved = [];  // 测试中所回答的答案
+    this.solution = null; // 标准答案
 
     this.targetable = false; // 参见option-group directive里的使用方法
     this.targetingOptionGroup = null;
