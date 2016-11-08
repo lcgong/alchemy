@@ -21,15 +21,66 @@
       System.import('app/comp/markdown/test/index').catch(console.error.bind(console));
     </script>
 
+    <!-- <script type="text/javascript"  async src="MathJax/MathJax.js"></script> -->
+
+    <script type="text/javascript"  async src="MathJax/MathJax.js?config=TeX-MML-AM_CHTML&locale=zh-hans"></script>
+    <!-- <script type="text/javascript"  async src="MathJax/localization/zh-hans/zh-hans.js"></script> -->
+
+    <!-- <script type="text/javascript"  async src="jspm_packages/npm/mathjax@2.7.0/MathJax.js?config=TeX-MML-AM_CHTML"></script> -->
+
+    <!-- <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+        <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+              // skipStartupTypeset: true,
+              // showMathMenu: true,
+              tex2jax: {
+                  preview: "none",
+                  inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                  processEscapes: true
+              },
+              showLocale: true,
+              messageStyle: "none"
+          });
+        </script>
+
+        <!-- <script type="text/x-mathjax-config">
+          MathJax.Hub.Config({
+              skipStartupTypeset: true,
+              showMathMenu: false,
+              tex2jax: {
+                  preview: "none",
+                  inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                  processEscapes: true
+              },
+              // showLocale: true,
+              messageStyle: "none",
+              // The following is TeX-MML-AM_CHTML configuration
+              jax: ["input/TeX", "input/MathML", "input/AsciiMath", "output/CommonHTML"],
+              extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js", "AssistiveMML.js"],
+              TeX: {
+                extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]
+              }
+          });
+        </script> -->
 </head>
 
 <body ng-controller="QuestionMarkdownTestCtrl as testCtrl">
 
+  <!-- $ 1 + 2 \sum_{1,2}{\pi + i} $  \( \int_{1,n} x_i \) -->
   <div class="panel panel-default" style="margin:10px">
     <div class="row" >
-      <div class="col-xs-6">
+      <div class="col-xs-3">
         <button class="btn btn-sm btn-warning" ng-click="testCtrl.clear()">Clear</button>
-        <button class="btn btn-sm btn-warning" ng-click="testCtrl.setSample(1)">Sample1</button>
+        <select class="form-control" style="display:inline-block; width:10em"
+          ng-model="testCtrl.sample"
+          ng-options="sample.title for sample in testCtrl.samples"
+          >
+        </select>
+        <select class="form-control" style="display:inline-block; width:10em"
+          ng-model="testCtrl.mode"
+          ng-options="m for m in testCtrl.modes"
+          ng-change="testCtrl.modeChanged()">
+        </select>
       </div>
     </div>
     <hr>
@@ -40,6 +91,7 @@
       </div>
       <div class="col-xs-6"           style="min-height:16em; height:100%">
         <textarea type="text" class="form-control"
+          ui-codemirror
           style="min-height:16em; height:100%"
           ng-model="testCtrl.markdownContent">
         </textarea>

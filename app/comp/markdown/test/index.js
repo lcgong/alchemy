@@ -18,13 +18,41 @@ import "angular-i18n/angular-locale_zh-hans-cn";
 import "angular-bootstrap/ui-bootstrap.min.js";
 import "angular-bootstrap/ui-bootstrap-tpls.min.js";
 
+import "angular-ui-select";
+import "markdown-it";
+import "markdown-it-mathjax";
+// import "markdown-it-decorate";
+import "codemirror/lib/codemirror";
+// import "codemirror";
+// import "angular-ui-codemirror";
+
+// import MathJax from "mathjax"
+// import "mathjax/MathJax.js";
+// import "mathjax/extensions/MathMenu.js";
+// import "mathjax/extensions/MathZoom.js";
+
+import "markdown-it-mathjax";
 
 var app = angular.module('mainapp', [
   'ngResource', 'ngSanitize', 'ngAnimate', 'ui.bootstrap',
+  'ui.select'//, 'ui.codemirror'
 ]);
 
+// System.import('mathjax/MathJax.js').then((main) => {
+//   MathJax.Hub.Config({
+//       tex2jax: {
+//           preview: "none",
+//           inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+//           processEscapes: true
+//       },
+//       messageStyle: "none"
+//   });
+// });
+
 angular.element(document).ready(function() {
+
   System.import('app/comp/markdown/test/main').then((main) => {
+
 
     angular.bootstrap(document.body, [app.name], {
       // strictDi: true

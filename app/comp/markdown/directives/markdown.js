@@ -5,6 +5,8 @@ import transform from '../json';
 import {plugin as questionMarkdownPlugin} from "../plugin";
 import {analyze} from "../analyzer/analyze"
 
+import  {plugin as mathjax} from '../mathjax';
+
 
 let app = angular.module('mainapp');
 
@@ -28,7 +30,7 @@ function questionMarkdownDirective($templateRequest, $compile) {
       content: '=',
       mode: '='
     },
-    template: '<div include-template="$sheet.htmlContent"></div>',
+    template: '<div include-template="$sheet.htmlContent" on-precompile-func="$sheet.precompileSheet"></div>',
     controller: 'questionMarkdownCtrl',
     controllerAs: '$sheet',
     link: function($scope, $element, $attrs, $sheet) {
@@ -46,19 +48,42 @@ function questionMarkdownDirective($templateRequest, $compile) {
       }
 
       if ($attrs.mode) {
+        $scope.$watch('mode', function(newValue, oldValue) {
+            $sheet.mode = newValue;
+            console.log(333, $scope.mode);
+        });
+      } else {
         $sheet.mode = 'listing';
       }
-      $scope.$watch('$scope.mode', function(newValue, oldValue) {
-        if (newValue) {
-          $sheet.mode = newValue;
-        }
-      });
 
+      // console.log(markdown_it_mathjax)
 
       let md = new MarkdownIt();
       md.disable([ 'code'])
+      md.use(mathjax); // prevent markdown tag parsed in mathjax
       md.use(questionMarkdownPlugin);
 
+      // right
+      // console.log(1234, md.render('$1+2 __(1)__$'));
+      // 放回： \(1+2 __(1)__\)
+      // 因为下面最后多了一个空格导致mathjax-plugin没办法识别这个标签
+      // console.log(1235, md.render('$1+2 __(1)__ $'));
+      // 返回： $1+2 <question_blank xpath=""></question_blank> $
+
+      // TODO 在公式里添加 blank ，
+      // 需要先将__()__解析为\QuestBlank类似的tax标签，
+      // 这需要定制markdown_it_mathjax组件
+      // 注意只能是字母，mathjax解析完后，在文本替换\QuestionBlank，
+      // 替换成<question-blank>.
+      $sheet.precompileSheet = function($element) {
+        // 装配MathJax
+        if (MathJax) {
+          MathJax.Hub.Queue(["Typeset", MathJax.Hub, $element[0]]);
+          console.log(123);
+        } else {
+          console.warn('MathJax is not found');
+        }
+      };
 
       function renderMarkdownContent(text) {
         text = unindent(text || '');
