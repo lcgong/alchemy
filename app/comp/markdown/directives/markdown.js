@@ -38,6 +38,25 @@ function questionMarkdownCtrl($scope, $element, $attrs) {
     }
     return true;
   }
+
+  $sheet.clearTargets = function() {
+    // 点击题目，也就是各选项和题空之外，则清除所有选择和候选标志
+    for (let question of $sheet.questions) {
+      for (let blank of Object.values(question._blanks)) {
+        blank.targetable = false;
+        blank.targeted = false;
+      }
+
+      for (subquestion of question.subquestions) {
+        let optionGroup = subquestion.optionGroup;
+        optionGroup.targetable = false;
+        optionGroup.targeted = false;
+      }
+      let optionGroup = question.optionGroup;
+      optionGroup.targetable = false;
+      optionGroup.targeted = false;
+    }
+  }
 }
 
 
