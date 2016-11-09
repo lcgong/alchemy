@@ -87,6 +87,19 @@
   color: white;
 }
 
+.question-blank  .question-result.blank-resolved.success {
+  border-color: hsla(120, 75%, 31%, 0.89);
+  background: hsla(120, 75%, 31%, 0.89);
+  color: white;
+
+}
+
+.question-blank  .question-result.blank-resolved.failed {
+  border-color: hsla(0, 87%, 47%, 0.89);
+  background: hsla(0, 87%, 47%, 0.89);
+  color: white;
+}
+
 .option-no {
   display: inline-block;
   vertical-align: baseline;

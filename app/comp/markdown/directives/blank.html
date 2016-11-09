@@ -21,19 +21,30 @@
   </span>
 
   <span  class="" ng-if="$sheet.mode==='checking'">
-    <span class="question-result blank-resolved" ng-if="blank.resolved.length > 0">
-      <span class="" ng-repeat="solution_option_no in blank.resolved" >
-        {{solution_option_no}}
+    <span ng-if="$sheet.checkResult(blank)">
+      <span class="question-result blank-resolved success" ng-if="blank.resolved.length > 0">
+        <span class="" ng-repeat="solution_option_no in blank.resolved" >
+          {{solution_option_no}}
+        </span>
       </span>
     </span>
-    <b>(</b>
-    <span class="question-result blank-solution" ng-if="blank.solution.length > 0">
+    <span ng-if="!$sheet.checkResult(blank)">
+      <span class="question-result blank-resolved failed" ng-if="blank.resolved.length > 0">
+        <span class="" ng-repeat="solution_option_no in blank.resolved" >
+          {{solution_option_no}}
+        </span>
+      </span>
+      <b>(</b>
+      <span class="question-result blank-solution" ng-if="blank.solution.length > 0">
 
-      <span class="" ng-repeat="solution_option_no in blank.solution" >
-        {{solution_option_no}}
+        <span class="" ng-repeat="solution_option_no in blank.solution" >
+          {{solution_option_no}}
+        </span>
       </span>
+      <b>)</b>
     </span>
-    <b>)</b>
+
+
   </span>
 
 

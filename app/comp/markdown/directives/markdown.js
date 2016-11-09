@@ -14,7 +14,30 @@ let app = angular.module('mainapp');
 app.controller('questionMarkdownCtrl', questionMarkdownCtrl);
 questionMarkdownCtrl.$inject = ['$scope', '$element', '$attrs'];
 function questionMarkdownCtrl($scope, $element, $attrs) {
-  $scope.thisSheet = {};
+
+  let $sheet = this;
+
+
+  /** 检查作答结果是否正确
+   */
+  $sheet.checkResult = function(blank) {
+    let resolved = blank.resolved;
+    let solution = blank.solution;
+
+    if (!resolved || !solution || resolved.length != solution.length) {
+      return false;
+    }
+
+    resolved.sort();
+    solution.sort();
+
+    for (let i = resolved.length -1; i >=0; i --) {
+      if (resolved[i] != solution[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 
 

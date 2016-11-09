@@ -28,19 +28,25 @@ export function reformSolutions(question) {
 
   function* iterSolutionNotes(question){
     for (let subquestion of question.subquestions) {
+      // 将子问题的多个notes的答案boundBlanks按顺序合并
+      let boundBlanks = [];
       for (let notes of subquestion.notes) {
-        yield [subquestion, notes];
+        boundBlanks = boundBlanks.concat(notes.boundBlanks);
       }
+
+      yield [subquestion, boundBlanks];
     }
 
+    let boundBlanks = [];
     for (let notes of question.notes) {
-      yield [question, notes];
+      boundBlanks = boundBlanks.concat(notes.boundBlanks);
     }
+    yield [question, boundBlanks];
   }
 
-  for (let [question, notes] of iterSolutionNotes(question)) {
-    for (let i = notes.boundBlanks.length - 1; i >=0; i--) {
-      let blankSolution = notes.boundBlanks[i];
+  for (let [question, boundBlanks] of iterSolutionNotes(question)) {
+    for (let i = boundBlanks.length - 1; i >=0; i--) {
+      let blankSolution = boundBlanks[i];
 
       let blankNo = blankSolution[0];  // [null, 'A', 'B'] or [0, 'A', 'B']
       if (!blankNo) { // 跳过没有指定题空号的
@@ -61,8 +67,8 @@ export function reformSolutions(question) {
         continue;
       }
 
-      blank.solution = notes.boundBlanks[i].slice(1); // 答案，['A', 'B']
-      notes.boundBlanks[i] = blank;
+      blank.solution = boundBlanks[i].slice(1); // 答案，['A', 'B']
+      boundBlanks[i] = blank;
     }
   }
 
@@ -71,29 +77,65 @@ export function reformSolutions(question) {
   // 1. 就近原则，子题目的解答匹配该子题目的未命名的题空
   // 2. 子题或没有子题的主题，有答案指定的题号的不再参与匹配
 
-  for (let [question, notes] of iterSolutionNotes(question)) {
-    let isBlankBound = false;
-    for (let solutionBlank of notes.boundBlanks) {
-        if (!Array.isArray(solutionBlank) // 在前面已经处理过的
-          || !solutionBlank[0] // 因为重号，未处理的
-        ) {
-
-          isBlankBound = true;
-          break;
-        }
+  function isAlreadyBound(boundBlanks) {
+    for (let solutionBlank of boundBlanks) {
+      if (!Array.isArray(solutionBlank) || solutionBlank[0]) {
+        // 1. 已经不是数组了，前面已经处理过
+        // 2. 因为答案指定了相同号，而未处理的，忽略
+        return true;
+      }
     }
+    return false;
+  }
 
-    if (isBlankBound) { //
+  for (let [question, boundBlanks] of iterSolutionNotes(question)) {
+    console.log(1111, question, boundBlanks);
+
+    if (isAlreadyBound(boundBlanks)) {
       continue;
     }
 
     // 按照顺序依次匹配，直到有一个先结束
-    let len = Math.min(question._boundBlanks.length, notes.boundBlanks.length);
+    let len = Math.min(question._boundBlanks.length, boundBlanks.length);
+
     for (let i = 0; i < len; i++) {
       let blank = question._boundBlanks[i];
 
-      blank.solution = notes.boundBlanks[i].slice(1); // 答案，['A', 'B']
-      notes.boundBlanks[i] = blank;
+      blank.solution = boundBlanks[i].slice(1); // 答案，['A', 'B']
+      boundBlanks[i] = blank;
     }
   }
+
+  // 3. 主题上的题空，对应于子题中的选项的解答，如果遇到子题的已经指定解答，中止查找
+
+  // let blankNoList = Object.keys(question._blanks).sort();
+  let idx = 0;
+  for (let [subquestion, boundBlanks] of iterSolutionNotes(question)) {
+    if (isAlreadyBound(boundBlanks)) {
+      break;
+    }
+
+    let stop = false;
+    for (let i = 0; i < boundBlanks.length; i++) {
+        if (idx >= question._boundBlanks.length) {
+          stop = true;
+          break;
+        }
+
+        let blank = question._boundBlanks[idx];
+
+        console.log(i, idx, blank, question)
+
+        blank.solution = boundBlanks[i].slice(1); // 答案，['A', 'B']
+        boundBlanks[i] = blank;
+
+        idx += 1;
+    }
+
+    if (stop) {
+      break;
+    }
+  }
+
+  console.log(question);
 }

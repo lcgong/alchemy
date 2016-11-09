@@ -98,7 +98,6 @@ function analyzeQuestion(question, section) {
 }
 
 function analyzeSubquestion(subquestion) {
-  console.log('33dddfffffffffffff')
 
   let section = subquestion.tokens;
 

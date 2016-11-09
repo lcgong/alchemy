@@ -96,8 +96,6 @@ function blankOptionDirective() {
           blank.resolved.splice(answerIdx, 1); // delete the answer
         }
         blank.resolved.sort();
-
-        console.log("blank resolved: ", blank.resolved);
       }
     }
   };
