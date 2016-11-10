@@ -29,6 +29,19 @@ export function analyze(tokens) {
     xpath[0] += 1;
   }
 
+  if (questions.length == 0) {
+    // 或许没有主题标志，但依然有题目内容，比如子题或仅有题空等
+
+    let question = new Question();
+    question.xpath = [0]; // 没有主题目的，给一个空的
+    question.tokens = section;
+    question.displayNo = '';
+
+    questions.push(question);
+
+    analyzeQuestion(question, section);
+  }
+
   return questions;
 }
 

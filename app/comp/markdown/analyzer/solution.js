@@ -89,7 +89,6 @@ export function reformSolutions(question) {
   }
 
   for (let [question, boundBlanks] of iterSolutionNotes(question)) {
-    console.log(1111, question, boundBlanks);
 
     if (isAlreadyBound(boundBlanks)) {
       continue;
@@ -124,7 +123,7 @@ export function reformSolutions(question) {
 
         let blank = question._boundBlanks[idx];
 
-        console.log(i, idx, blank, question)
+        // console.log(i, idx, blank, question)
 
         blank.solution = boundBlanks[i].slice(1); // 答案，['A', 'B']
         boundBlanks[i] = blank;
@@ -137,5 +136,5 @@ export function reformSolutions(question) {
     }
   }
 
-  console.log(question);
+  // console.log(question);
 }

@@ -45,7 +45,6 @@ export function analyzeOptionGroup(question, section) {
     option.xpath = xpath.slice();
     optionSection.first.meta.xpath = xpath.slice();
 
-    // console.log(xpath);
   }
 
   let endIndex = groupSections[groupSections.length - 1].endIndex;
