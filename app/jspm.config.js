@@ -31,6 +31,7 @@ System.config({
   },
 
   map: {
+    "ace": "github:ajaxorg/ace-builds@1.2.5",
     "angular": "github:angular/bower-angular@1.5.8",
     "angular-animate": "github:angular/bower-angular-animate@1.5.8",
     "angular-bootstrap": "github:angular-ui/bootstrap-bower@2.2.0",
@@ -38,7 +39,6 @@ System.config({
     "angular-resource": "github:angular/bower-angular-resource@1.5.8",
     "angular-sanitize": "github:angular/bower-angular-sanitize@1.5.8",
     "angular-smart-table": "github:lorenzofox3/Smart-Table@2.1.8",
-    "angular-ui-codemirror": "npm:angular-ui-codemirror@0.3.0",
     "angular-ui-grid": "github:angular-ui/bower-ui-grid@3.2.9",
     "angular-ui-router": "github:angular-ui/angular-ui-router-bower@0.3.1",
     "angular-ui-select": "github:angular-ui/ui-select@0.19.6",
@@ -46,7 +46,6 @@ System.config({
     "babel": "npm:babel-core@5.8.34",
     "babel-runtime": "npm:babel-runtime@5.8.34",
     "bootstrap": "github:twbs/bootstrap@3.3.6",
-    "codemirror": "npm:codemirror@5.20.2",
     "core-js": "npm:core-js@1.2.6",
     "css": "github:systemjs/plugin-css@0.1.32",
     "d3": "github:mbostock/d3@3.5.12",
@@ -55,7 +54,6 @@ System.config({
     "jasmine": "npm:jasmine@2.4.1",
     "jquery": "npm:jquery@2.2.4",
     "markdown-it": "npm:markdown-it@5.1.0",
-    "markdown-it-mathjax": "npm:markdown-it-mathjax@1.0.3",
     "mathjax": "npm:mathjax@2.7.0",
     "mathjax/MathJax": "github:mathjax/MathJax@2.6.0",
     "nvd3": "npm:nvd3@1.8.1",
@@ -89,9 +87,6 @@ System.config({
       "url": "github:jspm/nodelibs-url@0.1.0",
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
-    "github:jspm/nodelibs-https@0.1.0": {
-      "https-browserify": "npm:https-browserify@0.0.0"
-    },
     "github:jspm/nodelibs-path@0.1.0": {
       "path-browserify": "npm:path-browserify@0.0.0"
     },
@@ -115,11 +110,6 @@ System.config({
     },
     "github:twbs/bootstrap@3.3.6": {
       "jquery": "github:components/jquery@2.1.4"
-    },
-    "npm:angular-ui-codemirror@0.3.0": {
-      "child_process": "github:jspm/nodelibs-child_process@0.1.0",
-      "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "path": "github:jspm/nodelibs-path@0.1.0"
     },
     "npm:argparse@1.0.3": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
@@ -145,12 +135,6 @@ System.config({
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "ieee754": "npm:ieee754@1.1.8",
       "isarray": "npm:isarray@1.0.0",
-      "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:codemirror@5.20.2": {
-      "buffer": "github:jspm/nodelibs-buffer@0.1.0",
-      "child_process": "github:jspm/nodelibs-child_process@0.1.0",
-      "https": "github:jspm/nodelibs-https@0.1.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:core-js@1.2.6": {
@@ -183,9 +167,6 @@ System.config({
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:https-browserify@0.0.0": {
-      "http": "github:jspm/nodelibs-http@1.7.1"
-    },
     "npm:inherits@2.0.1": {
       "util": "github:jspm/nodelibs-util@0.1.0"
     },
@@ -209,9 +190,6 @@ System.config({
     },
     "npm:lodash@3.10.1": {
       "process": "github:jspm/nodelibs-process@0.1.2"
-    },
-    "npm:markdown-it-mathjax@1.0.3": {
-      "systemjs-json": "github:systemjs/plugin-json@0.1.2"
     },
     "npm:markdown-it@5.1.0": {
       "argparse": "npm:argparse@1.0.3",
