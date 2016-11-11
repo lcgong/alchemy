@@ -5,13 +5,16 @@
   <div class="category-select-menu" >
     <div class="category-option"
       ng-repeat="item in optionItems track by $index"
-      ng-class="{'level-1': item[1].length == 0, 'level-2': item[1].length > 0, active: $index === activeIndex }"
+      ng-class="{'level-1': item[1].length == 0, 'level-2': item[1].length > 0, active: $index === activeIndex, 'depth-one': depth == 1, 'depth-two': depth !=1 }"
       ng-click="setSelect()"
       ng-dblclick="setSelect()"
       ng-mouseover="highlight($index)"
       >
-      <span ng-if="item[1].length == 0">{{item[0]}}</span>
-      <span ng-if="item[1].length > 0">{{item[1]}}</span>
+
+      <span ng-if="depth == 1 || item[1].length == 0">{{item[0]}}
+      </span>
+      <span ng-if="depth == 1 || item[1].length > 0">{{item[1]}}
+      </span>
     </div>
   </div>
   <div class="caret-up">

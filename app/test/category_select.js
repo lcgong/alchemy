@@ -12,7 +12,22 @@ function TestCtrl($scope, $timeout) {
   var testCtrl = this;
 
 
-  testCtrl.options = optionsData1;
+
+  testCtrl. optionsData1 = [
+    '主类A/子类A1',
+    '主类A/子类A2',
+    '主类B/子类B1',
+    '主类B/子类B2',
+  ];
+
+
+  testCtrl.optionsData2 = [
+    '标签A',
+    '标签B',
+    '标签C',
+    '标签D',
+  ];
+
 
   testCtrl.onSelectAbc = (category) => {
     testCtrl.abcSelected = category;
@@ -23,10 +38,3 @@ function TestCtrl($scope, $timeout) {
   };
 
 }
-
-let optionsData1 = [
-  '主类A/子类A1',
-  '主类A/子类A2',
-  '主类B/子类B1',
-  '主类B/子类B2',
-];

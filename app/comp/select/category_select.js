@@ -31,6 +31,7 @@ function categorySelect($document, $animate, $templateRequest, $compile, $parse,
     require: ['?ngModel', 'categorySelect'],
     scope: {
       options: '=',
+      depth: '=?', // 分类的层数，1 或 2
       // onSelect: "&",
     },
     templateUrl: 'app/comp/select/category_select.html',
@@ -41,17 +42,25 @@ function categorySelect($document, $animate, $templateRequest, $compile, $parse,
       let ngModel = ctrls[0];
       let $select = ctrls[1];
 
+      console.log($scope.depth);
+
       $scope.$watch('options', function(options){
         if (!options) {
           return;
         }
 
-        $scope.optionItems = parseCateogoryOptions($scope.options);
+        if ($scope.depth == 1) {
+          $scope.optionItems = $scope.options.map(i => [i]);
+        } else {
+          $scope.optionItems = parseCateogoryOptions($scope.options);
+        }
+
       });
 
       $scope.onSelectExpr = $parse($attrs.onSelect);
 
       $scope.setSelect = function() {
+        // console.log(333, $scope.optionItems[$scope.activeIndex])
         let selected = $scope.optionItems[$scope.activeIndex].join('/');
         $scope.onSelectExpr($scope.$parent, {'$selected': selected});
       }

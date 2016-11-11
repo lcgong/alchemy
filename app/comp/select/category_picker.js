@@ -11,7 +11,7 @@ function categoryPickerCtrl($scope, $element, $attrs) {
 }
 
 var pickerTmpl = `\
-<category-select
+<category-select depth="depth"
   options="options"
   on-select="onSelect($selected)">
 </category-select>
@@ -28,6 +28,7 @@ function categoryPicker($document, $animate, $templateRequest, $compile, $parse,
     // require: ['?ngModel'],
     scope: {
       options: '=',
+      depth: '=',
     },
     transclude: true,
     templateUrl: 'app/comp/select/category_picker.html',

@@ -41,7 +41,7 @@
   padding: 0px;
 }
 
-.category-option.level-1 {
+.category-option.level-1.depth-two {
   font-weight: bold;
   padding-left: 15px;
   margin-top: 8px;
@@ -51,7 +51,7 @@
   color: #888;
 }
 
-.category-option.level-2 {
+.category-option.level-2.depth-two {
   font-weight: normal;;
   font-size: 110%;
   background-color: #fff;
@@ -60,6 +60,18 @@
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+.category-option.depth-one {
+
+  font-weight: normal;;
+  font-size: 110%;
+  padding-left: 15px;
+  background-color: #fff;
+
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 
 .category-option.active {
     background-color: #F3F3F3;
