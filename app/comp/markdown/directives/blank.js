@@ -41,9 +41,9 @@ app.directive('questionBlank',
 
         $scope.$watch('blank.targetingOptionGroup', function(newValue, oldValue){
 
-          console.log('Blank-%d\'s target is changed: %o => %o', blank.blankNo,
-            (oldValue) ? oldValue.xpath : null,
-            (newValue) ? newValue.xpath : null);
+          // console.log('Blank-%d\'s target is changed: %o => %o', blank.blankNo,
+            // (oldValue) ? oldValue.xpath : null,
+            // (newValue) ? newValue.xpath : null);
 
           if (!newValue) {
             blank.targeted = false;

@@ -66,7 +66,6 @@
 
 <body ng-controller="QuestionMarkdownTestCtrl as testCtrl">
 
-  <!-- $ 1 + 2 \sum_{1,2}{\pi + i} $  \( \int_{1,n} x_i \) -->
   <div class="panel panel-default" style="margin:10px">
     <div class="row" >
       <div class="col-xs-3">
@@ -90,11 +89,11 @@
         </question-markdown>
       </div>
       <div class="col-xs-6"           style="min-height:16em; height:100%">
-        <textarea type="text" class="form-control"
-          ui-codemirror
+        <div type="text" class="form-control"
+          ui-ace="testCtrl.aceOptions"
           style="min-height:16em; height:100%"
           ng-model="testCtrl.markdownContent">
-        </textarea>
+        </div>
       </div>
     </div>
   </div>

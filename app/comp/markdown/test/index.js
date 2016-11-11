@@ -18,11 +18,15 @@ import "angular-i18n/angular-locale_zh-hans-cn";
 import "angular-bootstrap/ui-bootstrap.min.js";
 import "angular-bootstrap/ui-bootstrap-tpls.min.js";
 
-import "angular-ui-select";
+import ace from "ace"
+import "ace/mode-markdown"
 import "markdown-it";
-import "markdown-it-mathjax";
+
+// import "markdown-it-mathjax";
+// import "angular-ui-select";
 // import "markdown-it-decorate";
-import "codemirror/lib/codemirror";
+// import "codemirror/lib/codemirror";
+// import "angular-ui-ace";
 // import "codemirror";
 // import "angular-ui-codemirror";
 
@@ -30,24 +34,11 @@ import "codemirror/lib/codemirror";
 // import "mathjax/MathJax.js";
 // import "mathjax/extensions/MathMenu.js";
 // import "mathjax/extensions/MathZoom.js";
+// import "markdown-it-mathjax";
 
-import "markdown-it-mathjax";
-
-var app = angular.module('mainapp', [
-  'ngResource', 'ngSanitize', 'ngAnimate', 'ui.bootstrap',
-  'ui.select'//, 'ui.codemirror'
+angular.module('mainapp', [
+  'ngResource', 'ngSanitize', 'ngAnimate', 'ui.bootstrap'
 ]);
-
-// System.import('mathjax/MathJax.js').then((main) => {
-//   MathJax.Hub.Config({
-//       tex2jax: {
-//           preview: "none",
-//           inlineMath: [ ['$','$'], ["\\(","\\)"] ],
-//           processEscapes: true
-//       },
-//       messageStyle: "none"
-//   });
-// });
 
 angular.element(document).ready(function() {
 

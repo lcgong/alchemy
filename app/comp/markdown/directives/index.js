@@ -9,3 +9,5 @@ import "./blank";
 
 import "./optionGroup";
 import "./option";
+
+import "./editor";

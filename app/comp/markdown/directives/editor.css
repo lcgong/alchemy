@@ -1,0 +1,107 @@
+
+.markdown-editor.ace_editor{
+  width: 100%;
+  font-size: 14px;
+  font-family: monospace;
+}
+
+.question-editor {
+  display: flex;
+  min-height: 90vh;
+  flex-direction: column;
+}
+
+.editor-header {
+  flex: 0 0 2em;
+  background-color: #d6abab;
+}
+
+.editor-footer {
+  flex: 0 0 2em;
+  background-color: #36731e;
+}
+
+.editor-body {
+  display: flex;
+  flex: 1;
+}
+
+.editor-left {
+  order: 1;
+  flex: 1;
+}
+
+.editor-right {
+  order: 2;
+  flex: 1;
+}
+
+.editor-left > .question-markdown {
+  width: 100%;
+  height: 100%;
+}
+
+.editor-right > .markdown-editor {
+  width: 100%;
+  height: 100%;
+}
+
+
+.editor-ctrl-bar {
+  display: flex;
+}
+
+.editor-ctrl-bar > div{
+  /*flex: 1;*/
+}
+
+.editor-ctrl-bar > div:not(:first-child) {
+  margin-left: 1rem;
+}
+
+
+.editor-ctrl-bar > div > select {
+
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.editor-ctrl-bar > div > select > option {
+
+  font-size: 14px;
+}
+
+
+
+.icon-save-later {
+  width: 2.2em;
+  height: 2.2em;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%20standalone%3D%22no%22%3F%3E%3Csvg%20width%3D%2224px%22%20height%3D%2224px%22%20viewBox%3D%220%200%2024%2024%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%20%20%20%20%20%20%20%20%3Ctitle%20fill%3D%22%23000000%22%3Esave-ios-md.colors-black%3C%2Ftitle%3E%20%20%20%20%3Cdesc%20fill%3D%22%23000000%22%3ECreated%20with%20Sketch.%3C%2Fdesc%3E%20%20%20%20%3Cdefs%20fill%3D%22%23000000%22%3E%3C%2Fdefs%3E%20%20%20%20%3Cg%20id%3D%22FX--Icons%22%20stroke%3D%22none%22%20stroke-width%3D%221%22%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%20%20%20%20%20%20%20%20%3Cg%20id%3D%22save-ios-md.colors-black%22%20fill%3D%22%23000000%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20fill%3D%22%23000000%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20id%3D%22Rectangle%22%20fill-opacity%3D%220%22%20fill%3D%22%23000000%22%20x%3D%220%22%20y%3D%220%22%20width%3D%2224%22%20height%3D%2224%22%3E%3C%2Frect%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M6%2C3%20L6%2C21.002%20L12.001%2C17.008%20L18%2C21%20L18%2C3%20L6%2C3%20Z%20M7%2C4.007%20L17%2C4.007%20L17%2C19.133%20L12.001%2C15.806%20L7%2C19.135%20L7%2C4.007%20Z%22%20id%3D%22icon-save-small%22%20fill%3D%22%23000000%22%3E%3C%2Fpath%3E%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fg%3E%20%20%20%20%20%20%20%20%3C%2Fg%3E%20%20%20%20%3C%2Fg%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat
+}
+
+.icon-save-later.active {
+  width: 2.2em;
+  height: 2.2em;
+
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%20standalone%3D%22no%22%3F%3E%3Csvg%20width%3D%2224px%22%20height%3D%2224px%22%20viewBox%3D%220%200%2024%2024%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%20%20%20%20%20%20%20%20%3Ctitle%3Esave--active-ios-md.colors-black%3C%2Ftitle%3E%20%20%20%20%3Cdesc%3ECreated%20with%20Sketch.%3C%2Fdesc%3E%20%20%20%20%3Cdefs%3E%3C%2Fdefs%3E%20%20%20%20%3Cg%20id%3D%22FX--Icons%22%20stroke%3D%22none%22%20stroke-width%3D%221%22%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%20%20%20%20%20%20%20%20%3Cg%20id%3D%22save--active-ios-md.colors-black%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20id%3D%22Rectangle%22%20fill-opacity%3D%220%22%20fill%3D%22%23FFFFFF%22%20x%3D%220%22%20y%3D%220%22%20width%3D%2224%22%20height%3D%2224%22%3E%3C%2Frect%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpolygon%20id%3D%22icon-save-small%22%20fill%3D%22%232BB24C%22%20points%3D%226%203%206%2021.002%2012.001%2017.008%2018%2021%2018%203%22%3E%3C%2Fpolygon%3E%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fg%3E%20%20%20%20%20%20%20%20%3C%2Fg%3E%20%20%20%20%3C%2Fg%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat
+}
+
+.icon-save-to-knowledge {
+  width: 2.2em;
+  height: 2.2em;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%20standalone%3D%22no%22%3F%3E%3Csvg%20width%3D%2224px%22%20height%3D%2224px%22%20viewBox%3D%220%200%2024%2024%22%20version%3D%221.1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%20%20%20%20%20%20%20%20%3Ctitle%20fill%3D%22%23000000%22%3Esave-to-knowledge-board-ios-md.colors-black%3C%2Ftitle%3E%20%20%20%20%3Cdesc%20fill%3D%22%23000000%22%3ECreated%20with%20Sketch.%3C%2Fdesc%3E%20%20%20%20%3Cdefs%20fill%3D%22%23000000%22%3E%3C%2Fdefs%3E%20%20%20%20%3Cg%20id%3D%22FX--Icons%22%20stroke%3D%22none%22%20stroke-width%3D%221%22%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%20%20%20%20%20%20%20%20%3Cg%20id%3D%22save-to-knowledge-board-ios-md.colors-black%22%20fill%3D%22%23000000%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%3Cg%20fill%3D%22%23000000%22%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Crect%20id%3D%22Rectangle-2%22%20fill-opacity%3D%220%22%20fill%3D%22%23000000%22%20x%3D%220%22%20y%3D%220%22%20width%3D%2224%22%20height%3D%2224%22%3E%3C%2Frect%3E%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%3Cpath%20d%3D%22M17%2C11%20L17%2C4%20L5%2C4%20L5%2C19%20L12%2C19%20L12%2C20%20L18%2C20%20L18%2C11%20L17%2C11%20Z%20M4%2C3%20L18%2C3%20L18%2C20%20L4%2C20%20L4%2C3%20Z%20M8%2C7%20L14%2C7%20L14%2C8%20L8%2C8%20L8%2C7%20Z%20M8%2C9%20L14%2C9%20L14%2C10%20L8%2C10%20L8%2C9%20Z%20M18%2C16%20L18%2C13%20L17%2C13%20L17%2C16%20L14%2C16%20L14%2C17%20L17%2C17%20L17%2C20%20L18%2C20%20L18%2C17%20L21%2C17%20L21%2C16%20L18%2C16%20Z%22%20id%3D%22icon-addtokb-small%22%20fill%3D%22%23000000%22%3E%3C%2Fpath%3E%20%20%20%20%20%20%20%20%20%20%20%20%3C%2Fg%3E%20%20%20%20%20%20%20%20%3C%2Fg%3E%20%20%20%20%3C%2Fg%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat
+}
+
+.icon-add-tag {
+  width: 2.2em;
+  height: 2.2em;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3C!--%3Fxml%20version%3D%221.0%22%20standalone%3D%22no%22%3F--%3E%0A%3Csvg%20version%3D%221.0%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300.000000pt%22%20height%3D%22300.000000pt%22%20viewBox%3D%220%200%20300.000000%20300.000000%22%20preserveAspectRatio%3D%22xMidYMid%20meet%22%3E%0A%3Cg%20transform%3D%22translate(0.000000%2C300.000000)%20scale(0.100000%2C-0.100000)%22%20fill%3D%22%23555%22%20stroke%3D%22none%22%3E%0A%3Cpath%20d%3D%22M450%202568%20l0%20-85%20113%20-5%20c125%20-6%20203%20-30%20306%20-92%2079%20-49%20202%20-182%0A184%20-200%20-3%20-3%20-46%20-6%20-94%20-6%20l-88%200%20-3%20-85%20-3%20-85%20-140%20-4%20c-115%20-2%20-155%20-8%0A-225%20-29%20-97%20-29%20-176%20-63%20-186%20-78%20-8%20-13%2045%20-149%2058%20-149%205%200%2025%208%2046%2019%0A100%2050%20190%2072%20301%2073%20167%200%20151%2027%20151%20-245%20l0%20-232%20508%20-508%20507%20-507%20410%0A410%20410%20410%20-505%20505%20-505%20505%20-210%200%20-210%200%20-60%2091%20c-147%20224%20-379%20354%20-667%0A375%20l-98%207%200%20-85z%20m922%20-636%20c92%20-61%20111%20-180%2041%20-263%20-87%20-103%20-259%20-70%20-297%0A57%20-6%2019%20-2%2022%2043%2026%2030%203%2064%2015%2085%2028%2038%2027%2076%2096%2076%20140%200%2034%2013%2038%2052%2012z%22%20id%3D%22node1%22%20class%3D%22node%22%3E%3C%2Fpath%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E");
+  background-repeat: no-repeat
+}

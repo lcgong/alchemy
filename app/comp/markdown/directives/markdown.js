@@ -49,12 +49,16 @@ function questionMarkdownCtrl($scope, $element, $attrs) {
 
       for (subquestion of question.subquestions) {
         let optionGroup = subquestion.optionGroup;
+        if (optionGroup) {
+          optionGroup.targetable = false;
+          optionGroup.targeted = false;
+        }
+      }
+      let optionGroup = question.optionGroup;
+      if (optionGroup) {
         optionGroup.targetable = false;
         optionGroup.targeted = false;
       }
-      let optionGroup = question.optionGroup;
-      optionGroup.targetable = false;
-      optionGroup.targeted = false;
     }
   }
 }
@@ -72,7 +76,7 @@ function questionMarkdownDirective($templateRequest, $compile) {
       content: '=',
       mode: '='
     },
-    template: '<div include-template="$sheet.htmlContent" on-precompile-func="$sheet.precompileSheet"></div>',
+    template: '<div class="question-markdown" include-template="$sheet.htmlContent" on-precompile-func="$sheet.precompileSheet"></div>',
     controller: 'questionMarkdownCtrl',
     controllerAs: '$sheet',
     link: function($scope, $element, $attrs, $sheet) {
@@ -92,7 +96,7 @@ function questionMarkdownDirective($templateRequest, $compile) {
       if ($attrs.mode) {
         $scope.$watch('mode', function(newValue, oldValue) {
             $sheet.mode = newValue;
-            console.log(333, $scope.mode);
+            // console.log(333, $scope.mode);
         });
       } else {
         $sheet.mode = 'listing';
@@ -149,7 +153,7 @@ function questionMarkdownDirective($templateRequest, $compile) {
         $sheet.questions = questions;
         $sheet.htmlContent = html;
 
-        console.log('QuestionMarkdown: tokens=%O, questions=%O', tokens, questions);
+        // console.log('QuestionMarkdown: tokens=%O, questions=%O', tokens, questions);
       }
     }
   };

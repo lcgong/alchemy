@@ -1,0 +1,50 @@
+<div class="question-editor" ng-click="click($event)">
+  <div class="editor-body">
+    <div class="editor-left">
+      <div class="editor-ctrl-bar">
+        <div class="btn-group" >
+         <label class="btn btn-primary" ng-model="question.purpose.testing" uib-btn-checkbox>
+           <span class="glyphicon"
+            ng-class="{'glyphicon-check': question.purpose.testing, 'glyphicon-unchecked': !question.purpose.testing}">
+           测试
+         </label>
+         <label class="btn btn-primary" ng-model="question.purpose.exercise" uib-btn-checkbox>
+           <span class="glyphicon"
+            ng-class="{'glyphicon-check': question.purpose.exercise, 'glyphicon-unchecked': !question.purpose.exercise}">
+           </span>
+           练习
+         </label>
+        </div>
+        <div>
+          <select class="form-control" style = "width: 10em"
+            ng-model="question.questionStyle"
+            ng-options="style for style in questionStyles">
+            <option value="" disabled selected hidden>需选题型...</option>
+          </select>
+        </div>
+        <div>
+          <div class="icon-save-later" ng-class="{active:question.saveLater}" ng-click="question.saveLater = !question.saveLater">
+          </div>
+        </div>
+        <div>
+          <div class="icon-save-to-knowledge"> </div>
+        </div>
+        <div>
+          <div class="icon-add-tag"> </div>
+        </div>
+      </div>
+      <hr>
+      <question-markdown class=""
+        start-question-no=""
+        mode="$editor.mode"
+        content="$editor.preview">
+      </question-markdown>
+    </div>
+    <div  class="editor-right">
+      <div class="markdown-editor" style="width:100%; eight:100%">
+      </div>
+    </div>
+  </div>
+  <!-- <div class="editor-footer">
+  </div> -->
+</div>

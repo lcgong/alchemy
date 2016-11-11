@@ -1,3 +1,4 @@
+
 .question, .section, .subquestion {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -238,4 +239,14 @@
   border-radius: 5px;
   border-color: #E91E63;
   box-shadow: 3px 5px 10px  #B1B1B1;
+}
+
+.ace_editor {
+  height: 100px;
+}
+
+.ace_editor, .ace_editor div{
+    font-family: monospace;
+    letter-spacing: 0;
+
 }

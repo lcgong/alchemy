@@ -24,6 +24,16 @@ function QuestionMarkdownTestCtrl($scope, $timeout, $injector) {
   // console.log(sample2);
 
 
+  ctrl.aceOptions = {
+    useWrapMode : true,
+    showGutter: true,
+    advanced : {
+      fontFamily: 'monospace', // 注意等宽字体，否则光标位置会错位
+      fontSize: '14px'
+    }
+  }
+
+
   ctrl.sample = ctrl.samples[1];
 
   $scope.$watch('testCtrl.sample', function(sample, oldValue) {
