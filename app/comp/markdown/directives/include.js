@@ -51,7 +51,7 @@ let includeTemplateDirective = ['$anchorScroll', '$animate',
 
             if (thisChangeId !== changeCounter) return;
             var newScope = scope.$new();
-            ctrl.template = src;
+            scope.template = src;
 
             // Note: This will also link all children of ng-include that were contained in the original
             // html. If that content contains controllers, ... they could pollute/change the scope.
@@ -69,7 +69,7 @@ let includeTemplateDirective = ['$anchorScroll', '$animate',
 
           } else {
             cleanupLastIncludeContent();
-            ctrl.template = null;
+            scope.template = null;
           }
         });
       };
@@ -89,7 +89,7 @@ let includeTemplateFillContentDirective = ['$compile', function($compile) {
       require: 'includeTemplate',
       link: function($scope, $element, $attr, ctrl) {
 
-        $element.html(ctrl.template);
+        $element.html($scope.template);
 
         if ($attr.onPrecompileFunc) {
           let func = $scope.$eval($attr.onPrecompileFunc);
