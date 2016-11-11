@@ -1,0 +1,11 @@
+.category-picker {
+  width: 100%;
+}
+
+.picker-popover.ng-enter {
+  animation: zoomInDown 0.3s;
+}
+
+.picker-popover.ng-leave {
+  animation: zoomOutUp 0.3s;
+}

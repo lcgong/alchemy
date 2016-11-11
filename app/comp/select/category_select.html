@@ -1,0 +1,19 @@
+<div class="category-select" tabindex="0">
+  <div>
+    <input class="form-control search-input" type="text" placeholder="按&#8645; 空格或回车选，首字母筛...">
+  </div>
+  <div class="category-select-menu" >
+    <div class="category-option"
+      ng-repeat="item in optionItems track by $index"
+      ng-class="{'level-1': item[1].length == 0, 'level-2': item[1].length > 0, active: $index === activeIndex }"
+      ng-click="setSelect()"
+      ng-dblclick="setSelect()"
+      ng-mouseover="highlight($index)"
+      >
+      <span ng-if="item[1].length == 0">{{item[0]}}</span>
+      <span ng-if="item[1].length > 0">{{item[1]}}</span>
+    </div>
+  </div>
+  <div class="caret-up">
+  </div>
+</div>
