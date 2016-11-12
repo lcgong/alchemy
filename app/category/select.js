@@ -41,17 +41,26 @@ function categorySelect($compile, $parse, $timeout) {
       })
 
       $scope.$parent.$watch($attrs.options, categorys => {
-        $scope.categoryItems = convertToList(categorys);
+        $scope.origCategoryItems = convertToList(categorys);
+        $scope.categoryItems = $scope.origCategoryItems;
         // console.log($scope.categoryItems);
       });
 
       $scope.onSelectExpr = $parse($attrs.onSelect);
-
       $scope.setSelect = function() {
         // console.log(333, $scope.categoryItems[$scope.activeIndex])
         let selected = $scope.categoryItems[$scope.activeIndex][0];
         $scope.onSelectExpr($scope.$parent, {'$selected': selected});
       }
+
+      $scope.$watch('searchText', search => {
+        if (!search) {
+          $scope.categoryItems = $scope.origCategoryItems;
+          return;
+        }
+
+        $scope.categoryItems = searchFilter($scope.origCategoryItems, search);
+      });
 
       $scope.focusInput = $element.find('input.search-input').first();
 
@@ -62,7 +71,7 @@ function categorySelect($compile, $parse, $timeout) {
       }
 
       $element.on('keydown', function(e) {
-        console.log('k', e.which);
+        // console.log('k', e.which);
 
         if (e.which === KEY.TAB || KEY.isControl(e) || KEY.isFunctionKey(e)) {
           return;
@@ -170,7 +179,7 @@ function convertToList(categories) {
       if (labelParts.length > 1 && labelParts[1] && labelParts[1].length > 0) {
         // 如果分类A/1, 接着就是B/1，而不是标准的 A/1, B, B/1
 
-        items.push([{label: label}, labelParts[0], '']);
+        items.push([{label: labelParts[0]}, labelParts[0], '']);
       }
 
       cat1 = labelParts[0];
@@ -183,6 +192,36 @@ function convertToList(categories) {
     props.label = label;
 
     items.push([props, labelParts[0], labelParts[1]]);
+  }
+
+  return items;
+}
+
+
+function searchFilter(origItems, searchText) {
+  searchText = searchText.toLowerCase();
+
+  let items = [];
+  for (item of origItems) {
+    let props = item[0];
+    if (props.label.toLowerCase().includes(searchText)) {
+      items.push(item);
+      continue;
+    }
+
+    if (props.pinyinAliases && props.pinyinAliases) {
+      let found = false;
+      for (pinyin of props.pinyinAliases) {
+        if (pinyin.toLowerCase().includes(searchText)) {
+          found = true;
+          break;
+        }
+      }
+      if (found) {
+        items.push(item);
+        continue;
+      }
+    }
   }
 
   return items;
