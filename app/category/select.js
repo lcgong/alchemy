@@ -1,40 +1,34 @@
-
+import "./select.css!"
 
 import {KEY} from "./keychars";
 
-angular.module('mainapp').controller('categorySelectCtrl', categorySelectCtrl);
-categorySelectCtrl.$inject = ['$scope', '$element', '$attrs'];
-function categorySelectCtrl($scope, $element, $attrs) {
 
-  let $select = this;
-
-  $scope.optionItems = [];
-
-  // $scope.$watch('searchText', function(searchText) {
-  //   console.log(searchText);
-  // });
-  // $scope.$watch('activeIndex', function(activeIndex) {
-  //   console.log(activeIndex);
-  // });
-
-}
-
+/** 数据：
+  categories : {
+    category_string : {
+      backgroudColor: '#fff',
+      color: '#fff',
+      pinyinAliases: [], // 为搜索拼音化,  ['fl1/fl2', 'fenlei1/fenlei2']
+      taggedTime: '2016... Timestamp', // 最近贴此条的时间
+    }
+  }
+  */
 
 angular.module('mainapp').directive('categorySelect', categorySelect);
-categorySelect.$inject = ['$document', '$animate', '$templateRequest',
-  '$compile', '$parse', '$timeout'];
-function categorySelect($document, $animate, $templateRequest, $compile, $parse, $timeout) {
+categorySelect.$inject = ['$compile', '$parse', '$timeout'];
+function categorySelect($compile, $parse, $timeout) {
 
   return {
     restrict: 'E',
     replace: true,
     require: ['?ngModel', 'categorySelect'],
-    scope: {
-      options: '=',
-      depth: '=?', // 分类的层数，1 或 2
-      // onSelect: "&",
-    },
-    templateUrl: 'app/comp/select/category_select.html',
+    scope: {},
+    // scope: {
+    //   // options: '=',
+    //   depth: '=?', // 分类的层数，1 或 2
+    //   // onSelect: "&",
+    // },
+    templateUrl: 'app/category/select.html',
     controller: 'categorySelectCtrl',
     controllerAs: '$select',
 
@@ -42,26 +36,20 @@ function categorySelect($document, $animate, $templateRequest, $compile, $parse,
       let ngModel = ctrls[0];
       let $select = ctrls[1];
 
-      console.log($scope.depth);
+      $scope.$parent.$watch($attrs.depth, depth => {
+        $scope.depth = depth;
+      })
 
-      $scope.$watch('options', function(options){
-        if (!options) {
-          return;
-        }
-
-        if ($scope.depth == 1) {
-          $scope.optionItems = $scope.options.map(i => [i]);
-        } else {
-          $scope.optionItems = parseCateogoryOptions($scope.options);
-        }
-
+      $scope.$parent.$watch($attrs.options, categorys => {
+        $scope.categoryItems = convertToList(categorys);
+        // console.log($scope.categoryItems);
       });
 
       $scope.onSelectExpr = $parse($attrs.onSelect);
 
       $scope.setSelect = function() {
-        // console.log(333, $scope.optionItems[$scope.activeIndex])
-        let selected = $scope.optionItems[$scope.activeIndex].join('/');
+        // console.log(333, $scope.categoryItems[$scope.activeIndex])
+        let selected = $scope.categoryItems[$scope.activeIndex][0];
         $scope.onSelectExpr($scope.$parent, {'$selected': selected});
       }
 
@@ -104,7 +92,7 @@ function categorySelect($document, $animate, $templateRequest, $compile, $parse,
 
         if (e.which == KEY.DOWN) {
           $scope.$evalAsync(function(){
-            if ($scope.activeIndex < $scope.optionItems.length - 1) {
+            if ($scope.activeIndex < $scope.categoryItems.length - 1) {
               $scope.activeIndex++;
             } else {
               $scope.activeIndex = 0;
@@ -117,7 +105,7 @@ function categorySelect($document, $animate, $templateRequest, $compile, $parse,
             if ($scope.activeIndex > 0) {
               $scope.activeIndex--;
             } else {
-              $scope.activeIndex = $scope.optionItems.length - 1;
+              $scope.activeIndex = $scope.categoryItems.length - 1;
             }
           });
         } else if (e.which == KEY.ENTER) {
@@ -141,29 +129,61 @@ function categorySelect($document, $animate, $templateRequest, $compile, $parse,
       });
     }
   };
+
+
+}
+
+angular.module('mainapp').controller('categorySelectCtrl', categorySelectCtrl);
+categorySelectCtrl.$inject = ['$scope', '$element', '$attrs'];
+function categorySelectCtrl($scope, $element, $attrs) {
+
+  let $select = this;
+
+  $scope.categoryItems = [];
+
+  // $scope.$watch('searchText', function(searchText) {
+  //   console.log(searchText);
+  // });
+  // $scope.$watch('activeIndex', function(activeIndex) {
+  //   console.log(activeIndex);
+  // });
+
 }
 
 
-/** 将一组[a/1, b/2]转换成 [[a,null], [a,1], [b, null], [b, 1]]
- */
-function parseCateogoryOptions(options) {
+/*
+  将 {cat_name : {cat_props},  }
+  [ [{ cat_props, ... }, cat_name_level1, cat_name_level2], ... ] */
+function convertToList(categories) {
+  if (!categories) {
+    return [];
+  }
 
-  let optionItems = [];
+  let items = [];
 
   let cat1;
 
-  for (item of options.sort().map(s => s.split('/', 2))) {
-    if (cat1 != item[0]) {
-      if (item.length > 1 && item[1] && item[1].length > 0) {
+  for (label of Object.keys(categories).sort()) {
+    let labelParts = label.split('/', 2);
+
+    if (cat1 != labelParts[0]) {
+      if (labelParts.length > 1 && labelParts[1] && labelParts[1].length > 0) {
         // 如果分类A/1, 接着就是B/1，而不是标准的 A/1, B, B/1
-        optionItems.push([item[0], '']);
+
+        items.push([{label: label}, labelParts[0], '']);
       }
 
-      cat1 = item[0];
+      cat1 = labelParts[0];
     }
 
-    optionItems.push([item[0], item[1]]);
+    let props = categories[label];
+    if (!props) {
+      props = {};
+    }
+    props.label = label;
+
+    items.push([props, labelParts[0], labelParts[1]]);
   }
 
-  return optionItems;
+  return items;
 }

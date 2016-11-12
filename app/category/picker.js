@@ -1,5 +1,6 @@
-import "app/comp/select/category_select";
 import "app/comp/markdown/directives/include"
+import "./select";
+import "./picker.css!"
 
 angular.module('mainapp').controller('categoryPickerCtrl', categoryPickerCtrl);
 categoryPickerCtrl.$inject = ['$scope', '$element', '$attrs'];
@@ -31,7 +32,7 @@ function categoryPicker($document, $animate, $templateRequest, $compile, $parse,
       depth: '=',
     },
     transclude: true,
-    templateUrl: 'app/comp/select/category_picker.html',
+    templateUrl: 'app/category/picker.html',
     controller: 'categoryPickerCtrl',
     // controllerAs: '$picker',
     link: function($scope, $element, $attrs, ctrls) {

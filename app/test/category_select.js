@@ -1,8 +1,4 @@
-
-import "app/comp/select/category_picker";
-import "app/comp/select/category_picker.css!";
-import "app/comp/select/category_select.css!";
-
+import "app/category/picker";
 
 
 angular.module('mainapp').controller('TestCtrl', TestCtrl);
@@ -13,27 +9,40 @@ function TestCtrl($scope, $timeout) {
 
 
 
-  testCtrl. optionsData1 = [
-    '主类A/子类A1',
-    '主类A/子类A2',
-    '主类B/子类B1',
-    '主类B/子类B2',
-  ];
+  testCtrl. optionsData1 = {
+    '主类A/子类A1': {
+      pinyinAliases: []
+    },
+    '主类A/子类A2': {},
+    '主类B/子类B1': {},
+    '主类B/子类B2': {},
+  };
 
 
-  testCtrl.optionsData2 = [
-    '标签A',
-    '标签B',
-    '标签C',
-    '标签D',
-  ];
+  testCtrl.optionsData2 = {
+    '标签A': {
+      pinyinAliases: []
+    },
+    '标签B': {
+      pinyinAliases: ['bqB', 'biaoqianB']
+    },
+    '标签C': {
+      pinyinAliases: []
+    },
+    '标签D': {
+      pinyinAliases: []
+    },
+  };
 
 
   testCtrl.onSelectAbc = (category) => {
+    console.log('abc selected', category);
     testCtrl.abcSelected = category;
   };
 
   testCtrl.onSelectXyz = (category) => {
+    console.log('xyz selected', category);
+
     testCtrl.xyzSelected = category;
   };
 
