@@ -11,7 +11,7 @@ function blankOptionDirective() {
     replace: true,
     transclude: true,
     scope: true,
-    templateUrl: 'app/comp/markdown/directives/option.html',
+    templateUrl: 'app/markdown/option.html',
 
     link: function($scope, $element, $attrs, $sheet) {
 

@@ -1,5 +1,5 @@
 
-import {setTarget, unsetTarget} from "../model/blank";
+import {setTarget, unsetTarget} from "./model/blank";
 
 let app = angular.module('mainapp');
 
@@ -12,7 +12,7 @@ app.directive('questionBlank',
       require: '^questionMarkdown',
       replace: true,
       scope: true,
-      templateUrl: 'app/comp/markdown/directives/blank.html',
+      templateUrl: 'app/markdown/blank.html',
       link: function($scope, $element, $attrs, $sheet) {
 
         if($attrs.xpath) {

@@ -11,7 +11,7 @@ function optionGroupDirective($parse, $window, $timeout) {
     replace: true,
     transclude: true,
     scope: true,
-    templateUrl: 'app/comp/markdown/directives/optionGroup.html',
+    templateUrl: 'app/markdown/optionGroup.html',
 
     link: function($scope, $element, $attrs, $sheet) {
 

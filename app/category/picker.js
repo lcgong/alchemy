@@ -1,4 +1,4 @@
-import "app/comp/markdown/directives/include"
+import "app/markdown/include"
 import "./select";
 import "./picker.css!"
 

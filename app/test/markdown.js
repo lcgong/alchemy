@@ -1,3 +1,4 @@
+import "app/markdown/markdown";
 
 import {data as sample1} from "./data/p01"
 import {data as sample2} from "./data/p02"
@@ -6,11 +7,11 @@ let app = angular.module('mainapp');
 
 
 // -------------------------------------------------------------------------
-app.controller('QuestionMarkdownTestCtrl', QuestionMarkdownTestCtrl);
-QuestionMarkdownTestCtrl.$inject = [
+app.controller('TestCtrl', TestCtrl);
+TestCtrl.$inject = [
   '$scope', '$timeout', '$injector'
 ];
-function QuestionMarkdownTestCtrl($scope, $timeout, $injector) {
+function TestCtrl($scope, $timeout, $injector) {
 
   // console.log('QuestionMarkdownTestCtrl started');
   var ctrl = this;

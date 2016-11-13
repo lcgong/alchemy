@@ -1,6 +1,9 @@
 import "app/category/picker";
 import "app/category/badge";
-import "./markdown";
+import "app/markdown/markdown";
+
+import "./editor.css!"
+
 
 let app = angular.module('mainapp');
 
@@ -63,7 +66,7 @@ function questionEditor($templateRequest, $compile, $timeout) {
       src: '=',
       // mode: '='
     },
-    templateUrl: 'app/comp/markdown/directives/editor.html',
+    templateUrl: 'app/repo/editor.html',
     controller: 'questionEditorCtrl',
     controllerAs: '$editor',
     link: function($scope, $element, $attrs, ctrls) {

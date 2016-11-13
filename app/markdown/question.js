@@ -11,7 +11,7 @@ function questionDirective($parse, $window, $timeout) {
     replace: true,
     transclude: true,
     scope: true,
-    templateUrl: 'app/comp/markdown/directives/question.html',
+    templateUrl: 'app/markdown/question.html',
 
     link: function($scope, $element, $attrs, $sheet) {
 

@@ -11,7 +11,7 @@ function subquestionDirective($parse, $window, $timeout) {
     replace: true,
     transclude: true,
     scope: true,
-    templateUrl: 'app/comp/markdown/directives/subquestion.html',
+    templateUrl: 'app/markdown/subquestion.html',
 
     link: function($scope, $element, $attrs, $sheet) {
 

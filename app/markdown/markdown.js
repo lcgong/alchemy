@@ -4,16 +4,19 @@ import "./subquestion";
 import "./blank";
 import "./optionGroup";
 import "./option";
+
 import "./markdown.css!";
 
-import {unindent} from "../util";
+import {unindent} from "./util";
 import MarkdownIt from "markdown-it";
-import transform from '../json';
-import {plugin as questionMarkdownPlugin} from "../plugin";
-import {analyze} from "../analyzer/analyze"
+import transform from './json';
+import {plugin as questionMarkdownPlugin} from "./plugin";
+import {analyze} from "./analyzer/analyze";
 
-import  {plugin as mathjax} from '../mathjax';
+import  {plugin as mathjax} from './mathjax';
 
+
+import "app/markdown/markdown.css!";
 
 let app = angular.module('mainapp');
 

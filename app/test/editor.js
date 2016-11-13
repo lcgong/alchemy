@@ -1,6 +1,5 @@
 
-import "app/comp/markdown/directives/editor"
-import "app/comp/markdown/directives/editor.css!"
+import "app/repo/editor"
 
 import {data as sample1} from "./data/p01"
 import {data as sample2} from "./data/p02"

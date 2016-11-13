@@ -1,4 +1,0 @@
-
-
-import "./editor";
-import "./markdown";
