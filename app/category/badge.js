@@ -3,51 +3,79 @@ import "./badge.css!"
 angular.module('mainapp').controller('badgeCardCtrl', badgeCardCtrl);
 badgeCardCtrl.$inject = ['$scope', '$element', '$attrs'];
 function badgeCardCtrl($scope, $element, $attrs) {
-  let ctrl = this;
+  let $ctrl = this;
+
+  $ctrl.saveForLater = function() {
+    let question = $scope.question;
+    if (!question.saveForLater) {
+      question.saveForLater = {
+        taggedTime: new Date()
+      };
+    } else {
+      question.saveForLater = null;
+    }
+  };
+
+  $ctrl.addToKnowledge = function(category) {
+    category = angular.copy(category);
+    category.taggedTime = new Date();
+    $scope.question.categories[category.label] = category;
+  };
+
+  $ctrl.addTag = function(tag) {
+    tag = angular.copy(tag);
+    tag.taggedTime = new Date();
+    $scope.question.tags[tag.label] = tag;
+  };
+
+  $ctrl.removeCategory= function(label) {
+    delete $scope.question.categories[label];
+  }
+
+
+  $ctrl.removeTag= function(label) {
+    delete $scope.question.tags[label];
+  }
 }
 
 
-angular.module('mainapp').directive('questionBadge', questionBadge);
-questionBadge.$inject = ['$compile', '$timeout'];
-function questionBadge($compile, $timeout) {
+angular.module('mainapp').directive('questionBadgeBar', questionBadgeBar);
+questionBadgeBar.$inject = ['$compile', '$timeout'];
+function questionBadgeBar($compile, $timeout) {
   return {
     restrict: 'EA',
     replace: true,
-    scope: {},
+    scope: {
+      question: '=',
+      repository: '='
+    },
     templateUrl: 'app/category/badge.html',
     controller: 'badgeCardCtrl',
+    controllerAs: '$ctrl',
     link: function($scope, $element, $attrs, ctrl) {
-      if ($attrs.purpose) {
-        $scope.$parent.$watch($attrs.purpose, purpose => {
-          // $scope.purpose = makeCatgeoryDictTuple(categories);
-        }, true);
-      }
+      // if ($attrs.purpose) {
+      //   $scope.$parent.$watch($attrs.purpose, purpose => {
+      //     // $scope.purpose = makeCatgeoryDictTuple(categories);
+      //   }, true);
+      // }
 
-      if ($attrs.questionStyle) {
-        $scope.$parent.$watch($attrs.questionStyle, questionStyle => {
-          $scope.questionStyle = questionStyle;
-        });
-      }
+      // $scope.$watch('question.questionStyle', questionStyle => {
+      // });
 
-      $scope.allCategories = {};
-      $scope.allTags = {};
+      // $scope.allCategories = {};
+      // $scope.allTags = {};
       $scope.hovers = {};
 
-      if ($attrs.categories) {
-        $scope.$parent.$watch($attrs.categories, categories => {
-          $scope.categories = convertToList(categories, $scope.allCategories);
-          // console.log(344555, $scope.categories);
-        }, true);
-      }
+      $scope.$parent.$watch('question.categories', categories => {
+        let repo = $scope.repository;
+        $scope.categoryList = convertToList(categories, repo.categories);
+        console.log(344555, $scope.categories);
+      }, true);
 
-      if ($attrs.tags) {
-        console.log(3399999, $attrs.tags);
-        $scope.$parent.$watch($attrs.tags, tags => {
-          console.log(3399999, tags);
-          $scope.tags = convertToList(tags, $scope.allTags);
-          console.log(344555, $scope.tags);
-        }, true);
-      }
+      $scope.$parent.$watch('question.tags', tags => {
+        let repo = $scope.repository;
+        $scope.tagList = convertToList(tags, repo.tags);
+      }, true);
 
     }
   }

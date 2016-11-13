@@ -1,18 +1,86 @@
 <div class="question-badge">
-  <span class="item tag"
-    ng-repeat="tag in tags track by $index"
-    ng-class="{hover: hovers[tag[0].label]}"
-    ng-mouseenter="hovers[tag[0].label] = true"
-    ng-mouseleave="hovers[tag[0].label] = false"
-    >
+  <span class="badge-tagging">
+    <div class="item">
+      <div class="icon-save-later" n
+        ng-class="{active: question.saveForLater }"
+        ng-click="$ctrl.saveForLater()">
+      </div>
+    </div>
+    <div class="item">
+      <category-picker depth="2"
+        options="repository.categories"
+        on-select="$ctrl.addToKnowledge($selected)">
+        <div class="icon-save-to-knowledge"> </div>
+      </category-picker>
+    </div>
+    <div class="item">
+      <category-picker depth="1"
+        options="repository.tags"
+        on-select="$ctrl.addTag($selected)">
+        <div class="icon-add-tag"> </div>
+      </category-picker >
+    </div>
+  </span>
 
-    <span class="badge-label"> {{tag[0].label}} </span>
-    <span class="badge-remove glyphicon glyphicon-remove-circle"
-      ng-mouseover="hover">
+  <!-- <div class="padding"></div> -->
+
+  <span class="badge-setting">
+
+    <div class="setting-purpose btn-group" >
+      <label class="btn btn-primary btn-testing"
+        ng-model="question.purpose.testing"
+        uib-btn-checkbox>
+        <span class="glyphicon"
+          ng-class="{'glyphicon-check': question.purpose.testing, 'glyphicon-unchecked': !question.purpose.testing}">
+        </span>
+        <span>测试</span>
+      </label>
+      <label class="btn btn-primary btn-exercising"
+        ng-model="question.purpose.exercising" uib-btn-checkbox>
+        <span class="glyphicon"
+          ng-class="{'glyphicon-check': question.purpose.exercising, 'glyphicon-unchecked': !question.purpose.exercising}">
+        </span>
+        <span>练习</span>
+      </label>
+    </div>
+
+    <select class="form-control btn-question-style"
+      ng-model="question.questionStyle"
+      ng-options="style for style in repository.questionStyles">
+      <option value="" disabled selected hidden>题型...</option>
+    </select>
+
+  </span>
+
+  <span class="badge-purpose">
+    <span class="badge-label purpose-testing"
+      ng-if="question.purpose.testing">
+      <span>测试</span>
+    </span>
+    <span class="badge-label purpose-exercising"
+      ng-if="question.purpose.exercising">练习
+    </span>
+    <span class="badge-label question-style"
+      ng-if="question.questionStyle">
+      {{question.questionStyle}}
     </span>
   </span>
-  <span class="item level-1"
-    ng-repeat="item in categories track by $index"
+
+
+  <span class="item tag"
+    ng-repeat="item in tagList track by $index"
+    ng-class="{hover: hovers[item[0].label]}"
+    ng-mouseenter="hovers[item[0].label] = true"
+    ng-mouseleave="hovers[item[0].label] = false"
+    >
+
+    <span class="badge-label"> {{item[0].label}} </span>
+    <span class="badge-remove glyphicon glyphicon-remove-circle"
+      ng-click="$ctrl.removeTag(item[0].label)">
+    </span>
+  </span>
+  <span class="item category level-1"
+    ng-repeat="item in categoryList track by $index"
     ng-class="{hover: hovers[item[0].label]}"
     ng-mouseenter="hovers[item[0].label] = item[1].length == 0 && true"
     ng-mouseleave="hovers[item[0].label] = false"
@@ -22,7 +90,7 @@
     <span class="sublevel-flag" ng-if="item[1].length > 0">
       <span class="glyphicon glyphicon-triangle-right"></span>
     </span>
-    <span class="level-2" ng-repeat="subitem in item[1] track by $index"
+    <span class="category level-2" ng-repeat="subitem in item[1] track by $index"
       ng-class="{hover: hovers[subitem.label]}"
       ng-mouseenter="hovers[subitem.label] = true"
       ng-mouseleave="hovers[subitem.label] = false"
@@ -32,11 +100,11 @@
         {{subitem.name}}
       </span>
       <span class="badge-remove glyphicon glyphicon-remove-circle"
-        ng-click="remove(subitem.label)">
+        ng-click="$ctrl.removeCategory(subitem.label)">
       </span>
     </span>
     <span class="badge-remove glyphicon glyphicon-remove-circle"
-      ng-click="remove(subitem.label)">
+      ng-click="$ctrl.removeCategory(item[0].label)">
     </span>
   </span>
 </div>

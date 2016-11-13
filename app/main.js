@@ -8,6 +8,8 @@
 
 import "app/comp/index"
 
+// export let app = angular.module('mainapp');
+
 // import "app/comp/index"
 // import "app/comp/code_manager"
 //

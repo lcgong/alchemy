@@ -39,6 +39,7 @@
   overflow-x: hidden;
   overflow-y: auto;
   padding: 0px;
+  line-height: 1.5em;
 }
 
 .category-option.level-1.depth-two {
