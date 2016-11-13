@@ -1,8 +1,42 @@
-<div>
-  <span class="tag-badge" >
-    <span class="label label-primary"
-      ng-repeat="tag in tags track by $index">
-      {{tag}}
+<div class="question-badge">
+  <span class="item tag"
+    ng-repeat="tag in tags track by $index"
+    ng-class="{hover: hovers[tag[0].label]}"
+    ng-mouseenter="hovers[tag[0].label] = true"
+    ng-mouseleave="hovers[tag[0].label] = false"
+    >
+
+    <span class="badge-label"> {{tag[0].label}} </span>
+    <span class="badge-remove glyphicon glyphicon-remove-circle"
+      ng-mouseover="hover">
+    </span>
+  </span>
+  <span class="item level-1"
+    ng-repeat="item in categories track by $index"
+    ng-class="{hover: hovers[item[0].label]}"
+    ng-mouseenter="hovers[item[0].label] = item[1].length == 0 && true"
+    ng-mouseleave="hovers[item[0].label] = false"
+    >
+
+    <span class="badge-label"> {{item[0].label}} </span>
+    <span class="sublevel-flag" ng-if="item[1].length > 0">
+      <span class="glyphicon glyphicon-triangle-right"></span>
+    </span>
+    <span class="level-2" ng-repeat="subitem in item[1] track by $index"
+      ng-class="{hover: hovers[subitem.label]}"
+      ng-mouseenter="hovers[subitem.label] = true"
+      ng-mouseleave="hovers[subitem.label] = false"
+      >
+
+      <span class="badge-label">
+        {{subitem.name}}
+      </span>
+      <span class="badge-remove glyphicon glyphicon-remove-circle"
+        ng-click="remove(subitem.label)">
+      </span>
+    </span>
+    <span class="badge-remove glyphicon glyphicon-remove-circle"
+      ng-click="remove(subitem.label)">
     </span>
   </span>
 </div>

@@ -1,13 +1,4 @@
 
-import "./include";
-
-import "./markdown";
-import "./question";
-import "./subquestion";
-
-import "./blank";
-
-import "./optionGroup";
-import "./option";
 
 import "./editor";
+import "./markdown";

@@ -13,47 +13,94 @@ function questionBadge($compile, $timeout) {
   return {
     restrict: 'EA',
     replace: true,
-    scope: true,
+    scope: {},
     templateUrl: 'app/category/badge.html',
     controller: 'badgeCardCtrl',
     link: function($scope, $element, $attrs, ctrl) {
-      // $scope.$watch('purpose', categories => {
-      // }, true);
-      //
-      // $scope.$watch('questionStyle', categories => {
-      // }, true);
-      //
-      $scope.$watch('categories', categories => {
-        $scope.categories = makeCatgeoryDictTuple(categories);
-      }, true);
-
-      if ($attrs.tags) {
-        $scope.$watch($attrs.tags, tags => {
-          $scope.tags = tags.sort();
+      if ($attrs.purpose) {
+        $scope.$parent.$watch($attrs.purpose, purpose => {
+          // $scope.purpose = makeCatgeoryDictTuple(categories);
         }, true);
       }
 
-      // console.log($scope.question);
+      if ($attrs.questionStyle) {
+        $scope.$parent.$watch($attrs.questionStyle, questionStyle => {
+          $scope.questionStyle = questionStyle;
+        });
+      }
+
+      $scope.allCategories = {};
+      $scope.allTags = {};
+      $scope.hovers = {};
+
+      if ($attrs.categories) {
+        $scope.$parent.$watch($attrs.categories, categories => {
+          $scope.categories = convertToList(categories, $scope.allCategories);
+          // console.log(344555, $scope.categories);
+        }, true);
+      }
+
+      if ($attrs.tags) {
+        console.log(3399999, $attrs.tags);
+        $scope.$parent.$watch($attrs.tags, tags => {
+          console.log(3399999, tags);
+          $scope.tags = convertToList(tags, $scope.allTags);
+          console.log(344555, $scope.tags);
+        }, true);
+      }
 
     }
   }
 
-  /** [[cat1, [cat2a, cat2b, ...] ], ...] */
-  function makeCatgeoryDictTuple(categorys) {
-    let categoryDict = {};
-    for (item of categorys.sort().map(s => s.split('/', 2))) {
+  /** [[{cat_item_1...}, {cat_item_2a, cat_item_2b, ...} ], ...] */
+  function convertToList(categories, allCategories) {
 
-      if (item.length == 0 and)
-      if (cat1 != item[0]) {
-        if (item.length > 1 && item[1] && item[1].length > 0) {
-          // 如果分类A/1, 接着就是B/1，而不是标准的 A/1, B, B/1
-          optionItems.push([item[0], '']);
-        }
+    let data = {};
+    for (label of Object.keys(categories)) {
+      let labelParts = label.split('/', 2)
+      if (labelParts.length == 2) {
+          let level1_label = labelParts[0];
+          let level1_item = data[level1_label];
+          if (!level1_item) {
+            level1_item = categories[level1_label];
+            if (!level1_item) {
+              level1_item = allCategories[level1_label];
+              if (!level1_item) {
+                level1_item = { label: level1_label };
+              }
+            }
 
-        cat1 = item[0];
+            level1_item = [level1_item, []];
+            data[level1_label] = level1_item;
+          }
+
+          item = categories[label];
+          item.name = labelParts[1];
+          level1_item[1].push(item);
+
+      } else if (labelParts.length == 1) {
+        data[label] = [categories[label], []]
+      } else {
+        console.error('!!!');
       }
-
-      optionItems.push([item[0], item[1]]);
     }
+
+    return Object.keys(data).sort().map(label => {
+      let item = data[label];
+
+      let level2Items;
+      level2Items = item[1].sort((a, b) => {
+        if (a.label < b.label) {
+          return -1;
+        }
+        if (a.label > b.label) {
+          return 1;
+        }
+        return 0;
+      });;
+
+      return [item[0], level2Items]
+    });
+
   }
 }

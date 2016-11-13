@@ -23,17 +23,28 @@
           </select>
         </div>
         <div>
-          <div class="icon-save-later" ng-class="{active:question.saveLater}" ng-click="question.saveLater = !question.saveLater">
+          <div class="icon-save-later" ng-class="{active:question.saveForLater}" ng-click="$editor.saveForLater()">
           </div>
         </div>
         <div>
-          <div class="icon-save-to-knowledge"> </div>
+          <category-picker depth="2"
+            options="availableCategories"
+            on-select="$editor.addToKnowledge($selected)">
+            <div class="icon-save-to-knowledge"> </div>
+          </category-picker>
         </div>
         <div>
-          <div class="icon-add-tag"> </div>
+          <category-picker depth="1"
+            options="availableTags" on-select="$editor.addTag($selected)">
+            <div class="icon-add-tag"> </div>
+          </category-picker >
         </div>
       </div>
       <hr>
+      <question-badge
+        tags="question.tags" allTags="availableTags"
+        categories="question.categories" allCategories="allCategories">
+      </question-badge>
       <question-markdown class=""
         start-question-no=""
         mode="$editor.mode"

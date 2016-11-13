@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <base href="/">
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="jspm_packages/system.js"></script>
+    <script src="app/jspm.config.js"></script>
+    <script src="build/thirdparty.js"></script>
+
+    <!-- <script src="build/app.js"></script> -->
+    <script>
+      System.import('bootstrap/css/bootstrap.min.css!');
+      System.import('animate.css/animate.min.css!');
+      System.import('app/comp/markdown/directives/markdown.css!');
+      System.import('app/comp/markdown/directives/editor.css!');
+
+      System.import('app/comp/markdown/test/index').catch(console.error.bind(console));
+    </script>
+<style>
+  #test {
+    /*height: 70vh;*/
+    width: 95vw;
+    border-color: #9c0d0d;
+    border-style: dotted;
+    margin: 10px auto;
+    border-width: 1px;
+  }
+</style>
+</head>
+
+<body ng-controller="QuestionMarkdownTestCtrl as testCtrl">
+
+  <div id="test">
+    <question-editor ng-model="testCtrl.markdownContent"> </question-editor>
+  </div>
+
+</body>
+
+</html>

@@ -1,3 +1,10 @@
+import "./include";
+import "./question";
+import "./subquestion";
+import "./blank";
+import "./optionGroup";
+import "./option";
+import "./markdown.css!";
 
 import {unindent} from "../util";
 import MarkdownIt from "markdown-it";

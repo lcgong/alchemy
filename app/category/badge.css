@@ -1,0 +1,99 @@
+.question-badge {
+  /*height: 36px;*/
+  line-height: 36px;
+}
+
+.question-badge .item  {
+  display: inline-block;
+  line-height: 28px;
+  height: 32px;
+  margin: 0 3px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1;
+  /* padding: .2em .6em .3em; */
+  padding: 0 2px 0 5;
+}
+
+.badge-label {
+  display: inline;
+  /* padding: .2em .6em .3em; */
+  font-size: 90%;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  padding: 0 0.6em;
+}
+
+.question-badge .item.tag {
+
+  background-color: #78477d;
+  border-color: #78477d;
+  color: #fff;
+}
+
+.question-badge .item.level-1 {
+  background-color: #095851;
+  border-color: #095851;
+
+
+}
+
+.question-badge .level-1 > .badge-label {
+  color: #fff;
+}
+
+.question-badge .level-2 {
+  display: inline-block;
+  line-height: 20px;
+  margin: 1px 2px;
+  border-radius: 2px;
+
+  background-color: #b7e2e1;
+  border-color: #b7e2e1;
+
+
+  border-style: solid;
+  border-width: 1px;
+  vertical-align: 1px;
+}
+
+.question-badge .level-2 > .badge-label {
+  color: #333;
+}
+
+.level-1 .sublevel-flag {
+  color: #aaa;
+  margin: 0;
+  padding: 0;
+  width: 12px;
+  display: inline-block;
+  margin-left: -6px;
+  margin-right: -6px;
+  top: 2px;
+  right: 4px;
+  position: relative;
+}
+
+.badge-remove {
+  right: 0px;
+  display: none;
+  margin: 0;
+  margin-left: -18px;
+  font-size: 120%;
+  width: 18px;
+  text-align: center;
+  background-color: #607D8B;
+  box-sizing: border-box;
+  opacity: 0.9;
+  color: white;
+  border-radius: 50%;
+  vertical-align: -2px;
+  padding: 0;
+  border-style: none;
+}
+
+.hover > .badge-remove {
+  display: inline-block;
+}
