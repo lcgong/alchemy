@@ -1,5 +1,4 @@
 default: # 缺省连接池的名字
     host: localhost
-    dbname: shuizhuyu
+    dbname: alchemy
     user: dbo
-

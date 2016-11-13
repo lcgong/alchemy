@@ -1,0 +1,30 @@
+
+.login-dialog .modal-dialog {
+  width: 100%;
+}
+
+.login-dialog .modal-content {
+    top: 30px;
+    width: 100%;
+    border-radius: 0px;
+}
+
+.login-dialog  .carousel-inner {
+    width: 100%;
+    height: calc(100vh - 90px);
+    min-height: 300px;
+}
+
+.login-dialog  .carousel-inner img {
+  width: 100%;
+  height: 100%;
+}
+
+.login-panel {
+  position: absolute;
+  width: 400px;
+  height: 280px;
+  top : calc(50% - 140px);
+  left: calc(50% - 200px);
+  background-color: rgba(201, 195, 179, 0.43);
+}

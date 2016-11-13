@@ -1,0 +1,22 @@
+<div>
+  <div class="input-group">
+    <input type="text" class="form-control"
+      ng-model="$searchtext"
+      ng-model-options="{ updateOn: 'blur' }"
+      update-on-enter-pressed
+      placeholder="{{placeholder}}">
+    <div class="input-group-btn">
+      <button class="btn btn-default"
+        style="padding: 6px 4px;"
+        uib-tooltip="清除输入的搜索关键字" tooltip-placement="bottom"
+        tooltip-append-to-body tooltip-class="helptip"
+        ng-click="clearText()">
+        <span class="glyphicon glyphicon-erase"></span>
+      </button>
+      <button class="btn btn-default"
+        style="padding: 6px 4px;"
+        ng-click="commitText()">
+        <span class="glyphicon glyphicon-search"></span>
+      </button>
+    </div>
+</div>

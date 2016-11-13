@@ -1,0 +1,77 @@
+
+li.user-btn > a {
+	padding: 15px 10px;	
+}
+
+li.user-btn > .dropdown-menu {
+	top: 100%;
+	right: 1rem;
+	left : initial;
+	margin-top: 10px;
+	width: 300px;
+	box-shadow: 0 6px 34px rgba(0,0,0,.475);
+}
+
+
+.user-profile > .arrow,
+.user-profile > .arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+
+.user-profile > .arrow {
+  border-width: 11px;
+  top: -11px;
+  right: 2rem;
+  margin-left: -11px;
+  border-top-width: 0;
+  border-bottom-color: #999;
+  border-bottom-color: rgba(0, 0, 0, .25);
+}
+.user-profile > .arrow:after {
+  content: "";
+  border-width: 10px;
+  top: 1px;
+  margin-left: -10px;
+  content: " ";
+  border-top-width: 0;
+  border-bottom-color: #fff;
+}
+
+
+.user-profile .col-header {
+	font-weight: bolder;
+	padding-right: 1em;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+	text-align: right;
+	min-width: 7rem;
+	vertical-align: top
+}
+
+.user-profile .pic img {
+	width:80px; 
+	float:right; 
+	padding:5px;
+
+	width: 45%;
+	padding: 15px;
+	background-color: white;
+
+	position: absolute;
+	top: 0;
+	right: 0;
+	
+}
+
+.user-profile .upstream-updated {
+	position: absolute;
+	bottom: 1px;
+	right: 1rem;
+	font-size: 80%;
+	color: rgb(25, 11, 148);
+}

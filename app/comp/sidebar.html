@@ -1,0 +1,13 @@
+<div class="sidebar" ng-controller="SideBarCtrl">
+    <ul class="btn-grp" ng-repeat="grp in groups" ng-if="grp.visible">
+
+      <li ng-if="item.visible" ng-repeat="item in grp">
+      	<a class="btn" ng-click="item.click()" ng-disabled="item.disabled"  tooltip-html-unsafe="{{item.tooltip}}" 
+          tooltip-trigger="mouseenter" tooltip-placement="bottom" 
+          tooltip-popup-delay="250" tooltip-append-to-body="true">
+      		
+          <span compile="item.title"></span>
+      	</a>
+      </li>
+    </ul>
+</div>

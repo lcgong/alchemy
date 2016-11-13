@@ -1,6 +1,12 @@
 <!doctype html>
-<html lang="zh-CN" >
+<!--[if lt IE 11]> <html class="lt-ie11"> <![endif]-->
+<!--[if gt IE 10]><!--> <html lang="zh-CN" > <!--<![endif]-->
 <head >
+  <script type="text/javascript">
+    if (document.getElementsByTagName("html")[0].className.indexOf('lt-ie11')!=-1) {
+      window.location = 'app/sys/oldbrowser.html'; // 不支持低于IE9的版本浏览器
+    };
+  </script>
   <base href="/">
 
   <meta charset="utf-8">
@@ -8,37 +14,87 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/plane-32x32.png">
 
-  <link rel="stylesheet" href="jspm_packages/npm/animate.css@3.4.0/animate.min.css">
-  <link rel="stylesheet" href="jspm_packages/github/twbs/bootstrap@3.3.6/css/bootstrap.min.css">
+  <title>炼金坊(Alchemy)</title>
 
-  <link rel="stylesheet" href="jspm_packages/github/angular-ui/ui-select@0.13.2/dist/select.min.css">
-  <link rel="stylesheet" href="jspm_packages/github/angular-ui/bootstrap-bower@0.14.3/ui-bootstrap-csp.css">
-
-  <link rel="stylesheet" href="jspm_packages/npm/nvd3@1.8.1/build/nv.d3.min.css">
-
-  <link rel="stylesheet" href="app/index.css">
-
-
-  <title></title>
+  <script src="jspm_packages/system.js"></script>
+  <script src="app/jspm.config.js"></script>
+  <script src="build/thirdparty.js"></script>
 
 </head>
 
 <body>
 
+  <header class="navbar navbar-default navbar-fixed-top">
+    <div notification-bar></div>
+    <main-nav></main-nav>
+  </header>
 
-
-
+  <div id="main" >
+    <div id="main-body">
+      <div class="paper-view" ui-view ></div>
+      <footer>天津工业大学·管理学院 &nbsp; &copy; 2015</footer>
+    </div>
+    <div id="sidebar">
+      <div class="sidebar-view" ui-view="leftside" style="height:100%"></div>
+    </div>
+  </div>
 
 
   <!-- ==================================================================== -->
 
-  <script src="jspm_packages/system.js"></script>
-  <script src="app/jspm.config.js"></script>
-  <script src="build/app.js"></script>
-  <script>
-    console.log(1333, System.get('angular'));
 
-    System.import('app/index').catch(console.error.bind(console));
+  <script>
+    Promise.all([
+      "jquery", "angular", "bootstrap", "markdown-it", "ace", "d3", "nvd3"
+    ].map(url => System.import(url))).then(function (jQuery, angular) {
+      // 2. anular加载之后
+      Promise.all([
+        "angular",
+        "angular-animate",
+        "angular-sanitize", "angular-resource",
+        "angular-i18n/angular-locale_zh-hans-cn",
+        "angular-bootstrap/ui-bootstrap.min.js",
+        "angular-bootstrap/ui-bootstrap-tpls.min.js",
+        "angular-ui-router",
+        "angular-ui-select",
+        "angular-smart-table",
+        "bootstrap/css/bootstrap.min.css!",
+        "angular-bootstrap/ui-bootstrap-csp.css!",
+        "angular-ui-select/dist/select.min.css!",
+        "animate.css/animate.min.css!",
+        "nvd3/build/nv.d3.min.css",
+
+      ].map(url => System.import(url))).then(function ([angular]) {
+
+        // 3. 在angular等主要模块加载后
+        let app = angular.module('mainapp', [
+          'ngResource', 'ngSanitize', 'ngAnimate', 'ui.bootstrap',
+          'ui.router', 'ui.select', 'smart-table'
+        ]);
+
+        Promise.all([
+          "angular",
+          //************************
+          //***** 要测试的模块 ******
+          'ace',
+          'app/main'
+        ].map(url => System.import(url))).then(function ([angualar]) {
+
+          // 在所有的程序库加载后在初始化DOM
+          angular.element(document).ready(function() {
+              angular.bootstrap(document.body, ['mainapp'], {
+                // strictDi: true
+              });
+          });
+        });
+      });
+    });
   </script>
+  <!-- <script>
+    System.import('app/test/greet.ts').catch(console.error.bind(console)).then((m) => {
+      console.log(1234, m.greeter('ddd'));
+    });
+  </script> -->
+
 </body>
 </html>

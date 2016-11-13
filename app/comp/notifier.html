@@ -1,0 +1,9 @@
+<div class="notification-bar" ng-show="hints.length > 0">
+  <uib-alert class="notification-panel" ng-repeat="m in hints" type="{{m.type}}" close="close(m)" >
+    <label ng-show="m.title != undefined">{{m.title}}</label>
+    <div class="alert-message">
+      <span ng-bind-html="m.message"></span>
+      <span class="badge" ng-show="m.count > 0">{{m.count}}</span>
+    </div>
+  </uib-alert>
+</div>

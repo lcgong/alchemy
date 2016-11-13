@@ -1,0 +1,98 @@
+<div class="paper-card panel panel-default paper-80"
+  ng-controller="UserDetailCtrl as dtlctrl">
+
+  <form name="frm">
+    <div class="modal-header">
+      <ul class="nav-breadcrumb">
+        <li><a >&nbsp;</a></li>
+        <li><a >用户管理</a></li>
+        <li><a>用户资料</a></li>
+
+        <li ng-if="isString(model.title) && model.title.trim().length > 0">
+          <a style="min-width:2">
+            <span ng-if="model.user_sn != 0">
+              {{model.user_name}}({{model.login_id}})
+            </span>
+            &nbsp;
+          </a>
+        </li>
+
+      </ul>
+
+      <div class="ctrlbar">
+        <ul class="nav navbar-nav" >
+          <li>
+            <button type="button" class="btn"
+              ng-disabled="model.user_sn == 0" ng-click="dtlctrl.changePassword()">
+              <span class="glyphicon glyphicon-plus1"
+                    style="vertical-align: text-top;margin-left: 2px;"></span>
+              <span>设置密码</span>
+            </button>
+          </li>
+
+          <li>
+            <button type="button" class="btn"
+              ng-disabled="frm.$pristine" ng-click="dtlctrl.save()">
+              <span class="glyphicon glyphicon-plus1"
+                    style="vertical-align: text-top;margin-left: 2px;"></span>
+              <span>保存</span>
+            </button>
+          </li>
+
+          <li>
+            <button type="button" class="btn" click-go-back >
+              <span class="glyphicon glyphicon-remove-circle1"
+                    style="vertical-align: text-top;margin-left: 2px;"></span>
+              <span>返回</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="row" >
+        <div class="col-xs-3">
+          <label>登录名</label>
+          <input type="text" class="form-control"
+            ng-model="model.login_id" name="title">
+        </div>
+        <div class="col-xs-3">
+          <label>用户名</label>
+          <input type="text" class="form-control"
+            ng-model="model.user_name" name="title">
+        </div>
+      </div>
+
+      <div class="row" >
+        <div class="col-xs-12">
+          <label>系统角色</label>
+          <ui-select class="form-control" style="width:100%;"
+            multiple ng-model="model.sys_roles">
+
+            <ui-select-match placeholder="选择角色...">
+              {{$item.title}}</ui-select-match>
+            <ui-select-choices repeat="role in roles">
+              <div ng-bind-html="role.title"></div>
+            </ui-select-choices>
+          </ui-select>
+        </div>
+      </div>
+
+      <div class="row" >
+        <div class="col-xs-12">
+          <label >说明</label>
+          <textarea type="text" class="form-control" rows="4"
+            ng-model="model.notes" name="notes">
+          </textarea>
+        </div>
+      </div>
+
+
+    </div>
+
+  </form>
+</div>

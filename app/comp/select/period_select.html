@@ -1,0 +1,30 @@
+<table class="select-period">
+  <tr>
+  <td ng-show="showMqy">
+    <div class="btn btn-primary btn-mqy"
+      uib-tooltip="点击切换“月度”、“季度”和“年度”"
+      ng-click = "toggleMQY()">
+      {{mqy.title}}
+    </div>
+  </td>
+  <td>
+    <input class="form-control" type="text"
+      ng-model="period_no" input-period-no ng-invalid-period-no
+      ng-model-options="{ updateOn: 'blur' }"
+      update-on-enter-pressed
+      >
+  </td>
+  <td>
+    <div>
+      <button class="btn btn-primary btn-spin up"
+        ng-click="up()">
+        <i class="glyphicon glyphicon-chevron-up"></i>
+      </button>
+      <button class="btn btn-primary btn-spin down"
+        ng-click="down()">
+        <i class="glyphicon glyphicon-chevron-down"></i>
+      </button>
+    </div>
+  </td>
+  </tr>
+</table>

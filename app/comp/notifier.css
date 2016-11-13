@@ -1,0 +1,40 @@
+.notification-bar {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	top: 0.5rem;
+	z-index: 3000;
+
+}
+
+.notification-bar .alert-success {
+    color: #3c763d;
+    background-color: hsla(103, 44%, 89%, 0.6);;
+    border-color: hsla(103, 44%, 89%, 0.6);;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+	letter-spacing: 2px;
+}
+
+.notification-bar > .alert {
+	display: block;
+	position: relative;
+	width: 30%;
+	min-width: 20em;
+	padding: 5px 30px;
+	margin: 0 auto;
+
+	z-index: 3000;
+
+}
+
+.notification-bar > .alert > .alert-message {
+	text-align: center;
+}
+
+.notification-bar > .alert.ng-enter {
+  animation: zoomInUp 0.5s;
+}
+
+.notification-bar > .alert.ng-leave {
+  animation: fadeOutRight 1s;
+}

@@ -1,0 +1,17 @@
+<nav ng-if="pages.length >= 2">
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-default"
+      ng-click="selectPage(1)">首页</button>
+    <button type="button" class="btn btn-default"
+       ng-click="selectPage(currentPage - 1)">上页</button>
+
+    <cb-page-no class="btn btn-default"></cb-page-no>
+    <button type="button" class="btn btn-default"
+      ng-click="selectPage(currentPage + 1)"
+      ng-disabled="currentPage==numPages"
+      style="">&nbsp;
+      <span ng-show="currentPage < numPages">下页</span>
+      <span ng-show="currentPage==numPages">尾页</span>
+    </button>
+  </div>
+</nav>

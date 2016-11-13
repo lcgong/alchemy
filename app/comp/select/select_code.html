@@ -1,0 +1,35 @@
+<div class="select-code" >
+  <div class="uneditable form-control" ng-hide="editable" >
+    <span class="label label-default"  style="font-size:105%"
+      ng-bind-html="model.selected[model.codeField]"></span>
+    <span ng-bind-html="model.selected[model.titleField]"></span>
+
+  </div>
+  <ui-select class="editable"
+    ng-model="model.selected" ng-show="editable"
+    reset-search-input="{{newOneField == undefined}}" required="true"
+    style="width:100%">
+
+    <ui-select-match placeholder="{{placeholder}}"  >
+      <span class="label label-default"  style="font-size:105%"
+        ng-bind-html="$select.selected[model.codeField]"></span>
+      <span ng-bind-html="$select.selected[model.titleField]"></span>
+
+      <a class="btn btn-xs btn-link pull-right"
+        ng-click="clear($event, $select)"
+        ng-show="model.clearButton && $select.selected">
+        <i class="glyphicon glyphicon-remove"></i></a>
+
+    </ui-select-match>
+
+    <ui-select-choices
+      repeat="item in $select.items"
+      refresh="refresh($select)"
+      refresh-delay="150">
+
+      <span ng-bind-html="item[model.codeField]"
+        class="label label-default" style="font-size:102%"></span>
+      <span ng-bind-html="item[model.titleField]"></span>
+    </ui-select-choices>
+  </ui-select>
+</div>

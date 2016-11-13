@@ -1,0 +1,82 @@
+<div class="navbar-inner">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed"
+        data-toggle="collapse" data-target="#navbar"
+        aria-expanded="false" aria-controls="navbar">
+
+      <span class="sr-only"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" >
+      <div class="brand-logo"></div>
+      <div style="display:inline-block;margin-top: -5px;margin-bottom: 0px;">
+        <div style="font-size: 16px;text-align: center;border-bottom-style: groove;border-bottom-width: 2px;">
+          炼金坊
+        </div>
+        <div style="width: 50px;font-size: 12px;text-align: center;margin-top: -5px;">
+          Alchemy
+        </div>
+      </div>
+      <sub class="version">v0.3</sub>
+    </a>
+  </div>
+  <div id="navbar" class="navbar-collapse collapse">
+    <ul class="nav navbar-nav">
+      <li>
+        <a ui-sref="repos" menu-active="repos">
+          测试
+        </a>
+      </li>
+      <li>
+        <a ui-sref="repos" menu-active="repos">
+          练习
+        </a>
+      </li>
+      <li>
+        <a ui-sref="repos" menu-active="repos">
+          题库
+        </a>
+      </li>
+      <li>
+        <a ui-sref="repos" menu-active="repos">
+          组卷
+        </a>
+      </li>
+    </ul>
+
+
+
+    <ul class="nav navbar-nav navbar-right">
+      <li><a><span>{{userSession.user.login_id}}</span></a></li>
+
+      <li ><fullscreen-all></fullscreen-all></li>
+
+      <li class="dropdown" >
+        <a href="#"
+          class="dropdown-toggle" data-toggle="dropdown"
+          role="button" aria-haspopup="true" aria-expanded="false">
+          <span class="menu-logo"></span>
+          <!-- <span class="glyphicon glyphicon-cog"></span> -->
+        </a>
+        <div class="dropdown-menu main-menu">
+            <div class="row" >
+              <div class="col-xs-6">
+                <ul >
+                  <li class="dropdown-header">系统管理</li>
+                  <li><a ui-sref="user.list()">系统用户</a></li>
+                  <li><a ng-click="userSession.changePassword()">更改密码</a></li>
+                  <li><a ng-click="userSession.logout()">登出系统</a></li>
+                </ul>
+
+              </div>
+            </div>
+
+        </div>
+
+      </li>
+      <li><a><span style="width:0.1em"></span></a></li>
+  </ul>
+  </div>
+</div>
