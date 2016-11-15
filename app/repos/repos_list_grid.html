@@ -1,0 +1,33 @@
+<div ng-controller="ReposListGridCtrl as ctrl">
+  <div class="grid-row">
+    <div class="grid-item">
+      <div class="dozen-card repos-item">
+        <div class="dozen-card-inner">
+          <h4 class="title">试题库1</h4>
+          <p class="brief">
+            苏分类的司法领导司机
+          </p>
+          <div class="statistics" style="height:1.5em">
+            <div class="item">
+              <label>订阅</label>
+              <span class="value">{{2}}</span>
+            </div>
+            <div class="item">
+              <label>题</label>
+              <span class="value">{{13}}</span>
+            </div>
+            <div class="item">
+              <label>知识点</label>
+              <span class="value">{{13}}</span>
+            </div>
+          </div>
+          <div class="pinned-status">
+            <span class="glyphicon"
+              ng-class="{'glyphicon-star-empty': !item.pinned, 'glyphicon-star': item.pinned}">
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<fieldset>
+  <legend>题型</legend>
+  <div class="repo-styles-zone">
+    <div ng-repeat="item in model.questionStyles">
+    </div>
+  </div>
+  <label >可同时添加多个题型，用空格或分号、逗号间隔即可）</label>
+  <input type="text" class="form-control" style="width:40em" ng-model="inputStyles">
+</fieldset>
+
+<fieldset>
+  <legend>标签</legend>
+  <div class="repos-tags-zone">
+    <div ng-repeat="item in model.tags">
+    </div>
+  </div>
+  <label >可同时添加多个标签，用空格或分号、逗号间隔即可）</label>
+  <input type="text" class="form-control" style="width:40em" ng-model="inputTags">
+</fieldset>

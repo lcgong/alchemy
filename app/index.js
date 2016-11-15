@@ -17,27 +17,27 @@
 // import "nvd3"
 
 
-(function() {
-  'use strict';
-
-
-  var app = angular.module('mainapp', [
-    // 'ngResource', 'ngSanitize', 'ngAnimate', 'ui.router', 'ui.bootstrap',
-    // 'ui.select', 'smart-table'
-  ]);
-
-  app.constant('d3', d3);
-
-
-  angular.element(document).ready(function() {
-    System.import('app/main').then((main) => {
-      console.log("module 'main' loaded");
-
-      // console.log(angular, app, initConfig);
-
-      angular.bootstrap(document.body, [app.name], {
-        // strictDi: true
-      });
-    });
-  });
-})();
+// (function() {
+//   'use strict';
+//
+//
+//   var app = angular.module('mainapp', [
+//     // 'ngResource', 'ngSanitize', 'ngAnimate', 'ui.router', 'ui.bootstrap',
+//     // 'ui.select', 'smart-table'
+//   ]);
+//
+//   app.constant('d3', d3);
+//
+//
+//   angular.element(document).ready(function() {
+//     System.import('app/main').then((main) => {
+//       console.log("module 'main' loaded");
+//
+//       // console.log(angular, app, initConfig);
+//
+//       angular.bootstrap(document.body, [app.name], {
+//         // strictDi: true
+//       });
+//     });
+//   });
+// })();

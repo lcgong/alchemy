@@ -11,8 +11,10 @@ from schema.user import sys_user, sys_user_seqno
 
 route_base('/api/sys/')
 
+@transaction
 def current_user():
     user_sn = webreq.principal_id
+    print(user_sn)
     user = get_user(user_sn)
     if user:
         return user
