@@ -9,7 +9,7 @@ class ts_quest_seqno(dsequence):
     step  = 1
 
 class ts_quest(dtable):
-    """航材登记信息"""
+    """ """
 
     quest_sn  = datt(ts_quest_seqno, doc='题号')
     repos_sn  = datt(int, len=4, doc="题库号")
@@ -30,7 +30,7 @@ class ts_quest(dtable):
     __dobject_key__ = [quest_sn]
 
 
-class ts_quest_sfl(dtable):
+class ts_quest_saveforlater(dtable):
     """题目的SaveForLater(表内有记录，就表示已经打了标签，否则没打)"""
 
     quest_sn   = datt(ts_quest_seqno, doc='题号')
