@@ -1,6 +1,9 @@
 #! /usr/bin/env python3.5
 # -*- coding: utf-8 -*-
 
+import psycopg2.extensions
+import psycopg2.extras
+psycopg2.extensions.register_adapter(dict, psycopg2.extras.Json)
 
 from domainics.tornice import Application
 import domainics.server
