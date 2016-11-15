@@ -1,11 +1,15 @@
 <div ng-controller="ReposListGridCtrl as ctrl">
   <div class="grid-row">
-    <div class="grid-item">
+    <div class="grid-item" ng-repeat="item in ctrl.items">
       <div class="dozen-card repos-item">
         <div class="dozen-card-inner">
-          <h4 class="title">试题库1</h4>
+          <h4 class="title">
+            <a ui-sref="repos.workshop.questlist({repos_sn: item.repos_sn, source:'saveforlater'})">
+              {{item.title}}
+            </a>
+          </h4>
           <p class="brief">
-            苏分类的司法领导司机
+            {{item.brief_desc}}
           </p>
           <div class="statistics" style="height:1.5em">
             <div class="item">
@@ -23,7 +27,8 @@
           </div>
           <div class="pinned-status">
             <span class="glyphicon"
-              ng-class="{'glyphicon-star-empty': !item.pinned, 'glyphicon-star': item.pinned}">
+              ng-class="{'glyphicon-star-empty': !item.pinned, 'glyphicon-star': item.pinned}"
+              ng-click="ctrl.pindown(item)">
             </span>
           </div>
         </div>

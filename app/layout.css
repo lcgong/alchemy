@@ -2,7 +2,8 @@
 .pane-container {
   display: flex;
   align-items: flex-start;
-  min-width: 800px;
+  min-width: 900px;
+  width: 100%;
 }
 
 .pane-nav {
@@ -29,6 +30,8 @@ nav.sidebar {
   margin-top: 0px;
   letter-spacing: 0.01em;
   /* align-content: stretch; */
+  padding-right: 1;
+  margin-right: 10px;
 }
 
 nav.sidebar > .header {

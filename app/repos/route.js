@@ -6,10 +6,15 @@ import "./model";
 import "./repos_list.css!";
 import "./repos_list";
 import "./repos_list_grid";
+import "./repos_new";
+
+import "./workshop";
 
 import "./settings.css!";
 import "./settings.ctrl";
 import "./settings_desc.ctrl";
+import "./settings_tag";
+import "./settings_cat";
 
 angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
   function($stateProvider, $urlRouterProvider) {
@@ -18,6 +23,11 @@ angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
     $stateProvider.state('repos', {
       url: "/repos",
       template: '<div class="list-detail-view" ui-view >无页面</div>'
+    });
+
+    $stateProvider.state('repos.new', {
+      url: '/new',
+      templateUrl: 'app/repos/repos_new.html'
     });
 
     $stateProvider.state('repos.list', {
@@ -33,6 +43,21 @@ angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
     $stateProvider.state('repos.settings', {
       url: '/{repos_sn:[0-9]*[0-9]}/settings',
       templateUrl: 'app/repos/settings.html'
+    });
+
+    $stateProvider.state('repos.workshop', {
+      url: '/{repos_sn:[0-9]*[0-9]}/workshop',
+      templateUrl: 'app/repos/workshop.html'
+    });
+
+    $stateProvider.state('repos.workshop.questpad', {
+      url: '/questpad/{quest_sn:[0-9]*[0-9]}',
+      templateUrl: 'app/repos/questpad.html'
+    });
+
+    $stateProvider.state('repos.workshop.questlist', {
+      url: '/questlist/{source}',
+      templateUrl: 'app/repos/questlist.html'
     });
 
     $stateProvider.state('repos.settings.desc', {

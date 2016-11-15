@@ -6,7 +6,7 @@ function ReposModel(restcli) {
 
   return {
     listBriefs: function list(params) {
-        var url = '/api/repos/brief/{source}';
+        var url = '/api/repos/list/brief/{source}';
 
         var config = {
           pathargs: {
@@ -52,6 +52,90 @@ function ReposModel(restcli) {
           pathargs: {
             repos_sn: repos_sn
           }
+        });
+    },
+
+    listQuestionStyles: function(repos_sn) {
+      let url = baseUrl + '/queststyles'
+      return restcli.factory('GET', url)({
+        pathargs: {
+          repos_sn: repos_sn
+        }
+      });
+    },
+    //
+    listTags: function(repos_sn) {
+      let url = baseUrl + '/tags'
+      return restcli.factory('GET', url)({
+        pathargs: {
+          repos_sn: repos_sn
+        }
+      });
+    },
+    //
+    listCategories: function(repos_sn) {
+      let url = baseUrl + '/categories'
+      return restcli.factory('GET', url)({
+        pathargs: {
+          repos_sn: repos_sn
+        }
+      });
+    },
+    addTags: function(obj) {
+        var url =  baseUrl + '/tags';
+        return restcli.factory('POST', url)({
+          pathargs: {
+            repos_sn: obj.repos_sn
+          },
+          data: obj
+        });
+    },
+    addQuestionStyles: function(obj) {
+        var url = baseUrl + '/queststyles';
+        return restcli.factory('POST', url)({
+          pathargs: {
+            repos_sn: obj.repos_sn
+          },
+          data: obj
+        });
+    },
+    updateCategoryText: function(obj) {
+        var url = baseUrl + '/categories';
+        return restcli.factory('POST', url)({
+          pathargs: {
+            repos_sn: obj.repos_sn
+          },
+          data: obj
+        });
+    },
+    removeTag: function(obj) {
+        var url =  baseUrl + '/tags/{label_sn}';
+        return restcli.factory('DELETE', url)({
+          pathargs: {
+            repos_sn: obj.repos_sn,
+            label_sn: obj.label_sn,
+          },
+          data: obj
+        });
+    },
+    removeQuestionStyle: function(obj) {
+        var url =  baseUrl + '/queststyles/{label_sn}';
+        return restcli.factory('DELETE', url)({
+          pathargs: {
+            repos_sn: obj.repos_sn,
+            label_sn: obj.label_sn,
+          },
+          data: obj
+        });
+    },
+    removeCategory: function(obj) {
+        var url =  baseUrl + '/categories/{label_sn}';
+        return restcli.factory('DELETE', url)({
+          pathargs: {
+            repos_sn: obj.repos_sn,
+            label_sn: obj.label_sn,
+          },
+          data: obj
         });
     },
   };

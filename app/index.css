@@ -211,6 +211,7 @@ footer {
     /* height: 100%; */
     /* margin-top: -10px; */
     min-height: calc(100vh - 90px);
+    width: 100%;
 }
 
 #main-body {

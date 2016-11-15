@@ -1,0 +1,26 @@
+
+<form name="frm">
+  <div class="repos-new-pane panel panel-primary paper-card paper-45"
+    ng-controller="ReposNewCtrl as ctrl">
+    <div class="panel-heading">
+      <h4>开始新题库...</h4>
+    </div>
+    <div class="panel-body">
+
+      <label>需要先给库起个名字，不要太长，创建后还可以到题库的配置界面进行修改的...</label>
+      <input type="text" class="form-control"
+        ng-model="reposDesc.title" name="title">
+
+      <label >劳烦给个简单说明，用在卡片上的，方便你和他人浏览...</label>
+      <textarea type="text" name="brief_desc" class="form-control" rows="2"
+        ng-model="reposDesc.brief_desc">
+      </textarea>
+
+    </div>
+    <div class="panel-footer">
+      <a class="btn btn-danger"
+        ng-disabled="frm.$pristine" ng-click="ctrl.create()">创建
+      </a>
+    </div>
+  </div>
+</form>

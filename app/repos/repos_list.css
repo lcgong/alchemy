@@ -1,3 +1,27 @@
+
+.repos-new-pane.paper-card {
+  padding: 0;
+}
+
+.repos-new-pane label {
+  margin-top: 20px;
+  color: #555;
+  font-weight: 600;
+
+}
+.repos-new-pane .panel-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.repos-new-pane .panel-footer > a {
+  font-size: 1.2em;
+  font-weight: bolder;
+  width: 30%;
+  letter-spacing: 0.5em;
+  text-align: center;
+}
+
 .repos-listview .btn-add {
     font-size: 200%;
     color: brown;
@@ -26,6 +50,10 @@
   color: #4078c0;
 }
 
+.repos-item {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
 
 .repos-item h4 {margin: 3px 0 6px 0px;font-weight: 600;}
 
