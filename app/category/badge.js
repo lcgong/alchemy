@@ -80,55 +80,89 @@ function questionBadgeBar($compile, $timeout) {
     }
   }
 
-  /** [[{cat_item_1...}, {cat_item_2a, cat_item_2b, ...} ], ...] */
-  function convertToList(categories, allCategories) {
+}
 
-    let data = {};
-    for (label of Object.keys(categories)) {
-      let labelParts = label.split('/', 2)
-      if (labelParts.length == 2) {
-          let level1_label = labelParts[0];
-          let level1_item = data[level1_label];
+
+/** [[{cat_item_1...}, {cat_item_2a, cat_item_2b, ...} ], ...] */
+export function convertToList(categories, allCategories) {
+  let data = {};
+  for (label of Object.keys(categories).sort()) {
+    let labelParts = label.split('/', 2)
+    if (labelParts.length == 2) {
+        let level1_label = labelParts[0];
+        let level1_item = data[level1_label];
+        if (!level1_item) {
+          level1_item = categories[level1_label];
           if (!level1_item) {
-            level1_item = categories[level1_label];
+            level1_item = allCategories[level1_label];
             if (!level1_item) {
-              level1_item = allCategories[level1_label];
-              if (!level1_item) {
-                level1_item = { label: level1_label };
-              }
+              level1_item = { label: level1_label };
             }
-
-            level1_item = [level1_item, []];
-            data[level1_label] = level1_item;
           }
 
-          item = categories[label];
-          item.name = labelParts[1];
-          level1_item[1].push(item);
+          level1_item = [level1_item, []];
+          data[level1_label] = level1_item;
+        }
 
-      } else if (labelParts.length == 1) {
-        data[label] = [categories[label], []]
-      } else {
-        console.error('!!!');
+        item = categories[label];
+        item.name = labelParts[1];
+        level1_item[1].push(item);
+
+    } else if (labelParts.length == 1) {
+      let item = categories[label]
+      if (!item.label) {
+        item.label = label;
       }
+      data[label] = [item, []]
+    } else {
+      console.error('!!!');
     }
+  }
 
-    return Object.keys(data).sort().map(label => {
-      let item = data[label];
+  data = Object.values(data); // list
+  data.sort(compareLabelItem);
 
-      let level2Items;
-      level2Items = item[1].sort((a, b) => {
+  for (item of data) { // 对第二级进行排序
+    item[1].sort(_compareLabelItem);
+  }
+
+  return data;
+}
+function compareLabelItem(a, b) {
+  return _compareLabelItem(a[0], b[0]);
+}
+
+function _compareLabelItem(a, b) {
+  if (typeof a.order !== 'undefined' &&
+      typeof b.order !== 'undefined' &&
+      typeof a.order !== null &&
+      typeof b.order !== null ) {
+        if (a.order < b.order) {
+          return -1;
+        }
+
+        if (a.order > b.order) {
+          return 1;
+        }
+
         if (a.label < b.label) {
           return -1;
         }
+
         if (a.label > b.label) {
           return 1;
         }
+
         return 0;
-      });;
+  } else {
+    if (a.label < b.label) {
+      return -1;
+    }
 
-      return [item[0], level2Items]
-    });
+    if (a.label > b.label) {
+      return 1;
+    }
 
+    return 0;
   }
 }

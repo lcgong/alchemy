@@ -1,19 +1,29 @@
-<fieldset>
-  <legend>题型</legend>
-  <div class="repo-styles-zone">
-    <div ng-repeat="item in model.questionStyles">
-    </div>
-  </div>
-  <label >可同时添加多个题型，用空格或分号、逗号间隔即可）</label>
-  <input type="text" class="form-control" style="width:40em" ng-model="inputStyles">
-</fieldset>
+<div class="repos-category-editor tag-editor panel panel-success paper-card paper-45"
+  ng-controller="CatEditorCtrl as ctrl"
+  ng-init="target='Tag'">
 
-<fieldset>
-  <legend>标签</legend>
-  <div class="repos-tags-zone">
-    <div ng-repeat="item in model.tags">
+  <div class="panel-heading">
+    <h4>定义题库的知识要点(两级分类)</h4>
+  </div>
+  <div class="panel-body">
+    <label >在右栏编辑知识大纲，每行一个要点，第一级顶头，第二级使用空格缩进</label>
+    <div class="two-columns">
+      <div class="left-pane">
+        <div ng-repeat="item in items track by $index"
+          ng-class="{levelone: item.depth==1, leveltwo: item.depth==2}">
+          <span>{{item.name}}</span>
+        </div>
+      </div>
+      <div class="right-pane">
+        <form name="frm">
+        <textarea class="form-control" style="height:100%"
+          ng-model="text">
+        </textarea>
+        <button type="submit" class="btn btn-success" style="flex-grow: 0"
+          ng-disabled="frm.$pristine" ng-click="ctrl.update()">保存
+        </button>
+        </form>
+      </div>
     </div>
   </div>
-  <label >可同时添加多个标签，用空格或分号、逗号间隔即可）</label>
-  <input type="text" class="form-control" style="width:40em" ng-model="inputTags">
-</fieldset>
+</div>

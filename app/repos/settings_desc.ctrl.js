@@ -28,14 +28,14 @@
       if ($scope.repos_sn === 0) {
         ReposModel.create($scope.reposDesc).then(function(data) {
           util.notifySuccess('凭证成功创建');
-          $state.go('repos.dtl.desc', {
+          $state.go('repos.settings.desc', {
             repos_sn: data[0].repos_sn
           });
         });
       } else {
         ReposModel.save($scope.reposDesc).then(function(data) {
           util.notifySuccess('保存成功');
-          $state.go('repos.dtl.desc', {
+          $state.go('repos.settings.desc', {
             repos_sn: data[0].repos_sn
           });
         });
