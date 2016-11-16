@@ -168,3 +168,19 @@ function questionMarkdownDirective($templateRequest, $compile) {
     }
   };
 }
+
+export function analyzeMarkdownText(text) {
+  text = unindent(text || '');
+
+  let md = new MarkdownIt();
+  md.disable([ 'code'])
+  md.use(mathjax); // prevent markdown tag parsed in mathjax
+  md.use(questionMarkdownPlugin);
+
+  let env = {};
+  let options = {};
+  let tokens = md.parse(text, env);
+  let questions = analyze(tokens);
+
+  return questions;
+}

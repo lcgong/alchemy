@@ -2,72 +2,71 @@ import "app/category/picker";
 import "app/category/badge";
 import "app/markdown/markdown";
 
-import "./editor.css!"
-
+import "./questeditor.css!";
 
 let app = angular.module('mainapp');
 
-app.controller('questionEditorCtrl', questionEditorCtrl);
-questionEditorCtrl.$inject = ['$scope', '$element', '$attrs'];
-function questionEditorCtrl($scope, $element, $attrs) {
+app.controller('questeditorCtrl', questeditorCtrl);
+questeditorCtrl.$inject = ['$scope', '$element', '$attrs'];
+function questeditorCtrl($scope, $element, $attrs) {
   let $editor = this;
 
-  $scope.repository = {
-    questionStyles: [
-      '基础题', '看图题', '综合题'
-    ],
-    categories : {
-      '主类A/子类A1': {
-        pinyinAliases: []
-      },
-      '主类A/子类A2': {},
-      '主类B/子类B1': {},
-      '主类B/子类B2': {},
-    },
-    tags: {
-      '标签A': {
-        pinyinAliases: []
-      },
-      '标签B': {
-        pinyinAliases: ['bqB', 'biaoqianB']
-      },
-      '标签C': {
-        pinyinAliases: []
-      },
-      '标签D': {
-        pinyinAliases: []
-      },
-    },
-  };
+  // $scope.repository = {
+  //   questionStyles: [
+  //     '基础题', '看图题', '综合题'
+  //   ],
+  //   categories : {
+  //     '主类A/子类A1': {
+  //       pinyinAliases: []
+  //     },
+  //     '主类A/子类A2': {},
+  //     '主类B/子类B1': {},
+  //     '主类B/子类B2': {},
+  //   },
+  //   tags: {
+  //     '标签A': {
+  //       pinyinAliases: []
+  //     },
+  //     '标签B': {
+  //       pinyinAliases: ['bqB', 'biaoqianB']
+  //     },
+  //     '标签C': {
+  //       pinyinAliases: []
+  //     },
+  //     '标签D': {
+  //       pinyinAliases: []
+  //     },
+  //   },
+  // };
 
-  $scope.question = {
-    purpose : {
-      testing: false,
-      exercising: false
-    },
-    tags : {},
-    categories: {},
-    saveForLater: null, // if it is labeled, {taggedTime: ..., }
-    created_ts: null,
-    updated_ts: null
-  };
-
+  // $scope.question = {
+  //   purpose : {
+  //     testing: false,
+  //     exercising: false
+  //   },
+  //   tags : {},
+  //   categories: {},
+  //   saveForLater: null, // if it is labeled, {taggedTime: ..., }
+  //   created_ts: null,
+  //   updated_ts: null,
+  //   text: ''
+  // };
 }
 
 
-app.directive('questionEditor', questionEditor);
-questionEditor.$inject = ['$templateRequest', '$compile', '$timeout'];
-function questionEditor($templateRequest, $compile, $timeout) {
+app.directive('questeditor', questeditor);
+questeditor.$inject = ['$templateRequest', '$compile', '$timeout'];
+function questeditor($templateRequest, $compile, $timeout) {
   return {
-    restrict: 'E',
+    restrict: 'EA',
     replace: true,
-    require: ['?ngModel', 'questionEditor',],
+    require: ['?ngModel', 'questeditor',],
     scope: {
-      src: '=',
-      // mode: '='
+      question: '=',
+      repository: '='
     },
-    templateUrl: 'app/repo/editor.html',
-    controller: 'questionEditorCtrl',
+    templateUrl: 'app/questwork/questeditor.html',
+    controller: 'questeditorCtrl',
     controllerAs: '$editor',
     link: function($scope, $element, $attrs, ctrls) {
       let [ngModelCtrl, $editor] = ctrls;
@@ -108,6 +107,7 @@ function questionEditor($templateRequest, $compile, $timeout) {
 
         aceSession.on('change', function (e) {
           let newValue = aceSession.getValue();
+
           if (newValue !== ngModelCtrl.$viewValue &&
              !$scope.$$phase && !$scope.$root.$$phase) {
 

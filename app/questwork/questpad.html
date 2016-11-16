@@ -1,0 +1,12 @@
+<div class="questpad panel panel-primary screen-min-height" ng-controller="QuestpadCtrl as qpad">
+
+  <nav class="ctrlbar">
+    <a class="btn" ng-click="qpad.save()">保存</a>
+  </nav>
+
+  <div class="panel-body">
+    <questeditor question="qpad.question" ng-model="qpad.questionText" repository="repos">
+    </questeditor>
+  </div>
+
+</div>

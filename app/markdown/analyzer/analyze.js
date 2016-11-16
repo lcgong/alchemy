@@ -46,6 +46,15 @@ export function analyze(tokens) {
 }
 
 function analyzeQuestion(question, section) {
+  // console.log(123, section.first);
+
+
+  // console.assert(section.first.type == "question_open");
+  if (section.first) {
+    question.textLineRange = section.first.map;
+  }
+
+
   let bgnIdx;
 
   let subquestionSections = [...findTokenSections('subquestion', section)];

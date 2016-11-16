@@ -33,6 +33,15 @@ def get_repos_desc(repos_sn):
     return repos
 
 
+@rest.GET(r'{repos_sn:int}/brief')
+@transaction
+def get_repos_brief_summary(repos_sn):
+    """  """
+    # TODO
+    repos = drecall(ts_repos(repos_sn = repos_sn))
+    return repos
+
+
 @rest.GET(r'list')
 @transaction
 def list_repos(page: DPage):

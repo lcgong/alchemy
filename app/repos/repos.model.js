@@ -23,6 +23,14 @@ function ReposModel(restcli) {
 
         return restcli.factory('GET', url)(config);
     },
+    getReposBriefSummary: function(repos_sn) {
+        let url = baseUrl + '/brief'
+        return restcli.factory('GET', url)({
+          pathargs: {
+            repos_sn: repos_sn
+          }
+        });
+    },
     get_desc: function(repos_sn) {
         let url = baseUrl + '/desc'
         return restcli.factory('GET', url)({

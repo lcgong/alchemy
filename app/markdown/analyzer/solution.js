@@ -7,6 +7,11 @@ export function analyzeNotes(question, section) {
   for(let notesSection of findTokenSections('question_notes', section)) {
     let notes = question.makeNotes();
 
+    if (notesSection.first) {
+      notes.textLineRange = notesSection.first.map;
+    }
+    // console.log(notes.textLineRange, notesSection);
+
     let solutionList = notesSection.get(notesSection.bgnIndex).meta.solution;
     for (sol of solutionList) {
       // [0, 'A', 'B'] 第一个数为题空号，后面是答案，临时格式，需要后面整理

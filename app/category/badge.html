@@ -46,7 +46,7 @@
 
     <select class="form-control btn-question-style"
       ng-model="question.questionStyle"
-      ng-options="style for style in repository.questionStyles">
+      ng-options="k as k for (k,v) in repository.questionStyles">
       <option value="" disabled selected hidden>题型...</option>
     </select>
 

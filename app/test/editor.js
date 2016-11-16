@@ -1,5 +1,5 @@
 
-import "app/repo/editor"
+import "app/questwork/questeditor"
 
 import {data as sample1} from "./data/p01"
 import {data as sample2} from "./data/p02"

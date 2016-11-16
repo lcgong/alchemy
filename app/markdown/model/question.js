@@ -126,3 +126,49 @@ export class Subquestion extends BaseQuestion {
   }
 
 };
+
+export function makeQuestionSolutionSignature(question) {
+  if (!question)
+    return;
+
+  let optgroups = {};
+
+  let optgrpSig = [];
+  let blankSig = [];
+
+  let optgrpNum = 0; //
+  let optgrp;
+
+  for (let subquest of question.subquestions) {
+    optgrp = subquest.optionGroup;
+    optgrpSig.push(Object.keys(optgrp._options).length)
+    optgroups[optgrp] = optgrpNum;
+    optgrpNum++;
+  }
+
+  optgrp = question.optionGroup;
+  if (optgrp) {
+    optgrpSig.push(Object.keys(optgrp._options).length)
+    optgroups[optgrp] = optgrpNum;
+    optgrpNum++;
+  }
+
+  for (let blank_no of Object.keys(question._blanks).sort()) {
+    let blank = question._blanks[blank_no]
+
+    let optgrp = blank.getTargetingOptionGroup();
+
+    let targeting = -1;
+    if (typeof optgroups[optgrp] !== 'undefined') {
+      targeting = optgroups[optgrp];
+    }
+
+    blankSig.push([targeting, blank.solution])
+  }
+
+  let signature = [blankSig, optgrpSig]
+
+  console.log(question, signature);
+
+  return signature;
+}

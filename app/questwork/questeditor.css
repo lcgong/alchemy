@@ -5,68 +5,89 @@
   font-family: monospace;
 }
 
-.question-editor {
+.questeditor {
   display: flex;
-  min-height: 90vh;
   flex-direction: column;
+  align-items: stretch;
+  flex-grow: 1
 }
 
-.editor-header {
+.questeditor-body {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1
+}
+
+.questeditor-header {
   flex: 0 0 2em;
   background-color: #d6abab;
 }
 
-.editor-footer {
+.questeditor-footer {
   flex: 0 0 2em;
   background-color: #36731e;
 }
 
-.editor-body {
-  display: flex;
-  flex: 1;
-}
 
-.editor-left {
+.questeditor-left {
   order: 1;
   flex: 1;
 }
 
-.editor-right {
+.questeditor-right {
   order: 2;
   flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
-.editor-left > .question-markdown {
+.questeditor-right > .markdown-editor {
+
+}
+
+.questeditor-left > .question-markdown {
   width: 100%;
+
   /* height: 100%; */
 }
 
-.editor-right > .markdown-editor {
-  width: 100%;
-  height: 100%;
+.questeditor-right > .markdown-editor {
+
+  flex-grow: 1;
+}
+
+.attachment-pane {
+  background-color: #eee;
+
 }
 
 
-.editor-ctrl-bar {
+
+
+
+
+.questeditor-ctrl-bar {
   display: flex;
 }
 
-.editor-ctrl-bar > div{
+.questeditor-ctrl-bar > div{
   /*flex: 1;*/
 }
 
-.editor-ctrl-bar > div:not(:first-child) {
+.questeditor-ctrl-bar > div:not(:first-child) {
   margin-left: 1rem;
 }
 
 
-.editor-ctrl-bar > div > select {
+.questeditor-ctrl-bar > div > select {
 
   font-size: 14px;
   font-weight: bold;
 }
 
-.editor-ctrl-bar > div > select > option {
+.questeditor-ctrl-bar > div > select > option {
 
   font-size: 14px;
 }

@@ -14,18 +14,28 @@ class ts_quest(dtable):
     quest_sn  = datt(ts_quest_seqno, doc='题号')
     repos_sn  = datt(int, len=4, doc="题库号")
 
-    for_testing    = datt(bool, doc="考试用")
-    for_exercising = datt(bool, doc="练习用")
-    question_style = datt(str,  doc='题型')
+    purpose_testing    = datt(bool, doc="考试用")
+    purpose_exercising = datt(bool, doc="练习用")
 
-    editingText    = datt(str,   doc='编辑版题目文本')
-    testingText    = datt(str,   doc='测试版题目文本（不含解答）')
+    question_style     = datt(int,  doc='题型序号: ts_label的S类型序号')
 
-    solution_sig   = datt(json_object, doc=('答案信息: '
-                        '[blank_no, option_group_no, option_num, ["A",...]]'))
+    editing_text       = datt(str,   doc='编辑版题目文本')
+    testing_text       = datt(str,   doc='测试版题目文本（不含解答）')
 
-    created_ts     = datt(datetime,  doc='创建时间')
-    updated_ts     = datt(datetime,  doc='更新时间')
+    """
+    signature: 序号从0开始计数
+    [
+        #题空#
+        [ [第一个题空所对应的选项组序号, [答案]], 第二个....  ],
+
+        #选项组#
+        [第一个选项组的选项数, 第二个选项组的选项数, ...]
+    ]
+    """
+    blank_signature = datt(json_object, doc=(''))
+
+    created_ts      = datt(datetime,  doc='创建时间')
+    updated_ts      = datt(datetime,  doc='更新时间')
 
     __dobject_key__ = [quest_sn]
 
@@ -38,20 +48,12 @@ class ts_quest_saveforlater(dtable):
 
     __dobject_key__ = [quest_sn]
 
-class ts_quest_tag(dtable):
+class ts_quest_labels(dtable):
     """题目的标签(Tag)"""
 
     quest_sn   = datt(ts_quest_seqno, doc='题号')
-    tags       = datt(array(int), doc='标签')
+    type       = datt(str, len=1, doc='标签类型: T标签, C分类')
+    labels     = datt(array(int), doc='标签')
     updated_ts = datt(datetime,  doc='更新时间')
 
-    __dobject_key__ = [quest_sn]
-
-class ts_quest_cat(dtable):
-    """题目的知识分类(Category)，人为限制两级分类"""
-
-    quest_sn   = datt(ts_quest_seqno, doc='题号')
-    categories = datt(array(int), doc='分类')
-    updated_ts = datt(datetime,  doc='更新时间')
-
-    __dobject_key__ = [quest_sn]
+    __dobject_key__ = [quest_sn, type]

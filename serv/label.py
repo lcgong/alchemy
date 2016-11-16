@@ -166,11 +166,9 @@ def add_tags(repos_sn, json_arg):
 
     return
 
-def get_update_labels(repos_sn, label_texts, label_type):
+def find_labels(repos_sn, label_texts, label_type):
 
     label_texts = list(set(label_texts))
-
-    now = datetime.utcnow();
 
     dbc << """
     SELECT label_sn, label FROM ts_label
@@ -180,6 +178,14 @@ def get_update_labels(repos_sn, label_texts, label_type):
     """
     dbc << dict(repos_sn=repos_sn, labels=label_texts, label_type=label_type)
     found_labels = { x.label: x.label_sn for x in dbc }
+
+    return found_labels
+
+def get_update_labels(repos_sn, label_texts, label_type):
+
+    found_labels = find_labels(repos_sn, label_texts, label_type)
+
+    now = datetime.utcnow();
 
     LabelSet = dset(ts_label)
 

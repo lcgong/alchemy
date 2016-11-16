@@ -1,5 +1,6 @@
 
 import "./workshop";
+import "./questpad"
 
 
 angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',

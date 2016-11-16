@@ -128,7 +128,8 @@ export function convertToList(categories, allCategories) {
 
   return data;
 }
-function compareLabelItem(a, b) {
+
+export function compareLabelItem(a, b) {
   return _compareLabelItem(a[0], b[0]);
 }
 

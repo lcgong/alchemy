@@ -27,6 +27,8 @@ if __name__ == '__main__':
     app.add_static_handler('/jspm_packages/(.*)', folder='jspm_packages')
     app.add_static_handler('/build/(.*)', folder='build')
     app.add_static_handler('/app/(.*)', folder='app')
+    
+    app.add_redirect('/(.*).js!transpiled$', status_code=404)
     app.add_static_handler('/(.*)', folder='app', default='/index.html')
 
     domainics.server.run_forever(app, port=args.port)

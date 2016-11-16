@@ -14,6 +14,8 @@ import {KEY} from "./keychars";
   }
   */
 
+import {compareLabelItem} from "./badge";
+
 angular.module('mainapp').directive('categorySelect', categorySelect);
 categorySelect.$inject = ['$compile', '$parse', '$timeout'];
 function categorySelect($compile, $parse, $timeout) {
@@ -194,6 +196,7 @@ function convertToList(categories) {
     items.push([props, labelParts[0], labelParts[1]]);
   }
 
+  items.sort(compareLabelItem);
   return items;
 }
 
