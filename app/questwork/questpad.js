@@ -28,7 +28,6 @@ function QuestpadCtrl($scope, $q, $state, util, QuestModel) {
     saveForLater: null, // if it is labeled, {taggedTime: ..., }
     created_ts: null,
     updated_ts: null,
-    text: null
   };
 
   qpad.questionText = '';
@@ -64,8 +63,8 @@ function QuestpadCtrl($scope, $q, $state, util, QuestModel) {
 
     lines = lines.slice(quest.textLineRange[0], quest.textLineRange[1])
 
-    question.editing_text  = lines
-    question.testing_text  = muteNotes(lines, quest)
+    question.editing_text  = lines.join('\n');
+    question.testing_text  = muteNotes(lines, quest);
     question.blank_signature = makeQuestionSolutionSignature(quest);
 
     if ($scope.quest_sn === 0) {
@@ -75,10 +74,11 @@ function QuestpadCtrl($scope, $q, $state, util, QuestModel) {
       question.categories = Object.keys(qpad.question.categories);
 
       QuestModel.create(question).then(function(data) {
+        let quest = data[0];
         util.notifySuccess('试题新建成功');
         $state.go('repos.workshop.questpad', {
-          repos_sn: $scope.repos_sn,
-          quest_sn: $scope.quest_sn
+          repos_sn: quest.repos_sn,
+          quest_sn: quest.quest_sn
         });
       });
 
@@ -86,13 +86,56 @@ function QuestpadCtrl($scope, $q, $state, util, QuestModel) {
 
       QuestModel.save(question).then(function(data) {
         util.notifySuccess('试题保存成功');
+        let quest = data[0];
         $state.go('repos.workshop.questpad', {
-          repos_sn: $scope.repos_sn,
-          quest_sn: $scope.quest_sn
+          repos_sn: quest.repos_sn,
+          quest_sn: quest.quest_sn
         });
       });
     }
   };
+
+
+  qpad.open = () => { // 打开
+    if ($scope.quest_sn === 0 || $scope.repos_sn === 0) {
+      return;
+    }
+
+    QuestModel.getQuestion($scope.quest_sn).then(function(data) {
+
+      let item = data[0];
+      let question = {
+        quest_sn: item['quest_sn'],
+        repos_sn: item['repos_sn'],
+      };
+
+      question.created_ts   = item['created_ts'];
+      question.updated_ts   = item['updated_ts'];
+
+      question.editingText  = item['editing_text'];
+      question.testing_text = item['testing_text'];
+
+      question.purpose      = item['purpose'];
+      question.questionStyle= item['question_style'];
+
+
+      question.editingText  = item['editing_text'];
+      question.testingText  = item['testing_text'];
+
+      question.saveForLater = item['saveforlater'];
+
+      question.tags = item['tags'];
+      question.categories = item['categories'];
+
+      // question.editingText  = item['editing_text'];
+      // question.testingText  = item['testing_text'];
+      qpad.questionText = item['editing_text'];
+
+      qpad.question = question;
+    });
+  };
+
+  qpad.open();
 }
 
 

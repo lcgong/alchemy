@@ -16,7 +16,7 @@ from schema.quest import ts_quest, ts_quest_seqno
 from schema.quest import ts_quest_labels
 from schema.quest import ts_quest_saveforlater
 
-from serv.label import find_labels
+from serv.label import find_labels, ts_label
 
 @rest.POST('/api/repos/{repos_sn}/quest(:?/?)')
 @rest.PUT('{quest_sn:int}')
@@ -34,8 +34,11 @@ def new_or_save_question(repos_sn: int, quest_sn: int, json_arg):
         quest.created_ts = now
     else:
         # 保存的
-        orig_quest = drecall(ts_quest(repos_sn=repos_sn))
-        quest = ts_quest(orig_quest)
+        quest = drecall(ts_quest(quest_sn=quest_sn))
+        if not quest:
+            busilogic.fail('找不到试题%d' % quest_sn)
+
+        orig_quest = ts_quest(quest)
 
     purpose = json_arg['purpose']
     if purpose:
@@ -71,6 +74,9 @@ def new_or_save_question(repos_sn: int, quest_sn: int, json_arg):
         if 'categories' in json_arg:
             _put_labels(repos_sn, quest.quest_sn, json_arg['categories'], 'C')
 
+    # After it is created, a value should be returned  with a new seqno
+    return quest
+
 @rest.GET('{quest_sn:int}')
 @transaction
 def get_quest(quest_sn: int):
@@ -83,8 +89,8 @@ def get_quest(quest_sn: int):
     data['created_ts'] = quest.created_ts
     data['updated_ts'] = quest.updated_ts
 
-    data['editing_text'] = quest.created_ts
-    data['testing_text'] = quest.updated_ts
+    data['editing_text'] = quest.editing_text
+    data['testing_text'] = quest.testing_text
 
     data['purpose'] = {
         'testing': bool(quest.purpose_testing),
@@ -94,12 +100,15 @@ def get_quest(quest_sn: int):
     # question_style     = datt(int,  doc='题型')
     # #
     if quest.question_style is not None:
-        label = drecall(ts_label(label_sn=question_style))
-        json_arg['question_style'] = label.label
+        label = drecall(ts_label(label_sn=quest.question_style))
+        if not label:
+            busilogic.fail('找不到题型标签：%d' % quest.question_style)
 
-    data['']           = get_saveforlater(quest_sn)
-    data['tags']       = get_labels(quest_sn, 'tags')
-    data['categories'] = get_labels(quest_sn, 'categories')
+        data['question_style'] = label.label
+
+    data['saveforlater'] = get_saveforlater(quest_sn)
+    data['tags']         = get_labels(quest_sn, 'tags')
+    data['categories']   = get_labels(quest_sn, 'categories')
 
     return data
 
@@ -147,7 +156,7 @@ def get_labels(quest_sn: int, target):
       FROM ts_quest_labels
       WHERE quest_sn = %(quest_sn)s AND type=%(label_type)s
     )
-    SELECT t.label, s.label_sn, s.updated_ts
+    SELECT t.label, s.label_sn, s.updated_ts, t.props
     FROM ts_label t JOIN s USING(label_sn)
     """
     dbc << dict(quest_sn=quest_sn, label_type=label_type)

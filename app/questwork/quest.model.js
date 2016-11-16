@@ -41,7 +41,7 @@ function QuestModel(restcli) {
       let url = baseUrl;
       return restcli.factory('PUT', url)({
         pathargs: {
-          quest: quest.quest_sn
+          quest_sn: quest.quest_sn
         },
         data: quest
       });
