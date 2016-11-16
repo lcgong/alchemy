@@ -214,16 +214,7 @@ footer {
     width: 100%;
 }
 
-#main-body {
-    /* flex: 1 1; */
-    /* align-self: stretch; */
-    /* order: 2; */
-    /* height: 100%; */
-    /*margin-top: -10px;*/
-    /* padding-top: 10px; */
-    /* overflow-x: hidden; */
-    /* min-height: calc(100vh - 90px); */
-}
+
 
 #sidebar {
     flex: 0 0;

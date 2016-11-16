@@ -20,10 +20,6 @@
   padding: 0;
 }
 
-.tag-editor.panel .panel-body {
-  min-height: 10em;
-}
-
 .tag-editor.panel .panel-footer  label {
   font-weight: normal;
   color: #999;
@@ -39,6 +35,7 @@
   border-bottom-right-radius: 0px;
 }
 
+
 .repos-tag-editor .panel-heading {
   background-color: #3c763d;
   border-color: #3c763d;
@@ -48,6 +45,18 @@
 .repos-tag-editor .btn-tag a {
   background-color: #4e5184;
   border-color: #4e5184;
+}
+
+.repos-category-editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.repos-category-editor .panel-body {
+  height: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .repos-category-editor .panel-heading {
@@ -62,6 +71,8 @@
   flex-wrap: nowrap;
   align-items: stretch;
   min-height: 12em;
+  height: 100%;
+  flex: 1;
 }
 
 .repos-category-editor  .left-pane {
