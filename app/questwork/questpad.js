@@ -6,8 +6,8 @@ import {analyzeMarkdownText} from "app/markdown/markdown";
 import {makeQuestionSolutionSignature} from "app/markdown/model/question";
 
 angular.module('mainapp').controller('QuestpadCtrl', QuestpadCtrl);
-QuestpadCtrl.$inject = ['$scope', '$q', '$state', 'util', 'QuestModel'];
-function QuestpadCtrl($scope, $q, $state, util, QuestModel) {
+QuestpadCtrl.$inject = ['$scope', '$q', '$state', '$timeout', 'util', 'QuestModel'];
+function QuestpadCtrl($scope, $q, $state, $timeout, util, QuestModel) {
   console.log('QuestpadCtrl', $scope.repos_sn);
 
   let qpad = this;
@@ -17,6 +17,7 @@ function QuestpadCtrl($scope, $q, $state, util, QuestModel) {
       $scope.quest_sn = 0; // 0 means it's new.
   }
 
+  let notLoaded = true;
 
   qpad.question = {
     purpose : {
@@ -32,13 +33,47 @@ function QuestpadCtrl($scope, $q, $state, util, QuestModel) {
 
   qpad.questionText = '';
 
-  $scope.$watch('qpad.question', question =>{
-    console.log('qpad.question=%O', question);
-  }, true)
+  // $scope.$watch('qpad.question', question =>{
+  //   console.log('qpad.question=%O', question);
+  // }, true)
 
   $scope.$watch('qpad.questionText', text =>{
     console.log('qpad.questionText=%O', text);
   })
+
+  $scope.$watch('qpad.question.saveForLater', saveforlater => {
+    if (notLoaded || $scope.quest_sn === 0) {
+      return;
+    }
+
+    let status =  qpad.question.saveForLater != null;
+
+    QuestModel.setSaveForLater($scope.quest_sn, status).then(function(data) {
+      console.log('saveForLater: ', data[0]);
+    });
+    
+  }, true);
+
+  $scope.$watch('qpad.question.tags', tags => {
+    if (notLoaded || $scope.quest_sn === 0) {
+      return;
+    }
+
+    QuestModel.updateLabels($scope.quest_sn, 'tags', tags).then(function(data) {
+      console.log('tags: ', data);
+    });
+  }, true);
+
+  $scope.$watch('qpad.question.categories', tags => {
+    if (notLoaded || $scope.quest_sn === 0) {
+      return;
+    }
+
+    QuestModel.updateLabels($scope.quest_sn, 'categories', tags).then(function(data) {
+      console.log('categories: ', data);
+    });
+  }, true);
+
 
   //------------------
   qpad.save = () => {
@@ -132,6 +167,10 @@ function QuestpadCtrl($scope, $q, $state, util, QuestModel) {
       qpad.questionText = item['editing_text'];
 
       qpad.question = question;
+
+      $timeout(function() {
+        notLoaded = false;
+      });
     });
   };
 

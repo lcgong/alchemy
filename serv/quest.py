@@ -128,14 +128,22 @@ def get_saveforlater(quest_sn: int):
 def put_saveforlater(quest_sn: int, json_arg):
     """创建或保存试题"""
 
-    status = json_arg['status'] # true or false
+    status = bool(json_arg['status']) # true or false
+    if status:
+        old_sfl = drecall(ts_quest_saveforlater(quest_sn=quest_sn))
 
-    old_sfl = drecall(ts_quest_saveforlater(quest_sn=quest_sn))
+        new_sfl = ts_quest_saveforlater(quest_sn=quest_sn)
 
-    new_sfl = ts_quest_saveforlater(quest_sn=quest_sn)
-
-    new_sfl.updated_ts = datetime.utcnow() if status else None
-    dmerge(new_sfl, old_sfl)
+        new_sfl.updated_ts = datetime.utcnow() if status else None
+        dmerge(new_sfl, old_sfl)
+    else:
+        dbc << """
+        DELETE FROM ts_quest_saveforlater
+        WHERE quest_sn = %(quest_sn)s
+        """
+        dbc << dict(quest_sn=quest_sn)
+        
+    return status;
 
 
 @rest.GET('{quest_sn:int}/{target:tags|categories}')
@@ -182,11 +190,13 @@ def put_labels(quest_sn: int, target, json_arg):
         busilogic.fail('没找到试题： %d', quest_sn)
 
     if target == 'tags':
-        return _put_labels(repos_sn, quest_sn, json_arg, 'T')
+        return _put_labels(quest.repos_sn, quest_sn, json_arg, 'T')
     elif target == 'categories':
-        return _put_labels(repos_sn, quest_sn, json_arg, 'C')
+        return _put_labels(quest.repos_sn, quest_sn, json_arg, 'C')
     else:
         busilogic.fail('!');
+
+    return get_labels(quest_sn, target)
 
 def _put_labels(repos_sn, quest_sn, label_texts, label_type):
     """"""
@@ -201,7 +211,8 @@ def _put_labels(repos_sn, quest_sn, label_texts, label_type):
     quest_label.labels = [sn for sn in found_labels.values()]
     quest_label.updated_ts = datetime.utcnow()
 
-    dmerge(quest_label, drecall(ts_quest_labels(quest_sn=quest_sn)))
+    original = drecall(ts_quest_labels(quest_sn=quest_sn, type = label_type))
+    dmerge(quest_label, original)
 
 @rest.DELETE('{quest:int}')
 @transaction

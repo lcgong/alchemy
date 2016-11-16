@@ -57,15 +57,29 @@ function QuestModel(restcli) {
       });
     },
 
-    // labelObj {label: '....', status: on/off}
-    // target: tags or categories
-    // return all of labels of this quest for this target
-    updateLabel: function(quest_sn, target, labelObj ) {
-      let url = baseUrl + '/' + target;
-      return restcli.factory('GET', url)({
+    setSaveForLater: function(quest_sn, status) {
+      let url = baseUrl + '/saveforlater';
+      return restcli.factory('PUT', url)({
         pathargs: {
           quest_sn: quest_sn
+        },
+        data: {
+          status: status
         }
+      });
+    },
+
+    // target: tags or categories
+    // return all of labels of this quest for this target
+    updateLabels: function(quest_sn, target, labels ) {
+      labels = Object.keys(labels);
+
+      let url = baseUrl + '/' + target;
+      return restcli.factory('PUT', url)({
+        pathargs: {
+          quest_sn: quest_sn
+        },
+        data: labels
       });
     },
   };
