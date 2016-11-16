@@ -1,16 +1,16 @@
 
 import "app/layout.css!";
 
-import "./model";
+import "./repos.model";
 
 import "./repos_list.css!";
 import "./repos_list";
 import "./repos_list_grid";
 import "./repos_new";
 
-import "./workshop";
 
-import "settings/routes"
+import "settings/routes";
+import "questwork/routes";
 
 angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
   function($stateProvider, $urlRouterProvider) {
@@ -38,20 +38,7 @@ angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
 
 
 
-    $stateProvider.state('repos.workshop', {
-      url: '/{repos_sn:[0-9]*[0-9]}/workshop',
-      templateUrl: 'app/repos/workshop.html'
-    });
 
-    $stateProvider.state('repos.workshop.questpad', {
-      url: '/questpad/{quest_sn:[0-9]*[0-9]}',
-      templateUrl: 'app/repos/questpad.html'
-    });
-
-    $stateProvider.state('repos.workshop.questlist', {
-      url: '/questlist/{source}',
-      templateUrl: 'app/repos/questlist.html'
-    });
 
 
 }]);
