@@ -11,34 +11,39 @@ angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
   function($stateProvider, $urlRouterProvider) {
     // 配置模块的页面路由规则
 
+    $stateProvider.state('repos.settings', {
+      url: '/{repos_sn:[0-9]*[0-9]}/settings',
+      templateUrl: 'app/settings/settings.html'
+    });
+
     $stateProvider.state('repos.settings.desc', {
       url: '/desc',
-      templateUrl: 'app/repos/settings_desc.html'
+      templateUrl: 'app/settings/settings_desc.html'
     });
 
     $stateProvider.state('repos.settings.styles', {
       url: '/styles',
-      templateUrl: 'app/repos/settings_sty.html'
+      templateUrl: 'app/settings/settings_sty.html'
     });
 
     $stateProvider.state('repos.settings.tags', {
       url: '/tags',
-      templateUrl: 'app/repos/settings_tag.html'
+      templateUrl: 'app/settings/settings_tag.html'
     });
 
     $stateProvider.state('repos.settings.categories', {
       url: '/categories',
-      templateUrl: 'app/repos/settings_cat.html'
+      templateUrl: 'app/settings/settings_cat.html'
     });
 
     $stateProvider.state('repos.settings.collaboration', {
       url: '/collaboration',
-      templateUrl: 'app/repos/settings_collaboration.html'
+      templateUrl: 'app/settings/settings_collaboration.html'
     });
 
     $stateProvider.state('repos.settings.advanced', {
       url: '/advanced',
-      templateUrl: 'app/repos/settings_advanced.html'
+      templateUrl: 'app/settings/settings_advanced.html'
     });
 
 }]);

@@ -10,11 +10,7 @@ import "./repos_new";
 
 import "./workshop";
 
-import "./settings.css!";
-import "./settings.ctrl";
-import "./settings_desc.ctrl";
-import "./settings_tag";
-import "./settings_cat";
+import "settings/routes"
 
 angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
   function($stateProvider, $urlRouterProvider) {
@@ -40,10 +36,7 @@ angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
       templateUrl: 'app/repos/repos_list_grid.html'
     });
 
-    $stateProvider.state('repos.settings', {
-      url: '/{repos_sn:[0-9]*[0-9]}/settings',
-      templateUrl: 'app/repos/settings.html'
-    });
+
 
     $stateProvider.state('repos.workshop', {
       url: '/{repos_sn:[0-9]*[0-9]}/workshop',
@@ -60,34 +53,5 @@ angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
       templateUrl: 'app/repos/questlist.html'
     });
 
-    $stateProvider.state('repos.settings.desc', {
-      url: '/desc',
-      templateUrl: 'app/repos/settings_desc.html'
-    });
-
-    $stateProvider.state('repos.settings.styles', {
-      url: '/styles',
-      templateUrl: 'app/repos/settings_sty.html'
-    });
-
-    $stateProvider.state('repos.settings.tags', {
-      url: '/tags',
-      templateUrl: 'app/repos/settings_tag.html'
-    });
-
-    $stateProvider.state('repos.settings.categories', {
-      url: '/categories',
-      templateUrl: 'app/repos/settings_cat.html'
-    });
-
-    $stateProvider.state('repos.settings.collaboration', {
-      url: '/collaboration',
-      templateUrl: 'app/repos/settings_collaboration.html'
-    });
-
-    $stateProvider.state('repos.settings.advanced', {
-      url: '/advanced',
-      templateUrl: 'app/repos/settings_advanced.html'
-    });
 
 }]);
