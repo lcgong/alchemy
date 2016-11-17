@@ -29,6 +29,7 @@ function badgeCardCtrl($scope, $element, $attrs) {
   };
 
   $ctrl.removeCategory= function(label) {
+    console.log('dddd', label)
     delete $scope.question.categories[label];
   }
 
@@ -47,7 +48,8 @@ function questionBadgeBar($compile, $timeout) {
     replace: true,
     scope: {
       question: '=',
-      repository: '='
+      repository: '=',
+      mode: '&?'
     },
     templateUrl: 'app/category/badge.html',
     controller: 'badgeCardCtrl',
@@ -66,13 +68,17 @@ function questionBadgeBar($compile, $timeout) {
       // $scope.allTags = {};
       $scope.hovers = {};
 
-      $scope.$parent.$watch('question.categories', categories => {
+      $scope.mode = $scope.mode();
+
+      console.log(333, $scope.question);
+
+
+      $scope.$watch('question.categories', categories => {
         let repo = $scope.repository;
         $scope.categoryList = convertToList(categories, repo.categories);
-        console.log(344555, $scope.categories);
       }, true);
 
-      $scope.$parent.$watch('question.tags', tags => {
+      $scope.$watch('question.tags', tags => {
         let repo = $scope.repository;
         $scope.tagList = convertToList(tags, repo.tags);
       }, true);
@@ -85,6 +91,10 @@ function questionBadgeBar($compile, $timeout) {
 
 /** [[{cat_item_1...}, {cat_item_2a, cat_item_2b, ...} ], ...] */
 export function convertToList(categories, allCategories) {
+  if (typeof categories === 'undefined' || categories == null) {
+    return [];
+  }
+
   let data = {};
   for (label of Object.keys(categories).sort()) {
     let labelParts = label.split('/', 2)
@@ -100,11 +110,16 @@ export function convertToList(categories, allCategories) {
             }
           }
 
+          if (!level1_item.label) {
+            level1_item.label = level1_label;
+          }
+
           level1_item = [level1_item, []];
           data[level1_label] = level1_item;
         }
 
         item = categories[label];
+        item.label = label;
         item.name = labelParts[1];
         level1_item[1].push(item);
 
@@ -119,12 +134,16 @@ export function convertToList(categories, allCategories) {
     }
   }
 
+  console.log(555, angular.copy(data))
+
   data = Object.values(data); // list
   data.sort(compareLabelItem);
 
   for (item of data) { // 对第二级进行排序
     item[1].sort(_compareLabelItem);
   }
+
+  console.log(444, angular.copy(data))
 
   return data;
 }

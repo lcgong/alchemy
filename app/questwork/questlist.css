@@ -1,0 +1,35 @@
+.questlist {
+  width: calc(100% - 10px);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.questlist .panel-body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+
+.questlist  .grid-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.questlist .grid-item {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  min-height: 3em;
+  min-width: 8em;
+  margin: 6px;
+  background-color: #fff;
+
+  padding: 0 10px;
+  flex-direction: column;
+  min-width: 42em;
+  width: 47%;
+}

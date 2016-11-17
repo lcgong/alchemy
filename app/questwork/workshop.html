@@ -3,12 +3,12 @@
   <nav class="pane-nav sidebar">
     <div class="header">
       <div class="header-status">
-        <h4>题屋</h4>
+        <h4>试题屋</h4>
       </div>
-      <a class="btn-add"
+      <!-- <a class="btn-add"
         ui-sref="repos.workshop.grid({repos_sn: 0, })">
         <span class="glyphicon glyphicon-plus"></span>
-      </a>
+      </a> -->
     </div>
     <a
       ui-sref="repos.list.grid({repos_sn: repos_sn, source:'panned'})"
@@ -26,9 +26,14 @@
       加备忘的
     </a>
     <a
+      ui-sref="repos.workshop.questlist({repos_sn: repos_sn, source: 'recent'})"
+      ui-sref-active="active">
+      最近更新的
+    </a>
+    <a
       ui-sref="repos.workshop.questlist({repos_sn: repos_sn, source: 'all'})"
       ui-sref-active="active">
-      所有题
+      全部
     </a>
     <a ui-sref="repos.workshop.grid({source:'subscriptions'})" ui-sref-active="active">
       题目的订阅
@@ -38,6 +43,12 @@
       ui-sref-active="active">
       配置题库
     </a>
+    <a
+      ui-sref="repos.workshop.questlist({repos_sn: repos_sn, source: 'trashed'})"
+      ui-sref-active="active">
+      回收箱
+    </a>
+
   </nav>
 
   <div class="pane-content list-detail-view" style="flex-grow:1;" ui-view >无页面</div>

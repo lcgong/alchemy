@@ -279,30 +279,6 @@ hr.bleed-flush {
     bottom: 43px
 }
 
-.ticket-stub:before,.technology-pages-wrapper .section-technology-details .card-lesson:before {
-  left: -8px;
-  box-shadow: inset -2px 0px 2px -2px rgba(38,38,38,0.3)
-}
-
-
-
-.ticket-stub:after {
-  right: -8px;
-  box-shadow: inset 2px 0px 2px -2px rgba(38,38,38,0.3)
-}
-
-.ticket-stub:before, .ticket-stub:after {
-  position: absolute;
-  top: 50%;
-  margin-top: -8px;
-  content: '';
-  width: 16px;
-  height: 16px;
-  background: whitesmoke;
-  z-index: 1;
-  border-radius: 50%
-}
-
 
 .list-card.item-card {
   width: 20em;

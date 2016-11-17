@@ -63,7 +63,8 @@ function questeditor($templateRequest, $compile, $timeout) {
     require: ['?ngModel', 'questeditor',],
     scope: {
       question: '=',
-      repository: '='
+      repository: '=',
+      mode: '&',
     },
     templateUrl: 'app/questwork/questeditor.html',
     controller: 'questeditorCtrl',
@@ -71,6 +72,8 @@ function questeditor($templateRequest, $compile, $timeout) {
     link: function($scope, $element, $attrs, ctrls) {
       let [ngModelCtrl, $editor] = ctrls;
       console.log(ngModelCtrl, $editor);
+
+      $editor.mode = $scope.mode();
 
       let elm = $element.find(".markdown-editor");
       //

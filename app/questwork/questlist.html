@@ -1,0 +1,22 @@
+<div class="questlist screen-min-height"
+  ng-controller="QuestlistCtrl as ctrl">
+
+  <div class="grid-row">
+    <div class="grid-item question ticket-stub" ng-repeat="item in ctrl.items">
+
+      <question-badge-bar
+        question="item"
+        repository="repos"
+        mode="ctrl.mode">
+      </question-badge-bar>
+
+
+      <question-markdown
+        class=""
+        start-question-no=""
+        mode="ctrl.mode"
+        content="item.text">
+      </question-markdown>
+    </div>
+  </div>
+</div>

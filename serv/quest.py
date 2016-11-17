@@ -18,6 +18,102 @@ from schema.quest import ts_quest_saveforlater
 
 from serv.label import find_labels, ts_label
 
+
+@rest.GET('/api/repos/{repos_sn:int}/quest/saveforlater')
+@transaction
+def list_saveforlater_questions(repos_sn: int, source):
+    """ """
+
+    dbc << """
+    SELECT q.*,
+      s.updated_ts AS saveforlater_updated_ts,
+      t.labels AS tags, t.updated_ts AS tag_updated_ts,
+      c.labels AS categories, c.updated_ts AS cat_updated_ts
+    FROM ts_quest q
+      JOIN ts_quest_saveforlater s USING(quest_sn)
+      LEFT JOIN ts_quest_labels c ON c.quest_sn=q.quest_sn AND c.type='C'
+      LEFT JOIN ts_quest_labels t ON t.quest_sn=q.quest_sn AND t.type='T'
+    WHERE q.repos_sn = %(repos_sn)s
+    ORDER BY s.updated_ts DESC
+    """
+    dbc << dict(repos_sn=repos_sn)
+    rows = list(r for r in dbc)
+
+    return to_list_json(repos_sn, rows)
+
+@rest.GET('/api/repos/{repos_sn:int}/quest/recent')
+@transaction
+def list_recent_questions(repos_sn: int, source):
+    """ """
+
+    dbc << """
+    SELECT q.*,
+      s.updated_ts AS saveforlater_updated_ts,
+      t.labels AS tags, t.updated_ts AS tag_updated_ts,
+      c.labels AS categories, c.updated_ts AS cat_updated_ts
+    FROM ts_quest q
+      LEFT JOIN ts_quest_saveforlater s USING(quest_sn)
+      LEFT JOIN ts_quest_labels c ON c.quest_sn=q.quest_sn AND c.type='C'
+      LEFT JOIN ts_quest_labels t ON t.quest_sn=q.quest_sn AND t.type='T'
+    WHERE q.repos_sn = %(repos_sn)s
+    ORDER BY q.updated_ts DESC
+    """
+    dbc << dict(repos_sn=repos_sn)
+    rows = list(dbc)
+
+    return to_list_json(repos_sn, rows)
+
+def to_list_json(repos_sn, rows):
+    print(rows)
+
+    labels = get_label_sn_dict(repos_sn)
+
+    data = []
+    for quest in rows:
+        item = {}
+        item['quest_sn']   = quest.quest_sn
+        item['created_ts'] = quest.created_ts
+        item['updated_ts'] = quest.updated_ts
+
+        item['text']       = quest.testing_text
+
+        item['purpose'] = {
+            'testing': bool(quest.purpose_testing),
+            'exercising': bool(quest.purpose_exercising)
+        }
+
+        item['questionStyle'] = labels.get(quest.question_style, None)
+
+        item['saveForLater'] = quest.saveforlater_updated_ts
+
+
+
+        item['tags'] = { labels[s]: {
+                                        'updated_ts': quest.tag_updated_ts
+                                    }
+                        for s in quest.tags }
+
+        item['categories'] = { labels[s]: {
+                                        'updated_ts': quest.cat_updated_ts
+                                    }
+                        for s in quest.categories }
+
+        data.append(item)
+
+    return data
+
+def get_label_sn_dict(repos_sn):
+    labels = {}
+    dbc << """
+    SELECT label, label_sn, props
+    FROM ts_label WHERE repos_sn=%(repos_sn)s
+    """
+    dbc << dict(repos_sn=repos_sn)
+    for r in dbc:
+        labels[r.label_sn] = r.label
+
+    return labels
+
 @rest.POST('/api/repos/{repos_sn}/quest(:?/?)')
 @rest.PUT('{quest_sn:int}')
 @transaction
@@ -142,7 +238,7 @@ def put_saveforlater(quest_sn: int, json_arg):
         WHERE quest_sn = %(quest_sn)s
         """
         dbc << dict(quest_sn=quest_sn)
-        
+
     return status;
 
 

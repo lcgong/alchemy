@@ -1,7 +1,8 @@
 <div class="questeditor" ng-click="click($event)">
   <div class="questeditor-body">
     <div class="questeditor-left">
-      <question-badge-bar question="question" repository="repository">
+      <question-badge-bar
+        question="question" repository="repository" mode="$editor.mode">
       </question-badge-bar>
 
       <div style="clear: both"></div>

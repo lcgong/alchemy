@@ -1,6 +1,7 @@
 
 import "./workshop";
-import "./questpad"
+import "./questpad";
+import "./questlist";
 
 
 angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',

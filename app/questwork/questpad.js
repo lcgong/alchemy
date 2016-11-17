@@ -12,6 +12,8 @@ function QuestpadCtrl($scope, $q, $state, $timeout, util, QuestModel) {
 
   let qpad = this;
 
+  qpad.mode = 'editing';
+
   $scope.quest_sn = parseInt($state.params['quest_sn']);
   if (isNaN($scope.quest_sn)) {
       $scope.quest_sn = 0; // 0 means it's new.
@@ -19,6 +21,7 @@ function QuestpadCtrl($scope, $q, $state, $timeout, util, QuestModel) {
 
   let notLoaded = true;
 
+  // TODO 截获离开事件，判断开头和结束的对象状态 angular.equals
   qpad.question = {
     purpose : {
       testing: false,
@@ -51,7 +54,7 @@ function QuestpadCtrl($scope, $q, $state, $timeout, util, QuestModel) {
     QuestModel.setSaveForLater($scope.quest_sn, status).then(function(data) {
       console.log('saveForLater: ', data[0]);
     });
-    
+
   }, true);
 
   $scope.$watch('qpad.question.tags', tags => {
