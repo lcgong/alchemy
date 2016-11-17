@@ -3,6 +3,7 @@ import "./workshop";
 import "./questpad";
 import "./questlist";
 import "./trash";
+import "../release/routes";
 
 
 angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',

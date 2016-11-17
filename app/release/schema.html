@@ -1,0 +1,111 @@
+<div class="release-schema questlist panel panel-primary screen-min-height"
+  ng-controller="ReleaseSchemaCtrl as ctrl">
+
+  <nav class="ctrlbar">
+    <a class="btn" ng-click="qpad.save()">保存</a>
+  </nav>
+
+  <div class="panel-heading">
+    <h4>定义试卷命题结构</h4>
+    <div class="btn-append"
+      ng-click="addSection(schema.sections)" >
+      <span class="glyphicon glyphicon-plus">
+      </span>
+    </div>
+  </div>
+
+  <div class="panel-body">
+
+    <fieldset class="schema-section"
+      ng-repeat="section in schema.sections track by $index">
+
+      <legend>
+        <div>&sect;{{$index + 1}}</div>
+        <input type="text" class="form-control" ng-model="section.title" >
+        <button 
+          ng-click="removeSection(schema.sections, $index)">
+          <span class="glyphicon glyphicon-remove"></span>
+        </button>
+
+        <!-- <div class="input-group">
+          <input type="text" class="form-control"
+            placeholder="请输入节的标题"
+            ng-model="section.title">
+          <span class="input-group-btn">
+
+          </span>
+        </div> -->
+
+      </legend>
+
+      <div class="points-equation">
+        <div>
+          <label>分值</label>
+          <input type="number" class="form-control" ng-model="section.points">
+        </div>
+        <div class="math-operator"> = </div>
+        <div>
+          <label>题空数</label>
+          <input type="number" class="form-control" ng-model="section.blank_count">
+        </div>
+        <div class="math-operator">
+          &times;
+        </div>
+        <label>每空</label>
+        <div class="form-control">
+          {{((section.points >0 && section.blank_count > 0)? section.points / section.blank_count : 0) | number : 1}}
+        </div>
+      </div>
+      <hr>
+      <div class="selector"
+        ng-repeat="selector in section.selectors track by $index">
+
+        <select class="form-control btn-question-style"
+          ng-model="selector.question_style"
+          ng-options="k as k for (k,v) in repos.questionStyles">
+          <option value="" disabled selected hidden>题型...</option>
+        </select>
+
+        <div class="tags">
+          <div  ng-repeat="label in selector.tags track by $index">
+            <div class="btn-tag">
+              <a>
+                {{label}}
+                <span class="glyphicon glyphicon-remove-circle"
+                  ng-click="removeTag(selector.tags, label)">
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <category-picker class="btn-tag-picker" depth="1"
+          options="repos.tags"
+          on-select="addTag(selector.tags, $selected)">
+          <div class="icon-add-tag"> </div>
+        </category-picker >
+
+        <div class="btn-selector-remove">
+          <span class="glyphicon glyphicon-remove"
+            ng-click="removeSelector(section.selectors, selector, $index)">
+          </span>
+        </div>
+
+      </div>
+      <div class="footer">
+        <div class="btn-append"
+          ng-click="addSelector(section.selectors)">
+          <span class="glyphicon glyphicon-plus"></span>
+        </div>
+      </div>
+
+    </fieldset>
+  </div>
+
+  <div class="panel-heading">
+    <h4>定义试卷的知识要点分布</h4>
+  </div>
+  <div class="panel-body">
+
+  </div>
+</div>
