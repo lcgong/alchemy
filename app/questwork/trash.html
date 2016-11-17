@@ -1,17 +1,28 @@
-<div class="trash-list screen-min-height"
-  ng-controller2="QuestTrashCtrl as ctrl">
+<div class="trash-list questlist screen-min-height"
+  ng-controller="TrashlistCtrl as ctrl">
 
   <div class="grid-row">
     <div class="grid-item question ticket-stub"
-      ng-repeat2="item in ctrl.items"
-      ng-dblclick="ctrl.openQuestpad(item.quest_sn)">
+      ng-repeat="item in ctrl.items">
+
+      <question-badge-bar
+        question="item"
+        repository="repos"
+        mode="ctrl.mode">
+      </question-badge-bar>
 
 
+      <question-markdown
+        class=""
+        start-question-no=""
+        mode="ctrl.mode"
+        content="item.text">
+      </question-markdown>
 
     </div>
   </div>
 
-  <div ng-if="!(ctrl3.items.length > 0)" class="empty-pane">
+  <div ng-if="!(ctrl.items.length > 0)" class="empty-pane">
     <div class="empty">空
     </div>
   </div>

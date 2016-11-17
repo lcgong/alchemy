@@ -87,6 +87,13 @@ function badgeCardCtrl($scope, $element, $attrs, QuestModel, util) {
     });
   }
 
+  $ctrl.trash = function(quest_sn) {
+
+    QuestModel.trash(quest_sn).then(function(data) {
+      $scope.$emit('questionTrashed', quest_sn);
+    });
+  }
+
 }
 
 

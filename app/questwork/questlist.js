@@ -31,6 +31,15 @@ function QuestlistCtrl($scope, $q, $state, $timeout, util, QuestModel) {
     });
   };
 
+  $scope.$on('questionTrashed', function(evt, quest_sn) {
+    $state.go('repos.workshop.questlist', {
+      repos_sn: $scope.repos_sn,
+      source: ctrl.listSource
+    }).then(function(){
+      util.notifySuccess('原试题移到了回收箱');
+    });
+  });
+
   //
   $timeout(() => { ctrl.open(); }, 0); // to load data initially
 }

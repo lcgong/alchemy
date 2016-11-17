@@ -2,6 +2,7 @@
 import "./workshop";
 import "./questpad";
 import "./questlist";
+import "./trash";
 
 
 angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',

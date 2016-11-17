@@ -48,7 +48,7 @@ function QuestModel(restcli) {
     },
 
     //
-    remove: quest_sn => {
+    trash: quest_sn => {
       let url = baseUrl;
       return restcli.factory('DELETE', url)({
           pathargs: {
@@ -56,6 +56,24 @@ function QuestModel(restcli) {
           }
       });
     },
+    listTrashedQuestions: quest_sn => {
+      let url = '/api/repos/{repos_sn}/trashed';
+      return restcli.factory('GET', url)({
+          pathargs: {
+            repos_sn: quest_sn
+          }
+      });
+    },
+
+    //
+    // remove: quest_sn => {
+    //   let url = baseUrl;
+    //   return restcli.factory('DELETE', url)({
+    //       pathargs: {
+    //         quest_sn: quest_sn
+    //       }
+    //   });
+    // },
 
     setSaveForLater: function(quest_sn, status) {
       let url = baseUrl + '/saveforlater';

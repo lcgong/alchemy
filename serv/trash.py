@@ -18,22 +18,28 @@ from schema.quest import ts_quest_trashed
 
 from serv.label import find_labels, ts_label
 
+from serv.quest import to_list_json
 
-@rest.DELETE('/api/quest/{quest:int}')
+@rest.GET('/api/repos/{repos_sn:int}/trashed')
 @transaction
-def trash_quest(quest_sn: int):
-    """  """
+def get_trashed_questions(repos_sn: int):
 
-    quest = drecall(ts_quest(quest_sn = quest_sn))
-    if not quest:
-        busilogic.fail('所删除的试题(%s)不存在' % quest_sn)
+    dbc << """
+    SELECT q.*,
+      s.updated_ts AS saveforlater_updated_ts,
+      t.labels AS tags, t.updated_ts AS tag_updated_ts,
+      c.labels AS categories, c.updated_ts AS cat_updated_ts
+    FROM ts_quest_trashed q
+      LEFT JOIN ts_quest_saveforlater s USING(quest_sn)
+      LEFT JOIN ts_quest_labels c ON c.quest_sn=q.quest_sn AND c.type='C'
+      LEFT JOIN ts_quest_labels t ON t.quest_sn=q.quest_sn AND t.type='T'
+    WHERE q.repos_sn = %(repos_sn)s
+    ORDER BY q.trashed_ts DESC
+    """
+    dbc << dict(repos_sn=repos_sn)
+    rows = list(dbc)
 
-
-    trash = ts_quest_trashed(quest)
-    dmerge(trash)
-
-    dbc << "DELETE FROM ts_quest WHERE quest_sn=%(quest_sn)s"
-    dbc << (quest_sn,)
+    return to_list_json(repos_sn, rows)
 
 
 @rest.POST('/api/quest/{quest:int}/trashed')

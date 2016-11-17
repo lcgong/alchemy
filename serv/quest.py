@@ -209,6 +209,24 @@ def get_quest(quest_sn: int):
 
     return data
 
+
+@rest.DELETE('{quest_sn:int}')
+@transaction
+def trash_quest(quest_sn: int):
+    """  """
+
+    quest = drecall(ts_quest(quest_sn = quest_sn))
+    if not quest:
+        busilogic.fail('所删除的试题(%s)不存在' % quest_sn)
+
+
+    trash = ts_quest_trashed(quest)
+    dmerge(trash)
+
+    dbc << "DELETE FROM ts_quest WHERE quest_sn=%(quest_sn)s"
+    dbc << dict(quest_sn=quest_sn)
+
+
 @rest.GET('{quest_sn:int}/saveforlater')
 @transaction
 def get_saveforlater(quest_sn: int):
@@ -245,7 +263,7 @@ def put_saveforlater(quest_sn: int, json_arg):
         return None
 
 
-@rest.GET('{quest_sn:int}/{target:tags|categories}')
+@rest.GET('{quest_sn:int}/{target:(:?tags|categories)}')
 @transaction
 def get_labels(quest_sn: int, target):
     """"""

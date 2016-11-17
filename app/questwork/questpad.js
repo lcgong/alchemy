@@ -147,6 +147,15 @@ function QuestpadCtrl($scope, $q, $state, $timeout, util, QuestModel) {
     });
   };
 
+  $scope.$on('questionTrashed', function(evt, quest_sn) {
+    $state.go('repos.workshop.questpad', {
+      repos_sn: $scope.repos_sn,
+      quest_sn: 0
+    }).then(function(){
+      util.notifySuccess('原试题移到了回收箱，这是刚新建的');
+    });
+  });
+
   qpad.open();
 }
 
