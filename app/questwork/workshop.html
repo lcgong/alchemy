@@ -26,6 +26,10 @@
       >
       <span class="glyphicon glyphicon-pencil bs-glyphicon-fix"></span>
       写题板
+      <span class="label label-danger"
+        ng-if="ctrl.uiRouteState.params.quest_sn == 0">
+        新题
+      </span>
     </a>
     <a
       ui-sref="repos.workshop.questlist({repos_sn:repos_sn, source:'saveforlater'})"

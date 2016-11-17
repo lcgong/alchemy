@@ -1,18 +1,20 @@
 import "./badge.css!"
 
 angular.module('mainapp').controller('badgeCardCtrl', badgeCardCtrl);
-badgeCardCtrl.$inject = ['$scope', '$element', '$attrs', 'QuestModel'];
-function badgeCardCtrl($scope, $element, $attrs, QuestModel) {
+badgeCardCtrl.$inject = ['$scope', '$element', '$attrs', 'QuestModel', 'util'];
+function badgeCardCtrl($scope, $element, $attrs, QuestModel, util) {
   let $ctrl = this;
 
   $ctrl.saveForLater = function() {
-    let question = $scope.question;
+    let quest_sn = $scope.question.quest_sn;
+    if (!(quest_sn > 0)) {
+      util.fail('“新题”需要保存一次后，才可以做备忘');
+      return;
+    }
 
-    console.log(question.saveForLater)
+    let status =  $scope.question.saveForLater == null;
 
-    let status =  question.saveForLater == null;
-
-    QuestModel.setSaveForLater(question.quest_sn, status).then(function(data) {
+    QuestModel.setSaveForLater(quest_sn, status).then(function(data) {
       if (!data[0]) {
         $scope.question.saveForLater = null;
       } else {
@@ -26,6 +28,11 @@ function badgeCardCtrl($scope, $element, $attrs, QuestModel) {
 
   $ctrl.addToKnowledge = function(category) {
     let quest_sn = $scope.question.quest_sn;
+    if (!(quest_sn > 0)) {
+      util.fail('新题需要保存一次后，才可以添加知识要点');
+      return;
+    }
+
     let labels = Object.keys($scope.question.categories);
 
     labels.push(category.label);
@@ -50,8 +57,14 @@ function badgeCardCtrl($scope, $element, $attrs, QuestModel) {
 
 
   $ctrl.addTag = function(tag) {
-
     let quest_sn = $scope.question.quest_sn;
+
+    if (!(quest_sn > 0)) {
+      util.fail('新题需要保存一次后，才可以添加标签');
+      return;
+    }
+
+
     let labels = Object.keys($scope.question.tags);
 
     labels.push(tag.label);

@@ -15,6 +15,8 @@ function QuestWorkshopCtrl($scope, $q, $state, $timeout, util, ReposModel) {
   }
   console.log('QuestWorkshopCtrl, repos_sn=%d', $scope.repos_sn);
 
+  ctrl.uiRouteState = $state;
+
   $scope.repos = {
     repos_sn: $scope.repos_sn,
     questionStyles: null,
