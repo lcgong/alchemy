@@ -72,7 +72,7 @@ function QuestModel(restcli) {
     // target: tags or categories
     // return all of labels of this quest for this target
     updateLabels: function(quest_sn, target, labels ) {
-      labels = Object.keys(labels);
+      // labels = Object.keys(labels);
 
       let url = baseUrl + '/' + target;
       return restcli.factory('PUT', url)({

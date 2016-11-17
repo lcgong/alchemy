@@ -12,6 +12,14 @@
    margin-right: 2em;
 }
 
+.question-badge .trash {
+  display: inline-block;
+  float:right;
+  float: right;
+  line-height: 28px;
+  padding: 2px 5px;
+}
+
 .badge-setting {
   float: right;
   display: inline-flex;

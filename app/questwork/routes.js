@@ -24,4 +24,14 @@ angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
       templateUrl: 'app/questwork/questlist.html'
     });
 
+    $stateProvider.state('repos.workshop.subcription', {
+      url: '/subcription',
+      templateUrl: 'app/questwork/subscription.html'
+    });
+
+    $stateProvider.state('repos.workshop.trash', {
+      url: '/trash',
+      templateUrl: 'app/questwork/trash.html'
+    });
+
 }]);

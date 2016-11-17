@@ -24,6 +24,13 @@ function QuestlistCtrl($scope, $q, $state, $timeout, util, QuestModel) {
     });
   };
 
+  ctrl.openQuestpad = function(quest_sn) {
+    $state.go('repos.workshop.questpad', {
+      repos_sn: $scope.repos_sn,
+      quest_sn: quest_sn
+    });
+  };
+
   //
   $timeout(() => { ctrl.open(); }, 0); // to load data initially
 }

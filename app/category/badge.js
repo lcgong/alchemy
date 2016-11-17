@@ -1,42 +1,79 @@
 import "./badge.css!"
 
 angular.module('mainapp').controller('badgeCardCtrl', badgeCardCtrl);
-badgeCardCtrl.$inject = ['$scope', '$element', '$attrs'];
-function badgeCardCtrl($scope, $element, $attrs) {
+badgeCardCtrl.$inject = ['$scope', '$element', '$attrs', 'QuestModel'];
+function badgeCardCtrl($scope, $element, $attrs, QuestModel) {
   let $ctrl = this;
 
   $ctrl.saveForLater = function() {
     let question = $scope.question;
-    if (!question.saveForLater) {
-      question.saveForLater = {
-        taggedTime: new Date()
-      };
-    } else {
-      question.saveForLater = null;
-    }
+
+    console.log(question.saveForLater)
+
+    let status =  question.saveForLater == null;
+
+    QuestModel.setSaveForLater(question.quest_sn, status).then(function(data) {
+      if (!data[0]) {
+        $scope.question.saveForLater = null;
+      } else {
+        $scope.question.saveForLater = data[0];
+      }
+      console.log('saveForLater: ', $scope.question.saveForLater);
+    });
+
   };
+
 
   $ctrl.addToKnowledge = function(category) {
-    category = angular.copy(category);
-    category.taggedTime = new Date();
-    $scope.question.categories[category.label] = category;
-  };
+    let quest_sn = $scope.question.quest_sn;
+    let labels = Object.keys($scope.question.categories);
 
-  $ctrl.addTag = function(tag) {
-    tag = angular.copy(tag);
-    tag.taggedTime = new Date();
-    $scope.question.tags[tag.label] = tag;
+    labels.push(category.label);
+
+    QuestModel.updateLabels(quest_sn, 'categories', labels).then(function(data) {
+      $scope.question.categories = data[0];
+    });
   };
 
   $ctrl.removeCategory= function(label) {
-    console.log('dddd', label)
-    delete $scope.question.categories[label];
+
+    let quest_sn = $scope.question.quest_sn;
+    let labels = Object.keys($scope.question.categories);
+
+    labels.splice(labels.indexOf(label), 1)
+
+    QuestModel.updateLabels(quest_sn, 'categories', labels).then(function(data) {
+        $scope.question.categories = data[0];
+    });
+
   }
 
+
+  $ctrl.addTag = function(tag) {
+
+    let quest_sn = $scope.question.quest_sn;
+    let labels = Object.keys($scope.question.tags);
+
+    labels.push(tag.label);
+
+    QuestModel.updateLabels(quest_sn, 'tags', labels).then(function(data) {
+      $scope.question.tags = data[0];
+    });
+
+  };
 
   $ctrl.removeTag= function(label) {
-    delete $scope.question.tags[label];
+
+    let quest_sn = $scope.question.quest_sn;
+    let labels = Object.keys($scope.question.tags);
+
+    labels.splice(labels.indexOf(label), 1)
+
+    QuestModel.updateLabels(quest_sn, 'tags', labels).then(function(data) {
+        $scope.question.tags = data[0];
+    });
   }
+
 }
 
 

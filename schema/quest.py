@@ -40,6 +40,13 @@ class ts_quest(dtable):
     __dobject_key__ = [quest_sn]
 
 
+class ts_quest_trashed(ts_quest):
+
+    trashed_ts = datt(datetime,  doc='进入回收箱的时间')
+
+    __dobject_key__ = [ts_quest.quest_sn]
+
+
 class ts_quest_saveforlater(dtable):
     """题目的SaveForLater(表内有记录，就表示已经打了标签，否则没打)"""
 

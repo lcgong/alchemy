@@ -23,6 +23,9 @@
   </span>
 
   <!-- <div class="padding"></div> -->
+  <div class="trash"><span class=" glyphicon glyphicon-trash"> </span></div>
+
+
 
   <span class="badge-setting" ng-if="mode=='editing'">
 
@@ -90,7 +93,7 @@
     <span class="sublevel-flag" ng-if="item[1].length > 0">
       <span class="glyphicon glyphicon-triangle-right"></span>
     </span>
-    
+
     <span class="category level-2" ng-repeat="subitem in item[1] track by $index"
       ng-class="{hover: hovers[subitem.label]}"
       ng-mouseenter="hovers[subitem.label] = true"

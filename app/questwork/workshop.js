@@ -1,3 +1,5 @@
+import "app/comp/directive/menuActive";
+
 import {convertToList as convertLabelDictToList} from "app/category/badge";
 
 

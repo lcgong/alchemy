@@ -44,38 +44,8 @@ function QuestpadCtrl($scope, $q, $state, $timeout, util, QuestModel) {
     console.log('qpad.questionText=%O', text);
   })
 
-  $scope.$watch('qpad.question.saveForLater', saveforlater => {
-    if (notLoaded || $scope.quest_sn === 0) {
-      return;
-    }
 
-    let status =  qpad.question.saveForLater != null;
 
-    QuestModel.setSaveForLater($scope.quest_sn, status).then(function(data) {
-      console.log('saveForLater: ', data[0]);
-    });
-
-  }, true);
-
-  $scope.$watch('qpad.question.tags', tags => {
-    if (notLoaded || $scope.quest_sn === 0) {
-      return;
-    }
-
-    QuestModel.updateLabels($scope.quest_sn, 'tags', tags).then(function(data) {
-      console.log('tags: ', data);
-    });
-  }, true);
-
-  $scope.$watch('qpad.question.categories', tags => {
-    if (notLoaded || $scope.quest_sn === 0) {
-      return;
-    }
-
-    QuestModel.updateLabels($scope.quest_sn, 'categories', tags).then(function(data) {
-      console.log('categories: ', data);
-    });
-  }, true);
 
 
   //------------------

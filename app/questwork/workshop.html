@@ -13,39 +13,53 @@
     <a
       ui-sref="repos.list.grid({repos_sn: repos_sn, source:'panned'})"
       ui-sref-active="active">
+      <span
+        class="glyphicon glyphicon-share-alt bs-glyphicon-fix"
+        style="transform: scale(-1, 1);">
+      </span>
       返回题库列表
     </a>
     <a
       ui-sref="repos.workshop.questpad({repos_sn: repos_sn, quest_sn:0})"
-      ui-sref-active="active">
+      ui-sref-active2="active"
+      menu-active="repos.workshop.questpad"
+      >
+      <span class="glyphicon glyphicon-pencil bs-glyphicon-fix"></span>
       写题板
     </a>
     <a
       ui-sref="repos.workshop.questlist({repos_sn:repos_sn, source:'saveforlater'})"
       ui-sref-active="active">
-      加备忘的
+      <span class="glyphicon glyphicon-bookmark bs-glyphicon-fix"></span>
+      备忘的
     </a>
     <a
       ui-sref="repos.workshop.questlist({repos_sn: repos_sn, source: 'recent'})"
       ui-sref-active="active">
+      <span class="glyphicon glyphicon-briefcase bs-glyphicon-fix"></span>
       最近更新的
     </a>
     <a
       ui-sref="repos.workshop.questlist({repos_sn: repos_sn, source: 'all'})"
       ui-sref-active="active">
+      <span class="glyphicon glyphicon-oil bs-glyphicon-fix"></span>
       全部
     </a>
-    <a ui-sref="repos.workshop.grid({source:'subscriptions'})" ui-sref-active="active">
-      题目的订阅
+    <a ui-sref="repos.workshop.subcription({repos_sn: repos_sn})"
+      ui-sref-active="active">
+      <span class="glyphicon glyphicon-user bs-glyphicon-fix"></span>
+      订阅用户
     </a>
     <a
       ui-sref="repos.settings.desc({repos_sn: repos_sn, source:'subscriptions'})"
       ui-sref-active="active">
+      <span class="glyphicon glyphicon-cog bs-glyphicon-fix"></span>
       配置题库
     </a>
     <a
-      ui-sref="repos.workshop.questlist({repos_sn: repos_sn, source: 'trashed'})"
+      ui-sref="repos.workshop.trash({repos_sn: repos_sn})"
       ui-sref-active="active">
+      <span class="glyphicon glyphicon-trash bs-glyphicon-fix"></span>
       回收箱
     </a>
 

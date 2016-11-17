@@ -15,6 +15,7 @@ route_base('/api/quest/')
 from schema.quest import ts_quest, ts_quest_seqno
 from schema.quest import ts_quest_labels
 from schema.quest import ts_quest_saveforlater
+from schema.quest import ts_quest_trashed
 
 from serv.label import find_labels, ts_label
 
@@ -41,7 +42,7 @@ def list_saveforlater_questions(repos_sn: int, source):
 
     return to_list_json(repos_sn, rows)
 
-@rest.GET('/api/repos/{repos_sn:int}/quest/recent')
+@rest.GET('/api/repos/{repos_sn:int}/quest/(:?recent|all)')
 @transaction
 def list_recent_questions(repos_sn: int, source):
     """ """
@@ -232,6 +233,8 @@ def put_saveforlater(quest_sn: int, json_arg):
 
         new_sfl.updated_ts = datetime.utcnow() if status else None
         dmerge(new_sfl, old_sfl)
+
+        return new_sfl
     else:
         dbc << """
         DELETE FROM ts_quest_saveforlater
@@ -239,7 +242,7 @@ def put_saveforlater(quest_sn: int, json_arg):
         """
         dbc << dict(quest_sn=quest_sn)
 
-    return status;
+        return None
 
 
 @rest.GET('{quest_sn:int}/{target:tags|categories}')
@@ -253,6 +256,10 @@ def get_labels(quest_sn: int, target):
         label_type = 'C'
     else:
         busilogic.fail('!');
+
+    return _get_labels(quest_sn, label_type)
+
+def _get_labels(quest_sn, label_type):
 
     dbc << """\
     WITH s AS (
@@ -286,13 +293,17 @@ def put_labels(quest_sn: int, target, json_arg):
         busilogic.fail('没找到试题： %d', quest_sn)
 
     if target == 'tags':
-        return _put_labels(quest.repos_sn, quest_sn, json_arg, 'T')
+        label_type = 'T'
+
     elif target == 'categories':
-        return _put_labels(quest.repos_sn, quest_sn, json_arg, 'C')
+        label_type = 'C'
     else:
         busilogic.fail('!');
 
-    return get_labels(quest_sn, target)
+    _put_labels(quest.repos_sn, quest_sn, json_arg, label_type)
+
+    return _get_labels(quest.quest_sn, label_type)
+
 
 def _put_labels(repos_sn, quest_sn, label_texts, label_type):
     """"""
@@ -309,15 +320,3 @@ def _put_labels(repos_sn, quest_sn, label_texts, label_type):
 
     original = drecall(ts_quest_labels(quest_sn=quest_sn, type = label_type))
     dmerge(quest_label, original)
-
-@rest.DELETE('{quest:int}')
-@transaction
-def delete_quest(quest_sn: int):
-    """  """
-
-    quest = drecall(ts_quest(quest_sn = quest_sn))
-    if not quest:
-        busilogic.fail('所删除的试题(%s)不存在' % quest_sn)
-
-    dbc << "DELETE FROM ts_quest WHERE quest_sn=%(quest_sn)s"
-    dbc << (quest_sn,)
