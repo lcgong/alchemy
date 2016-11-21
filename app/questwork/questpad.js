@@ -39,10 +39,10 @@ function QuestpadCtrl($scope, $q, $state, $timeout, util, QuestModel) {
   // $scope.$watch('qpad.question', question =>{
   //   console.log('qpad.question=%O', question);
   // }, true)
-
-  $scope.$watch('qpad.questionText', text =>{
-    console.log('qpad.questionText=%O', text);
-  })
+  // 
+  // $scope.$watch('qpad.questionText', text =>{
+  //   console.log('qpad.questionText=%O', text);
+  // })
 
 
 

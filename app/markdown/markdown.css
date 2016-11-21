@@ -1,4 +1,6 @@
-
+question_notes {
+  background-color: #eee;
+}
 .question, .section, .subquestion {
     margin-top: 10px;
     margin-bottom: 10px;

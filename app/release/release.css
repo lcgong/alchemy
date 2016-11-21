@@ -189,3 +189,21 @@ fieldset.schema-section legend {
 .schema-section .btn-append:hover {
   color: #E91E63;
 }
+
+
+th.selector > div {
+  display: block;
+   /*display: inline-flex;
+   flex-direction: column;
+   align-items: flex-start;
+  justify-content: flex-end;*/
+}
+
+.cat-dist.table input {
+  width:4em;
+  text-align:center;
+  border-radius: 3px;
+  padding-right: 0;
+  font-weight: bold;
+
+}

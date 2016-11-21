@@ -19,6 +19,11 @@ angular.module('mainapp').config(['$stateProvider', '$urlRouterProvider',
       templateUrl: 'app/release/schema.html'
     });
 
+    $stateProvider.state('repos.release.listschema', {
+      url: '/schema',
+      templateUrl: 'app/release/schemalist.html'
+    });
+
     $stateProvider.state('repos.release.paper', {
       url: '/paper',
       templateUrl: 'app/release/paper.html'

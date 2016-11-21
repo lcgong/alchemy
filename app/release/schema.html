@@ -2,7 +2,7 @@
   ng-controller="ReleaseSchemaCtrl as ctrl">
 
   <nav class="ctrlbar">
-    <a class="btn" ng-click="qpad.save()">保存</a>
+    <a class="btn" ng-click="save()">保存</a>
   </nav>
 
   <div class="panel-heading">
@@ -22,7 +22,7 @@
       <legend>
         <div>&sect;{{$index + 1}}</div>
         <input type="text" class="form-control" ng-model="section.title" >
-        <button 
+        <button
           ng-click="removeSection(schema.sections, $index)">
           <span class="glyphicon glyphicon-remove"></span>
         </button>
@@ -106,6 +106,44 @@
     <h4>定义试卷的知识要点分布</h4>
   </div>
   <div class="panel-body">
+    <table class="cat-dist table">
+      <tr>
+        <th></th>
+        <th></th>
+        <th ng-repeat="section in schema.sections track by $index" colspan="{{section.selectors.length}}">
+          &sect;{{$index + 1}}
+        </th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th class="selector" ng-repeat="selector in selectorCols track by $index">
+          <span class="badge-label question-style">
+            {{selector.question_style}}
+          </span>
+          <div  ng-repeat="label in selector.tags track by $index">
+            <div class="btn-tag">
+              <a>
+                {{label}}
+                <span></span>
+              </a>
+            </div>
+          </div>
 
+        </th>
+      </tr>
+      <tr ng-repeat="r in catItems track by $index">
+        <td style="width:8em">
+          {{r[1]}}
+        </td>
+        <td style="width:8em">
+          {{r[2]}}
+        </td>
+        <td ng-repeat="col in selectorCols track by $index">
+          <input type="number" class="form-control">
+        </td>
+
+      </tr>
+    </table>
   </div>
 </div>

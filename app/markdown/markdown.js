@@ -84,7 +84,7 @@ function questionMarkdownDirective($templateRequest, $compile) {
     scope: {
       startQuestionNo: '=',
       content: '=',
-      mode: '='
+      // mode: '='
     },
     template: '<div class="question-markdown" include-template="$sheet.htmlContent" on-precompile-func="$sheet.precompileSheet"></div>',
     controller: 'questionMarkdownCtrl',
@@ -106,11 +106,13 @@ function questionMarkdownDirective($templateRequest, $compile) {
       if ($attrs.mode) {
         $scope.$watch('mode', function(newValue, oldValue) {
             $sheet.mode = newValue;
+            $sheet.mode = 'editing';
             // console.log(333, $scope.mode);
         });
       } else {
-        $sheet.mode = 'listing';
+        $sheet.mode = 'editing';
       }
+      $sheet.mode = 'editing';
 
       // console.log(markdown_it_mathjax)
 

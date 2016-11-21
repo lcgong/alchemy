@@ -209,7 +209,7 @@ export function compareLabelItem(a, b) {
   return _compareLabelItem(a[0], b[0]);
 }
 
-function _compareLabelItem(a, b) {
+export function _compareLabelItem(a, b) {
   if (typeof a.order !== 'undefined' &&
       typeof b.order !== 'undefined' &&
       typeof a.order !== null &&

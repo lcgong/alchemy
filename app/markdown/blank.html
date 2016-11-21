@@ -3,8 +3,7 @@
   ng-click="click($event)";
   >
   <span class="blank-no">{{blank.blankNo}}</span>
-
-  <span class="" ng-if="$sheet.mode==='testing'">
+  <span class="" ng-if="$sheet.mode=='testing'">
     <span class="question-result blank-resolved" ng-if="blank.resolved.length > 0">
       <span class="" ng-repeat="solution_option_no in blank.resolved" >
         {{solution_option_no}}
@@ -12,7 +11,7 @@
     </span>
   </span>
 
-  <span class="" ng-if="$sheet.mode==='editing'">
+  <span class="" ng-if="$sheet.mode=='editing'">
     <span class="question-result blank-solution" ng-if="blank.solution.length > 0">
       <span class="" ng-repeat="solution_option_no in blank.solution" >
         {{solution_option_no}}
@@ -20,7 +19,7 @@
     </span>
   </span>
 
-  <span  class="" ng-if="$sheet.mode==='checking'">
+  <span  class="" ng-if="$sheet.mode=='checking'">
     <span ng-if="$sheet.checkResult(blank)">
       <span class="question-result blank-resolved success" ng-if="blank.resolved.length > 0">
         <span class="" ng-repeat="solution_option_no in blank.resolved" >

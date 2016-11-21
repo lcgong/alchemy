@@ -15,7 +15,7 @@ import "app/comp/code_manager";
 // import "app/comp/index"
 
 import "app/comp/udd-btn";
-import "app/comp/d3_chart";
+// import "app/comp/d3_chart";
 import "app/comp/notifier";
 import "app/comp/smarttable";
 import "app/comp/fullscreen";

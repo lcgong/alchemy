@@ -7,7 +7,7 @@ function ReleaseModel(restcli) {
   return {
     // source: recent, saveforlater, all
     list: function(repos_sn, source) {
-        let url = '/api/repos/{repos_sn}/quest/' + source;
+        let url = '/api/repos/{knk}/quest/' + source;
         return restcli.factory('GET', url)({
           pathargs: {
             repos_sn: repos_sn
@@ -38,7 +38,7 @@ function ReleaseModel(restcli) {
 
     //
     save: function (quest) {
-      let url = baseUrl;
+      let url = baseUrl + '/3';
       return restcli.factory('PUT', url)({
         pathargs: {
           quest_sn: quest.quest_sn

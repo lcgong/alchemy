@@ -1,3 +1,4 @@
+import {_compareLabelItem as compareLabelItem } from 'app/category/badge';
 
 angular.module('mainapp').controller('ReleaseSchemaCtrl', ReleaseSchemaCtrl);
 ReleaseSchemaCtrl.$inject = ['$scope', '$q', '$state', '$timeout', 'util', 'ReleaseModel'];
@@ -87,6 +88,49 @@ function ReleaseSchemaCtrl($scope, $q, $state, $timeout, util, ReleaseModel) {
       questiongstyle: null,
       tags: []
     });
+  }
+
+  $scope.$watch('schema.sections', function(sections) {
+    console.log(sections);
+
+    let selectorCols = [];
+    for (let section of sections) {
+      for (let selector of section.selectors) {
+          selectorCols.push(selector);
+      }
+    }
+    $scope.selectorCols = selectorCols;
+
+  }, true);
+
+  $scope.$watch('repos.categories', function(categories) {
+    categories = angular.copy(categories);
+
+    for(let label in categories) {
+      categories[label].label = label
+    }
+
+    let items = Object.values(categories).sort(compareLabelItem).map(item => {
+      let parts = item.label.split('/', 2);
+      if (parts.length == 2) {
+        return [item.label, parts[0], parts[1]];
+      } else if (parts.length == 1) {
+        return [item.label, parts[0], null];
+      } else{
+        throw 'unknown';
+      }
+    });
+
+    $scope.catItems = items;
+
+    console.log(123, items);
+
+  });
+
+  $scope.save = function() {
+    ReleaseModel.save(this).then(function(){
+
+    })
   }
 
   // section {title, blankCount, points, selectors (questiongstyle, tags) }
