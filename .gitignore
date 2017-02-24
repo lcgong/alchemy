@@ -2,5 +2,6 @@
 webapp/app/MathJax
 webapp/node_modules/
 webapp/jspm_packages/
+logs/*
 __pycache__/
 *.bak
