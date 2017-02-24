@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <base href="/">
+  <title>MyApp</title>
+</head>
+<body>
+  <my-app>Loading AppComponent content here ...</my-app>
+
+  <script src="jspm_packages/system.js"></script>
+  <script src="jspm.config.js"></script>
+  <!-- <script src="build/a.js"></script> -->
+  <!-- <script src="build/third.js"></script> -->
+  <!--
+  jspm bundle @angular/common + @angular/compiler + @angular/forms + \
+    @angular/http + @angular/platform-browser-dynamic + reflect-metadata + \
+    rxjs + zone.js  + crypto + fs + os + buffer + assert + constants + \
+    events + path +  process + stream + string_decoder + timers + util + vm + \
+    plugin-typescript + child_process + module + net build/third.js --minify
+  -->
+  <script>
+    System.import('app/test/ng2/ts').catch(console.error.bind(console));
+  </script>
+</body>
+</html>

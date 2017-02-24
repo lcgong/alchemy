@@ -1,62 +1,213 @@
 {
-  "name": "babel-jspm-karma-jasmine-istanbul",
-  "version": "1.0.0",
-  "description": "Babel JSPM Karma Jasmine Istanbul Coverage example and tutorial",
-  "repository": "git@github.com:gunnarlium/babel-jspm-karma-jasmine-istanbul.git",
-  "main": "index.js",
-  "devDependencies": {
-    "babel-core": "^6.3.17",
-    "babel-polyfill": "^6.3.14",
-    "babel-preset-es2015": "^6.3.13",
-    "isparta": "^3.0.3",
-    "istanbul": "gotwarlost/istanbul.git#source-map",
-    "jasmine": "^2.3.1",
-    "jasmine-core": "^2.3.4",
-    "jspm": "^0.16.47",
-    "karma": "^0.13.19",
-    "karma-babel-preprocessor": "^6.0.1",
-    "karma-coverage": "douglasduteil/karma-coverage#next",
-    "karma-jasmine": "^0.3.6",
-    "karma-jspm": "^2.0.2",
-    "karma-phantomjs-launcher": "^0.2.0",
-    "karma-sourcemap-loader": "^0.3.5",
-    "phantomjs": "^1.9.17"
-  },
-  "scripts": {
-    "test": "karma start karma.conf.js",
-    "postinstall": "jspm install",
-    "thirdparty": "jspm bundle jquery + bootstrap + angular + angular-animate + angular-resource + angular-sanitize + angular-i18n/angular-locale_zh-hans-cn + angular-ui-router + angular-ui-select + angular-smart-table + angular-bootstrap + babel + css + markdown-it + babel-runtime/core-js + babel-runtime/regenerator + core-js/core + core-js/es6  build/thirdparty  --minify --no-mangle"
-  },
-  "author": "",
-  "license": "MIT",
   "jspm": {
-    "configFile": "app/jspm.config.js",
+    "name": "app",
+    "main": "app.js",
+    "configFiles": {
+      "jspm": "app/jspm.config.js"
+    },
     "dependencies": {
-      "ace": "github:ajaxorg/ace-builds@^1.2.5",
-      "angular": "github:angular/bower-angular@^1.5.8",
-      "angular-animate": "github:angular/bower-angular-animate@^1.5.8",
-      "angular-bootstrap": "github:angular-ui/bootstrap-bower@^2.2.0",
-      "angular-i18n": "npm:angular-i18n@^1.5.8",
-      "angular-resource": "github:angular/bower-angular-resource@^1.5.8",
-      "angular-sanitize": "github:angular/bower-angular-sanitize@^1.5.8",
-      "angular-smart-table": "github:lorenzofox3/Smart-Table@^2.1.8",
-      "angular-ui-grid": "github:angular-ui/bower-ui-grid@^3.2.9",
-      "angular-ui-router": "github:angular-ui/angular-ui-router-bower@^0.3.1",
-      "angular-ui-select": "github:angular-ui/ui-select@^0.19.6",
-      "animate.css": "npm:animate.css@^3.5.2",
-      "bootstrap": "github:twbs/bootstrap@^3.3.6",
+      "@angular/http": "npm:@angular/http@^2.2.3",
+      "@angular/language-service": "npm:@angular/language-service@^2.3.0-beta.1",
+      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@^2.2.3",
+      "@angular/router": "npm:@angular/router@^3.2.3",
+      "@ng-bootstrap/ng-bootstrap": "npm:@ng-bootstrap/ng-bootstrap@^1.0.0-alpha.14",
+      "bootstrap": "npm:bootstrap@4.0.0-alpha.5",
       "css": "github:systemjs/plugin-css@^0.1.32",
-      "d3": "github:d3/d3@3.5.17",
-      "highlight": "npm:highlight@^0.2.4",
-      "highlightjs": "github:components/highlightjs@^9.0.0",
-      "jquery": "npm:jquery@^2.2.3",
-      "markdown-it": "npm:markdown-it@^8.0.1",
-      "mathjax": "npm:mathjax@^2.7.0"
+      "jquery": "npm:jquery@^3.1.1",
+      "typescript": "npm:typescript@^2.1"
     },
     "devDependencies": {
-      "babel": "npm:babel-core@^6.3.17",
-      "babel-runtime": "npm:babel-runtime@^5.8.24",
-      "core-js": "npm:core-js@^1.1.4"
+      "plugin-typescript": "github:frankwallis/plugin-typescript@^5.3.1"
+    },
+    "peerDependencies": {
+      "@angular/common": "npm:@angular/common@2.2.3",
+      "@angular/compiler": "npm:@angular/compiler@2.2.3",
+      "@angular/core": "npm:@angular/core@^2.2.3",
+      "@angular/forms": "npm:@angular/forms@^2.2.3",
+      "@angular/platform-browser": "npm:@angular/platform-browser@2.2.3",
+      "assert": "npm:jspm-nodelibs-assert@^0.2.0",
+      "buffer": "npm:jspm-nodelibs-buffer@^0.2.0",
+      "child_process": "npm:jspm-nodelibs-child_process@^0.2.0",
+      "constants": "npm:jspm-nodelibs-constants@^0.2.0",
+      "crypto": "npm:jspm-nodelibs-crypto@^0.2.0",
+      "events": "npm:jspm-nodelibs-events@^0.2.0",
+      "fs": "npm:jspm-nodelibs-fs@^0.2.0",
+      "module": "npm:jspm-nodelibs-module@^0.2.0",
+      "net": "npm:jspm-nodelibs-net@^0.2.0",
+      "os": "npm:jspm-nodelibs-os@^0.2.0",
+      "path": "npm:jspm-nodelibs-path@^0.2.0",
+      "process": "npm:jspm-nodelibs-process@^0.2.0",
+      "reflect-metadata": "npm:reflect-metadata@^0.1.8",
+      "rxjs": "npm:rxjs@5.0.0-beta.12",
+      "stream": "npm:jspm-nodelibs-stream@^0.2.0",
+      "string_decoder": "npm:jspm-nodelibs-string_decoder@^0.2.0",
+      "timers": "npm:jspm-nodelibs-timers@^0.2.0",
+      "util": "npm:jspm-nodelibs-util@^0.2.0",
+      "vm": "npm:jspm-nodelibs-vm@^0.2.0",
+      "zone.js": "npm:zone.js@^0.6.6"
+    },
+    "overrides": {
+      "github:HubSpot/tether@1.3.7": {
+        "main": "js/tether",
+        "directories": {
+          "lib": "dist"
+        },
+        "meta": {
+          "js/tether.js": {
+            "exports": "Tether",
+            "format": "global"
+          }
+        }
+      },
+      "npm:@angular/common@2.2.3": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/common": ".",
+          "./testing": "./bundles/common-testing.umd.js"
+        }
+      },
+      "npm:@angular/compiler@2.2.3": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/compiler": ".",
+          "./testing": "./bundles/compiler-testing.umd.js"
+        }
+      },
+      "npm:@angular/core@2.2.3": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          },
+          "bundles/core.umd.js": {
+            "typings": "index.d.ts"
+          }
+        },
+        "map": {
+          "@angular/core": ".",
+          "./testing": "./bundles/core-testing.umd.js"
+        }
+      },
+      "npm:@angular/http@2.2.3": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/http": ".",
+          "./testing": "./bundles/http-testing.umd.js"
+        }
+      },
+      "npm:@angular/platform-browser-dynamic@2.2.3": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/platform-browser-dynamic": ".",
+          "./testing": "./bundles/platform-browser-dynamic-testing.umd.js"
+        }
+      },
+      "npm:@angular/platform-browser@2.2.3": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/platform-browser": ".",
+          "./testing": "./bundles/platform-browser-testing.umd.js"
+        }
+      },
+      "npm:@angular/router@3.2.3": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/router": ".",
+          "./testing": "./bundles/router-testing.umd.js"
+        }
+      },
+      "npm:bootstrap@4.0.0-alpha.5": {
+        "main": "dist/js/bootstrap",
+        "jspmNodeConversion": false,
+        "directories": {
+          "lib": "."
+        },
+        "dependencies": {
+          "jquery": "*",
+          "tether": "github:HubSpot/tether@^1.1.1"
+        },
+        "meta": {
+          "dist/js/bootstrap.js": {
+            "deps": [
+              "jquery",
+              "tether"
+            ],
+            "exports": "$",
+            "format": "global"
+          }
+        }
+      },
+      "npm:inherits@2.0.3": {
+        "ignore": [
+          "test.js"
+        ]
+      },
+      "npm:jquery@3.1.1": {
+        "format": "amd"
+      },
+      "npm:reflect-metadata@0.1.8": {
+        "map": {
+          "crypto": "@empty"
+        }
+      },
+      "npm:typescript@2.1.1": {
+        "browser": {},
+        "map": {
+          "buffer": "@empty",
+          "child_process": "@empty",
+          "fs": "@empty",
+          "path": "@empty",
+          "process": "@empty",
+          "readline": "@empty"
+        },
+        "dependencies": {
+          "source-map-support": "*"
+        }
+      }
     }
   }
 }
