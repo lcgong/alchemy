@@ -1,10 +1,4 @@
-# alchemy
 
-```
-jspm install
-```
 
-```
-npm install -g angular2-dependencies-graph
-ngd -f app/test/ng2/ts.ts
-```
+* webapp Web浏览器前端，采用angualr 2和nodejs
+* services 服务后端，采用python
