@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "tsc": "tsc",
-    "tsc:w": "tsc -w"
+    "tsc:w": "tsc -w",
+    "webdriver:start":"webdriver-manager start",
+    "webdriver:update":"webdriver-manager update --gecko=false"
   },
   "wasm": true,
   "jspm": {
@@ -192,6 +194,7 @@
     "helmet": "^3.4.0",
     "moment": "^2.17.1",
     "serve-static": "^1.11.2",
-    "typescript": "^2.2.0"
+    "typescript": "^2.2.0",
+    "webdriver-manager": "^12.0.2"
   }
 }

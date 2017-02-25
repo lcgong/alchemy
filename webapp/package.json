@@ -209,5 +209,8 @@
         }
       }
     }
+  },
+  "devDependencies": {
+    "webdriver-manager": "^12.0.2"
   }
 }
