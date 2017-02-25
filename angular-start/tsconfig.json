@@ -16,8 +16,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "noEmitHelpers": false
   },
+  "typings": [
+      "typings/**/*.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "jspm_packages",

@@ -1,4 +1,5 @@
 build
 node_modules
 jspm_packages
+typings/*
 *.log
