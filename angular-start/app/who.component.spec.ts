@@ -8,7 +8,6 @@ import { MockBackend } from '@angular/http/testing';
 import { FormsModule } from '@angular/forms';
 import { WhoComponent } from './who.component';
 
-
 describe('WhoComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({

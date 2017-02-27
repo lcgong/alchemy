@@ -12,6 +12,7 @@ module.exports = function(config) {
 
     client: {
       args: ['--grep', (config.grep===true)? null : config.grep],
+      clearContext: false // 在浏览器runner显示输出结果
     },
 
     files: [

@@ -8,6 +8,8 @@
     "paths" : {
       "app/*" : ["app/*"]
     },
+    "typeRoots" : ["./typings/globals"],
+    "types": ["jasmine"],
     "target": "ES2015",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -19,9 +21,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "noEmitHelpers": false
   },
-  "typings": [
-      "typings/**/*.d.ts"
-  ],
+
   "exclude": [
     "node_modules",
     "jspm_packages",
