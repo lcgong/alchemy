@@ -11,12 +11,12 @@ wepappEnviroment.typescript = hasAttrChecked('typescript');
 wepappEnviroment.debug = hasAttrChecked('debug');
 
 var prefetchResources = [
-  'jspm_packages/system.js', 'jspm.config.js', 'rt.js'
+  'jspm_packages/system.js', 'jspm.config.js', 'lib/rt.js'
 ];
 
 if (wepappEnviroment.typescript) {
   prefetchResources = prefetchResources.concat([
-    'jspm.config.transpiler.js', 'ts.transpiler.js']
+    'jspm.config.transpiler.js', 'lib/ts.transpiler.js']
   );
 }
 
@@ -54,13 +54,13 @@ function importApplicationScripts() {
     if (wepappEnviroment.typescript) {
       // 配置动态ts编译，接着并行加载其所需包
       return Promise.all([
-        importScript('rt.js', false),
-        importScript('ts.transpiler.js', true),
+        importScript('lib/rt.js', false),
+        importScript('lib/ts.transpiler.js', true),
       ]);
 
     } else {
       // 加载已编译成js的typescript程序
-      return importScript('rt.js', false);
+      return importScript('lib/rt.js', false);
     }
   }).then(function() {
     // return Promise.all([
@@ -85,7 +85,7 @@ function importApplicationScripts() {
     //   return System.import('app.bootstrap');
     // })
 
-    return System.import('app.bootstrap');
+    return System.import('app/bootstrap');
   }).catch(function(err){ console.error(err); });
 }
 
@@ -153,7 +153,9 @@ function importScript(url, asyncFlag) {
     });
     el.addEventListener('error', function errorHandler(event) {
       event.currentTarget.removeEventListener(event.type, errorHandler);
-      reject('error in loading: ' + url);
+      // reject('error in loading: ' + url);
+      console.error('error in loading: ' + url);
+      resolve(url);
     });
     document.head.appendChild(el);
   });

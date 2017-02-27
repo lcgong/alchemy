@@ -36,9 +36,9 @@ app.use(historyHandler({ // 所有没有后缀的访问路径均转向指定的�
   index: '/index.html',
 }));
 
-app.use('/', serveStatic('build/lib'));
-app.use('/', serveStatic('build/transpiled'));
-app.use('/', serveStatic('src'));
+app.use('/app', serveStatic('app'));
+app.use('/', serveStatic('webroot'));
+app.use('/', serveStatic('build'));
 app.use('/node_modules', serveStatic('node_modules'));
 app.use('/jspm_packages', serveStatic('jspm_packages'));
 
