@@ -6,10 +6,9 @@
   "scripts": {
     "tsc": "tsc",
     "tsc:w": "tsc -w",
-    "webdriver:start":"webdriver-manager start",
-    "webdriver:update":"webdriver-manager update --gecko=false"
+    "test": "karma start"
   },
-  "wasm": true,
+  "angular-cli": {},
   "jspm": {
     "configFiles": {
       "jspm": "src/jspm.config.js"
@@ -186,17 +185,41 @@
     }
   },
   "devDependencies": {
+    "@angular/cli": "^1.0.0-rc.0",
+    "@angular/common": "^2.4.8",
+    "@angular/compiler": "^2.4.8",
     "@angular/compiler-cli": "^2.4.8",
+    "@angular/core": "^2.4.8",
+    "@angular/forms": "^2.4.8",
+    "@angular/http": "^2.4.8",
+    "@angular/platform-browser": "^2.4.8",
+    "@angular/platform-browser-dynamic": "^2.4.8",
+    "@types/jasmine": "^2.5.43",
+    "@types/node": "^7.0.5",
     "chalk": "^1.1.3",
     "connect": "^3.6.0",
     "connect-history-api-fallback": "^1.3.0",
     "cors": "^2.8.1",
+    "express": "^4.14.1",
+    "gulp": "^3.9.1",
     "gulp-typescript": "^3.1.5",
     "helmet": "^3.4.0",
     "http-shutdown": "^1.1.0",
+    "jasmine-core": "^2.5.2",
+    "jasmine-spec-reporter": "^3.2.0",
+    "jspm": "^0.17.0-beta.40",
+    "karma": "^1.5.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-remap-istanbul": "^0.6.0",
     "moment": "^2.17.1",
+    "rxjs": "^5.2.0",
     "serve-static": "^1.11.2",
+    "shim": "^0.6.0",
     "typescript": "^2.2.0",
-    "webdriver-manager": "^12.0.2"
+    "webdriver-manager": "^12.0.2",
+    "zone.js": "^0.7.7"
   }
 }

@@ -1,18 +1,18 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "rootDirs": ["src"],
-    "outDir": "build/transpiled",
+    "rootDir": "./",
+    "outDir": "build/",
     "sourceRoot": "/",
     "baseUrl": ".",
     "paths" : {
-      "app/*" : ["src/*"]
+      "app/*" : ["app/*"]
     },
     "target": "ES2015",
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
-    "lib": [ "es2015", "dom" ],
+    "lib": [ "es2015", "dom"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noImplicitAny": true,
@@ -25,6 +25,7 @@
   "exclude": [
     "node_modules",
     "jspm_packages",
+    "typings/",
     "build"
   ]
 }

@@ -1,44 +1,41 @@
-// //
-import {inject} from '@angular/core/testing';
-console.log(inject)
-import { TestBed, async } from '@angular/core/testing';
-// import {it, describe, expect, inject, fakeAsync, beforeEachProviders, tick} from 'angular2/testing';
+// import {describe, beforeEach, it, expect} from 'jasmine';
+import { TestBed, ComponentFixture, async } from '@angular/core/testing';
+import { By }  from '@angular/platform-browser';
 
-
-import { WhoComponent } from './who.component';
-// import { StormpathModule, Stormpath } from 'angular-stormpath';
-import {MainModule} from "./main.module";
 import { BaseRequestOptions, Http, ConnectionBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
+import { FormsModule } from '@angular/forms';
+import { WhoComponent } from './who.component';
 
 
 describe('WhoComponent', () => {
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        WhoComponent
-      ],
-      imports: [MainModule],
-      providers: [
-        // {
-        //   provide: Http, useFactory: (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) => {
-        //   return new Http(backend, defaultOptions);
-        //   },
-        //   deps: [MockBackend, BaseRequestOptions]
-        // },
-        {provide: MockBackend, useClass: MockBackend},
-        // {provide: BaseRequestOptions, useClass: BaseRequestOptions}
-      ]
-    });
-    TestBed.compileComponents();
+      declarations: [WhoComponent],
+      imports: [FormsModule],
+    }).compileComponents();
+  }));
+
+  console.log('see test');
+
+  let comp: WhoComponent;
+  let fixture: ComponentFixture<WhoComponent>;
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(WhoComponent);
+    comp = fixture.componentInstance;
+    // de = fixture.debugElement.query(By.css('h1'));
   });
 
-  it('should create the app', async(() => {
-    const fixture = TestBed.createComponent(WhoComponent);
-    // const app = fixture.debugElement.componentInstance;
-    // expect(app).toBeTruthy();
-  }));
+  it('should create component', () => expect(comp).toBeDefined() );
+
+  it('should have expected <h1> text', () => {
+    // fixture.detectChanges();
+    // const h1 = de.nativeElement;
+    // expect(h1.innerText).toMatch(/angular/i,
+    //   '<h1> should say something about "Angular"');
+  });
 // //
 // //   // it(`should have as title 'app works!'`, async(() => {
 // //   //   const fixture = TestBed.createComponent(AppComponent);
