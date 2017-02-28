@@ -1,6 +1,7 @@
 // import {describe, beforeEach, it, expect} from 'jasmine';
 import { TestBed, ComponentFixture, async } from '@angular/core/testing';
-import { By }  from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 import { BaseRequestOptions, Http, ConnectionBackend } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
@@ -16,24 +17,43 @@ describe('WhoComponent', () => {
     }).compileComponents();
   }));
 
-  console.log('see test');
-
   let comp: WhoComponent;
   let fixture: ComponentFixture<WhoComponent>;
+  let de: DebugElement;
+  let el: HTMLElement;
 
   beforeEach(() => {
     fixture = TestBed.createComponent(WhoComponent);
     comp = fixture.componentInstance;
-    // de = fixture.debugElement.query(By.css('h1'));
   });
 
   it('should create component', () => expect(comp).toBeDefined() );
 
-  it('should have expected <h1> text', () => {
+  it('value set', () => {
+    let inputEl: DebugElement;
+
+    inputEl = fixture.debugElement.query(By.css('input'));
+    expect(inputEl).toBeDefined();
+
+    let pEl: DebugElement;
+
+    inputEl.nativeElement.value = 'Tom Zhang';
+
+      // dispatch a DOM event so that Angular learns of input value change.
+    inputEl.nativeElement.dispatchEvent(newEvent('input'));
+
+    // comp.name = 'Tom Zhang';
+    //
     // fixture.detectChanges();
-    // const h1 = de.nativeElement;
-    // expect(h1.innerText).toMatch(/angular/i,
-    //   '<h1> should say something about "Angular"');
+
+    inputEl = fixture.debugElement.query(By.css('input'));
+    pEl = fixture.debugElement.query(By.css('p'));
+
+    console.log(789, inputEl.nativeElement.value, pEl.nativeElement.textContent);
+
+    expect(pEl.nativeElement.textContent).toContain(comp.name);
+
+    // expect(inputEl.nativeElement.value).toContain('Tom Zhang');
   });
 // //
 // //   // it(`should have as title 'app works!'`, async(() => {
