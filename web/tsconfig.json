@@ -1,0 +1,31 @@
+{
+  "compileOnSave": false,
+  "check": false,
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "build/",
+    "sourceRoot": "/",
+    "baseUrl": ".",
+    "paths" : {
+      "app/*" : ["app/*"]
+    },
+    "typeRoots" : ["./typings/globals"],
+    "types": ["jasmine"],
+    "target": "ES2015",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "lib": [ "es2015", "dom"],
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noEmitHelpers": false
+  },
+  "exclude": [
+    "node_modules",
+    "jspm_packages",
+    "typings/",
+    "build"
+  ]
+}

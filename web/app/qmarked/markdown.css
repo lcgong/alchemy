@@ -1,0 +1,254 @@
+question_notes {
+  background-color: #eee;
+}
+.question, .section, .subquestion {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.question .question-no {
+    /*background: #dc3022;*/
+    border-color: transparent;
+    color: #333;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+    /*box-shadow: inset 0 0 5px 0 rgba(0, 0, 0, 0.3);*/
+    min-width: 2ex;
+    min-height: 1ex;
+    text-align: center;
+    float: left;
+    font-weight: bold;
+    padding: 1px 5px 2px 2px;
+}
+
+.option-group {
+  padding: 1rem 1rem 0rem 0rem;
+}
+
+.option-group > div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.option-group .blank-option {
+    display: inline-block;
+    flex: 1 0 calc(25%);
+    padding-left: 2em;
+    box-sizing: border-box;
+}
+
+.question-blank {
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    background-color: #fff;
+
+    min-width: 6em;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding: 0px 1ex;
+}
+
+.testing .question-blank {
+  cursor: pointer;
+}
+
+.question-blank  .question-result  {
+  display: inline-block;
+  vertical-align: baseline;
+  align-items: center;
+  justify-content: center;
+  border-style: solid;
+  border-width: 2px;
+  font-size: 100%;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 15%;
+
+  line-height: 1.3em;
+  padding: 0 0.2em;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+
+  box-shadow:  1px 1px 5px  #B1B1B1;
+  text-shadow: 1px 1px 0 rgba(90, 90, 90, 0.5);
+}
+
+.question-blank  .question-result.blank-solution {
+
+  border-color: hsla(120, 75%, 31%, 0.89);
+  background: hsla(120, 75%, 31%, 0.89);
+  color: white;
+}
+
+.question-blank  .question-result.blank-resolved {
+
+  border-color: #6968fd;
+  background: #2f85b3;
+  color: white;
+}
+
+.question-blank  .question-result.blank-resolved.success {
+  border-color: hsla(120, 75%, 31%, 0.89);
+  background: hsla(120, 75%, 31%, 0.89);
+  color: white;
+
+}
+
+.question-blank  .question-result.blank-resolved.failed {
+  border-color: hsla(0, 87%, 47%, 0.89);
+  background: hsla(0, 87%, 47%, 0.89);
+  color: white;
+}
+
+.option-no {
+  display: inline-block;
+  vertical-align: baseline;
+  align-items: center;
+  justify-content: center;
+  border-style: solid;
+  border-width: 2px;
+  font-size: 100%;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 15%;
+
+  line-height: 1.3em;
+  padding: 0 0.2em;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+
+  border-color: #c1c1c1;
+  background: rgb(255, 255, 255);
+  color: #080808;
+  box-shadow:  1px 1px 5px  #B1B1B1;
+  text-shadow: 1px 1px 0 rgba(90, 90, 90, 0.5);
+}
+
+.blank-option > .option-no {
+  float: left;
+}
+
+.editing .blank-option.solution .option-no {
+  border-color: hsla(120, 75%, 31%, 0.89);
+  background: hsla(120, 75%, 31%, 0.89);
+  color: white;
+}
+
+.testing .blank-option.unresolved .option-no {
+  border-color: #c1c1c1;
+  background: rgb(255, 255, 255);
+  color: #080808;
+}
+
+.testing .blank-option.resolved .option-no {
+  border-color: #6968fd;
+  background: #2f85b3;
+  color: white;
+}
+
+/** 答的和标准答案一致的 */
+.checking .blank-option.resolved.solution .option-no {
+  border-color: hsla(120, 75%, 31%, 0.89);
+  background: hsla(120, 75%, 31%, 0.89);
+  color: white;
+}
+
+/** 答的不是标准答案 */
+.checking .blank-option.resolved .option-no {
+  border-color: hsla(0, 87%, 47%, 0.89);
+  background: hsla(0, 87%, 47%, 0.89);
+  color: white;
+}
+
+/** 标准答案未答上的 */
+.checking .blank-option.unresolved.solution .option-no {
+  border-color: hsla(120, 75%, 31%, 0.89);
+  border-width: 3px;
+  background: hsla(0, 87%, 47%, 0.89);
+  color: white;
+}
+
+/*blank-option ng-scope unresolved solution*/
+
+/*.question .blank-option > .option-no {
+    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.2em;
+
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #FFB300;
+    color: white;
+
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: 1px 1px 0 rgba(90, 90, 90, 0.5);
+
+    float: left;
+}*/
+
+/*.option-group .blank-option > p {
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    line-height: 22px;
+}*/
+.question-notes {
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 17.5px;
+    border-left: 5px solid #eee;
+    margin: 1em 2em 1em 2em;
+}
+
+
+.question .question-blank.targeted, .option-group.targeted {
+    margin: 0 auto;
+    /*padding: 10px 0;*/
+
+    position: relative;
+    /*box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);*/
+    /*color: #E91E63;*/
+    background-color: #f5f5f5;
+    border-style: solid;
+    border-width: 1px;
+    border-color: hsla(315, 12%, 71%, 0.54);
+    border-radius: 5px;
+    box-shadow: 3px 5px 10px  #B1B1B1;
+    transition: box-shadow ease-in-out 100ms, top ease-in-out 100ms;
+}
+
+.question .question-blank.targeted::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16);
+    z-index : -1;
+}
+
+.question .question-blank.targetable, .option-group.targetable {
+  border-style: dotted;
+  border-width: 1px;
+  border-radius: 5px;
+  border-color: #E91E63;
+  box-shadow: 3px 5px 10px  #B1B1B1;
+}
+
+.ace_editor {
+  height: 100px;
+}
+
+.ace_editor, .ace_editor div{
+    font-family: monospace;
+    letter-spacing: 0;
+
+}

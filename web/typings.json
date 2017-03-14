@@ -1,0 +1,8 @@
+{
+  "globalDependencies": {
+    "jasmine": "registry:dt/jasmine#2.5.0+20170207112528"
+  },
+  "dependencies": {
+    "markdown-it": "registry:npm/markdown-it#4.0.0+20160704212804"
+  }
+}
