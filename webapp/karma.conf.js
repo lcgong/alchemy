@@ -1,72 +1,63 @@
-/* global module */
-module.exports = function (config) {
-	'use strict';
-	config.set({
-		autoWatch: true,
-		singleRun: true,
+module.exports = function(config) {
 
-		frameworks: ['jspm', 'jasmine'],
+  config.set({
+    basePath: '',
+    frameworks: ['jasmine'],
 
-		basePath : '.',
+    plugins: [
+      require('karma-jasmine'),
+      require('karma-chrome-launcher'),
+      require('karma-jasmine-html-reporter')
+    ],
 
-		files: [
-			'node_modules/babel-polyfill/dist/polyfill.js'
-		],
+    client: {
+      args: ['--grep', (config.grep===true)? null : config.grep],
+      clearContext: false // 在浏览器runner显示输出结果
+    },
 
-		exclude : [
-			'jspm_packages/github/mathjax/**/*.*'
-		],
+    files: [
+      'jspm_packages/system.js',
+      'webroot/jspm.config.js',
+      'webroot/jspm.config.transpiler.js',
+      'build/lib/rt.js',
+      'build/lib/ts.transpiler.js',
+      { pattern: 'jspm_packages/system.js.map)', included: false, watched: false },
+      { pattern: 'build/lib/rt.js.map)', included: false, watched: false },
+      { pattern: 'build/lib/ts.transpiler.js.map)', included: false, watched: false },
 
-		jspm: {
-			config: 'app/jspm.config.js',
-			loadFiles: [
-				'app/**/*.spec.js'
-			],
-			serveFiles: [
-				'app/**/!(*spec).js'
-			]
-		},
+      // webapp程序
+      { pattern: 'app/**/*.+(css|html)', included: false, watched: true },
+      { pattern: 'app/**/*.ts', included: false, watched: true },
+      // { pattern: 'build/app/**/*.+(js|js.map)', included: false, watched: true },
 
-		browsers: ['PhantomJS'],
+      'karma.bootstrap.js', // Karma在浏览器端启动脚本
 
-		preprocessors: {
-			'app/!(*spec).js': ['babel'] //, 'sourcemap', 'coverage']
-		},
+      { pattern: 'jspm_packages/npm/**/*', included: false, watched: false },      
 
-		babelPreprocessor: {
-			options: {
-				sourceMap: 'inline'
-			},
-			sourceFileName: function(file) {
-				return file.originalPath;
-			}
-		},
+      // /base/jspm_packages/npm/@angular/core@2.4.8/bundles/core-testing.umd.js
+      // { pattern: 'jspm_packages/npm/markdown-it/**/*.umd.+(js|js.map)', included: false, watched: false },
+      // { pattern: 'jspm_packages/npm/@angular/**/*.umd.+(js|js.map)', included: false, watched: false },
+      // { pattern: 'jspm_packages/npm/reflect-metadata@*/*.+(js|js.map)', included: false, watched: false },
+      // { pattern: 'jspm_packages/npm/shim@*/**/*.+(js|js.map)', included: false, watched: false },
+      // { pattern: 'jspm_packages/npm/zone.js@*/dist/**/*.+(js|js.map)', included: false, watched: false },
 
-		singleRun: true,
+    ],
 
-		// reporters: ['coverage', 'progress'],
+    proxies: {
+      // '/app': '/base/build/app',
+      '/app': '/base/app',
+      '/jspm_packages/': '/base/jspm_packages/',
+    },
 
-		// coverageReporter: {
-		// 	instrumenters: {isparta: require('isparta')},
-		// 	instrumenter: {
-		// 		'app/**/*.js': 'isparta'
-		// 	},
-		//
-		// 	reporters: [
-		// 		{
-		// 			type: 'text-summary',
-		// 			subdir: normalizationBrowserName
-		// 		},
-		// 		{
-		// 			type: 'html',
-		// 			dir: 'coverage/',
-		// 			subdir: normalizationBrowserName
-		// 		}
-		// 	]
-		// }
-	});
+    exclude: [],
+    preprocessors: {},
+    reporters: ['progress', 'kjhtml'],
 
-	function normalizationBrowserName(browser) {
-		return browser.toLowerCase().split(/[ /-]/)[0];
-	}
-};
+    port: 9876,
+    colors: true,
+    logLevel: config.LOG_INFO,
+    autoWatch: true,
+    browsers: ['Chrome'],
+    singleRun: false
+  })
+}

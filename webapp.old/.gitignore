@@ -1,0 +1,5 @@
+app/MathJax
+node_modules/
+jspm_packages/
+*.log
+*.bak

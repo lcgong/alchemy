@@ -1,65 +1,64 @@
 {
+  "name": "angular-start",
+  "version": "0.0.0",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "tsc": "tsc",
+    "tsc:w": "tsc -w",
+    "test": "karma start"
+  },
+  "angular-cli": {},
   "jspm": {
-    "name": "app",
-    "main": "app.js",
     "configFiles": {
-      "jspm": "app/jspm.config.js"
+      "jspm": "webroot/jspm.config.js"
     },
     "dependencies": {
-      "@angular/http": "npm:@angular/http@^2.2.3",
-      "@angular/language-service": "npm:@angular/language-service@^2.3.0-beta.1",
-      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@^2.2.3",
-      "@angular/router": "npm:@angular/router@^3.2.3",
-      "@ng-bootstrap/ng-bootstrap": "npm:@ng-bootstrap/ng-bootstrap@^1.0.0-alpha.14",
-      "bootstrap": "npm:bootstrap@4.0.0-alpha.5",
-      "css": "github:systemjs/plugin-css@^0.1.32",
-      "jquery": "npm:jquery@^3.1.1",
-      "typescript": "npm:typescript@^2.1"
+      "@angular/forms": "npm:@angular/forms@^2.4.8",
+      "@angular/http": "npm:@angular/http@^2.4.8",
+      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@^2.4.8",
+      "@angular/router": "npm:@angular/router@^3.4.8",
+      "markdown-it": "npm:markdown-it@^8.3.1",
+      "reflect-metadata": "npm:reflect-metadata@^0.1.10",
+      "shim": "npm:shim@^0.6.0"
     },
     "devDependencies": {
-      "plugin-typescript": "github:frankwallis/plugin-typescript@^5.3.1"
+      "brorand": "npm:brorand@^1.1.0",
+      "child_process": "npm:jspm-nodelibs-child_process@^0.2.0",
+      "elliptic": "npm:elliptic@^6.4.0",
+      "hmac-drbg": "npm:hmac-drbg@^1.0.0",
+      "minimalistic-crypto-utils": "npm:minimalistic-crypto-utils@^1.0.1",
+      "module": "npm:jspm-nodelibs-module@^0.2.0",
+      "net": "npm:jspm-nodelibs-net@^0.2.0",
+      "plugin-typescript": "npm:plugin-typescript@^6.0.4",
+      "readable-stream": "npm:readable-stream@^2.2.3",
+      "typescript": "npm:typescript@^2.2.1"
     },
     "peerDependencies": {
-      "@angular/common": "npm:@angular/common@2.2.3",
-      "@angular/compiler": "npm:@angular/compiler@2.2.3",
-      "@angular/core": "npm:@angular/core@^2.2.3",
-      "@angular/forms": "npm:@angular/forms@^2.2.3",
-      "@angular/platform-browser": "npm:@angular/platform-browser@2.2.3",
+      "@angular/common": "npm:@angular/common@^2.4.8",
+      "@angular/compiler": "npm:@angular/compiler@^2.4.8",
+      "@angular/core": "npm:@angular/core@^2.4.8",
+      "@angular/platform-browser": "npm:@angular/platform-browser@^2.4.8",
       "assert": "npm:jspm-nodelibs-assert@^0.2.0",
       "buffer": "npm:jspm-nodelibs-buffer@^0.2.0",
-      "child_process": "npm:jspm-nodelibs-child_process@^0.2.0",
       "constants": "npm:jspm-nodelibs-constants@^0.2.0",
       "crypto": "npm:jspm-nodelibs-crypto@^0.2.0",
       "events": "npm:jspm-nodelibs-events@^0.2.0",
       "fs": "npm:jspm-nodelibs-fs@^0.2.0",
-      "module": "npm:jspm-nodelibs-module@^0.2.0",
-      "net": "npm:jspm-nodelibs-net@^0.2.0",
       "os": "npm:jspm-nodelibs-os@^0.2.0",
       "path": "npm:jspm-nodelibs-path@^0.2.0",
       "process": "npm:jspm-nodelibs-process@^0.2.0",
-      "reflect-metadata": "npm:reflect-metadata@^0.1.8",
-      "rxjs": "npm:rxjs@5.0.0-beta.12",
+      "punycode": "npm:jspm-nodelibs-punycode@^0.2.0",
+      "rxjs": "npm:rxjs@^5.0.1",
       "stream": "npm:jspm-nodelibs-stream@^0.2.0",
       "string_decoder": "npm:jspm-nodelibs-string_decoder@^0.2.0",
       "timers": "npm:jspm-nodelibs-timers@^0.2.0",
       "util": "npm:jspm-nodelibs-util@^0.2.0",
       "vm": "npm:jspm-nodelibs-vm@^0.2.0",
-      "zone.js": "npm:zone.js@^0.6.6"
+      "zone.js": "npm:zone.js@^0.7.2"
     },
     "overrides": {
-      "github:HubSpot/tether@1.3.7": {
-        "main": "js/tether",
-        "directories": {
-          "lib": "dist"
-        },
-        "meta": {
-          "js/tether.js": {
-            "exports": "Tether",
-            "format": "global"
-          }
-        }
-      },
-      "npm:@angular/common@2.2.3": {
+      "npm:@angular/common@2.4.8": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -73,7 +72,7 @@
           "./testing": "./bundles/common-testing.umd.js"
         }
       },
-      "npm:@angular/compiler@2.2.3": {
+      "npm:@angular/compiler@2.4.8": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -87,16 +86,13 @@
           "./testing": "./bundles/compiler-testing.umd.js"
         }
       },
-      "npm:@angular/core@2.2.3": {
+      "npm:@angular/core@2.4.8": {
         "meta": {
           "src/*.js": {
             "deps": [
               "reflect-metadata",
               "zone.js"
             ]
-          },
-          "bundles/core.umd.js": {
-            "typings": "index.d.ts"
           }
         },
         "map": {
@@ -104,7 +100,7 @@
           "./testing": "./bundles/core-testing.umd.js"
         }
       },
-      "npm:@angular/http@2.2.3": {
+      "npm:@angular/http@2.4.8": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -118,7 +114,7 @@
           "./testing": "./bundles/http-testing.umd.js"
         }
       },
-      "npm:@angular/platform-browser-dynamic@2.2.3": {
+      "npm:@angular/platform-browser-dynamic@2.4.8": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -132,7 +128,7 @@
           "./testing": "./bundles/platform-browser-dynamic-testing.umd.js"
         }
       },
-      "npm:@angular/platform-browser@2.2.3": {
+      "npm:@angular/platform-browser@2.4.8": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -146,7 +142,7 @@
           "./testing": "./bundles/platform-browser-testing.umd.js"
         }
       },
-      "npm:@angular/router@3.2.3": {
+      "npm:@angular/router@3.4.8": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -160,41 +156,21 @@
           "./testing": "./bundles/router-testing.umd.js"
         }
       },
-      "npm:bootstrap@4.0.0-alpha.5": {
-        "main": "dist/js/bootstrap",
-        "jspmNodeConversion": false,
-        "directories": {
-          "lib": "."
-        },
-        "dependencies": {
-          "jquery": "*",
-          "tether": "github:HubSpot/tether@^1.1.1"
-        },
-        "meta": {
-          "dist/js/bootstrap.js": {
-            "deps": [
-              "jquery",
-              "tether"
-            ],
-            "exports": "$",
-            "format": "global"
-          }
-        }
-      },
       "npm:inherits@2.0.3": {
         "ignore": [
           "test.js"
         ]
       },
-      "npm:jquery@3.1.1": {
-        "format": "amd"
-      },
-      "npm:reflect-metadata@0.1.8": {
+      "npm:reflect-metadata@0.1.10": {
+        "jspmNodeConversion": false,
         "map": {
-          "crypto": "@empty"
+          "crypto": {
+            "node": "@node/crypto",
+            "default": "@empty"
+          }
         }
       },
-      "npm:typescript@2.1.1": {
+      "npm:typescript@2.2.1": {
         "browser": {},
         "map": {
           "buffer": "@empty",
@@ -211,6 +187,41 @@
     }
   },
   "devDependencies": {
-    "webdriver-manager": "^12.0.2"
+    "@angular/cli": "^1.0.0-rc.0",
+    "@angular/common": "^2.4.8",
+    "@angular/compiler": "^2.4.8",
+    "@angular/compiler-cli": "^2.4.8",
+    "@angular/core": "^2.4.8",
+    "@angular/forms": "^2.4.8",
+    "@angular/http": "^2.4.8",
+    "@angular/platform-browser": "^2.4.8",
+    "@angular/platform-browser-dynamic": "^2.4.8",
+    "@types/jasmine": "^2.5.43",
+    "@types/node": "^7.0.5",
+    "chalk": "^1.1.3",
+    "connect": "^3.6.0",
+    "connect-history-api-fallback": "^1.3.0",
+    "cors": "^2.8.1",
+    "express": "^4.14.1",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.1.5",
+    "helmet": "^3.4.0",
+    "http-shutdown": "^1.1.0",
+    "jasmine-core": "^2.5.2",
+    "jasmine-spec-reporter": "^3.2.0",
+    "jspm": "^0.17.0-beta.40",
+    "karma": "^1.5.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^1.1.0",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "karma-remap-istanbul": "^0.6.0",
+    "moment": "^2.17.1",
+    "rxjs": "^5.2.0",
+    "serve-static": "^1.11.2",
+    "shim": "^0.6.0",
+    "typescript": "^2.2.0",
+    "webdriver-manager": "^12.0.2",
+    "zone.js": "^0.7.7"
   }
 }
