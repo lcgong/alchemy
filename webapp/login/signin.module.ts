@@ -9,6 +9,18 @@ if (!WebAppEnviroment.debug) { enableProdMode(); }
 //-------------------------------------------------------------------------
 
 import { NgModule, Component } from '@angular/core';
+
+@Component({
+  selector: 'signin',
+  templateUrl: 'login/signin.component.html',
+})
+export class AppComponent {
+  name: string = '';
+  constructor() {
+  }
+};
+
+// ------------------------------------------------------------------------
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
@@ -20,9 +32,9 @@ import { OAuthButton } from './oauth-button';
         FormsModule
     ],
     declarations: [
-        OAuthButton,
+        AppComponent, OAuthButton,
     ],
-    bootstrap: [OAuthButton]
+    bootstrap: [AppComponent]
 })
 export class MainModule {
   constructor() {

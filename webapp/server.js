@@ -53,14 +53,25 @@ app.use(cors({
 
 let path    = require("path");
 
-// app.get('/js/myscript.js', function(req, res) {
-//     res.render('myscript');
-// });
 
+function crsfProtection(req, res) {
+  let crsf = crypto.randomBytes(12).toString('base64');
+  let salt = crypto.randomBytes(3).toString('base64');
+  let data = {crsf: crsf, salt: salt, ts: moment().unix()};
+  let signed = jwt.sign(data, get_jwt_secure(), {expiresIn:'1d'});
 
+  let expires = new Date(Date.now() + 24*3600*1000);
 
+  // script can access the unsigned version
+  res.cookie('_crsf_token', crsf, { expires: expires });
+
+  // script cannot access this signed cookie.
+  res.cookie('_crsf_signed', signed, { expires: expires, httpOnly: true });
+}
 
 app.get('/signin', function(req, res){
+  crsfProtection(req, res)
+
   res.sendFile(path.join(__dirname, 'login/signin.html'));
 });
 
@@ -68,12 +79,15 @@ app.get('/signup', function(req, res){
   res.sendFile(path.join(__dirname, 'login/signup.html'));
 });
 
-var oauth_info = {
-  weibo : {
-    app_id: 1234,
-    redirect_url: 'http....'
-  }
+
+function get_oauth_settings() {
+  let doc = yaml.safeLoad(fs.readFileSync('../secrets/oauth.yml', 'utf8'));
+  return doc;
 }
+
+
+// var oauth_info = get_oauth_settings();
+
 
 let crypto = require('crypto');
 let jwt = require('jsonwebtoken');
@@ -93,16 +107,7 @@ function renderOAuthSettings(isSignin) {
 
 }
 
-// if (isSignin) {
-//   let crsf = crypto.randomBytes(16).toString('base64');
-//   let data = {token: crsf, timestamp: moment().unix()};
-//   let signed = jwt.sign(data, get_jwt_secure());
-//
-//   res.cookie('_oauth_crsf', signed, {maxAge: 600});
-//
-//   res.write('var _oauth_crsf = "' + crsf + '";');
-//   console.log('234');
-// }
+
 
 app.get('/login/settings.js', function(req, res) {
   res.set({
@@ -110,6 +115,8 @@ app.get('/login/settings.js', function(req, res) {
     'Cache-Control': 'private, no-cache, no-store, must-revalidate',
     'Expires': '0'
   });
+
+  let oauth_info = get_oauth_settings();
 
   res.write('var LoginSettings = ' + JSON.stringify(oauth_info) + ';');
   res.end();
