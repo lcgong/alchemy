@@ -8,6 +8,14 @@ System.config({
           "loader": "plugin-typescript"
         }
       }
+    },
+    "login": {
+      "defaultExtension": "ts",
+      "meta": {
+        "*.ts": {
+          "loader": "plugin-typescript"
+        }
+      }
     }
   },
   typescriptOptions: {

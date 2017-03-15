@@ -1,5 +1,5 @@
 
-var wepappEnviroment = {
+var WebAppEnviroment = {
   typescript: true,
   debug: true,
 };
@@ -7,14 +7,14 @@ var wepappEnviroment = {
 (function(){
   'use strict';
 
-wepappEnviroment.typescript = hasAttrChecked('typescript');
-wepappEnviroment.debug = hasAttrChecked('debug');
+WebAppEnviroment.typescript = hasAttrChecked('typescript');
+WebAppEnviroment.debug = hasAttrChecked('debug');
 
 var prefetchResources = [
   'jspm_packages/system.js', 'jspm.config.js', 'lib/rt.js'
 ];
 
-if (wepappEnviroment.typescript) {
+if (WebAppEnviroment.typescript) {
   prefetchResources = prefetchResources.concat([
     'jspm.config.transpiler.js', 'lib/ts.transpiler.js']
   );
@@ -36,7 +36,7 @@ function importApplicationScripts() {
   importScript('jspm_packages/system.js', true).then(function() {
     var p = importScript('jspm.config.js');
 
-    if (wepappEnviroment.typescript) {
+    if (WebAppEnviroment.typescript) {
       return p.then(function() {
         return importScript('jspm.config.transpiler.js');
       });
@@ -45,13 +45,13 @@ function importApplicationScripts() {
     }
   }).then(function() {
 
-    if (!wepappEnviroment.debug) {
+    if (!WebAppEnviroment.debug) {
       System.config({
         production: true,
       });
     }
 
-    if (wepappEnviroment.typescript) {
+    if (WebAppEnviroment.typescript) {
       // 配置动态ts编译，接着并行加载其所需包
       return Promise.all([
         importScript('lib/rt.js', false),
@@ -63,29 +63,7 @@ function importApplicationScripts() {
       return importScript('lib/rt.js', false);
     }
   }).then(function() {
-    // return Promise.all([
-    //   'reflect-metadata', 'shim', 'zone.js'
-    // ].map(function(p) {return System.resolve(p)})).then(function(urls){
-    //   console.log();
-    //
-    //   return importScript(urls[0]).then(function() {
-    //     return importScript(urls[1]);
-    //   }).then(function() {
-    //     return importScript(urls[2]);
-    //   });
-    // });
-    // // return System.import('reflect-metadata');
-
-
-    // return System.import('reflect-metadata').then(function() {
-    //   return System.import('shim');
-    // }).then(function() {
-    //   return System.import('zone.js');
-    // }).then(function() {
-    //   return System.import('app.bootstrap');
-    // })
-
-    return System.import('app/bootstrap');
+    return System.import(getMainModuleName());
   }).catch(function(err){ console.error(err); });
 }
 
@@ -177,6 +155,13 @@ function preloadResources(resources) {
 function hasAttrChecked(attrName) {
   var htmlEl = document.getElementsByTagName('html')[0];
   var attrValue = htmlEl.getAttribute(attrName);
+
+  return attrValue === '' || attrValue;
+}
+
+function getMainModuleName() {
+  var htmlEl = document.getElementsByTagName('html')[0];
+  var attrValue = htmlEl.getAttribute('main');
 
   return attrValue === '' || attrValue;
 }

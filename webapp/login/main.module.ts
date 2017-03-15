@@ -2,16 +2,17 @@
 import "reflect-metadata";
 import "shim";
 import "zone.js";
-
 import {enableProdMode} from '@angular/core';
+
 declare var WebAppEnviroment: any;
 if (!WebAppEnviroment.debug) { enableProdMode(); }
-// -------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
 import { NgModule, Component } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { WhoComponent } from './who.component';
+
+import { OAuthButton } from './oauth-button';
 
 @NgModule({
     imports: [
@@ -19,9 +20,9 @@ import { WhoComponent } from './who.component';
         FormsModule
     ],
     declarations: [
-        WhoComponent,
+        OAuthButton,
     ],
-    bootstrap: [WhoComponent]
+    bootstrap: [OAuthButton]
 })
 export class MainModule {
   constructor() {
