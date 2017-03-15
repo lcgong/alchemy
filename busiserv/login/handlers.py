@@ -5,7 +5,7 @@ import aiohttp
 import yaml
 from jose import jwt
 
-from partner_auth import get_oauth_client
+from .manager import get_oauth_client
 
 
 PRINCIPAL_TOKEN = '_principal_token'
