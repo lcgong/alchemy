@@ -223,5 +223,9 @@
     "typescript": "^2.2.0",
     "webdriver-manager": "^12.0.2",
     "zone.js": "^0.7.7"
+  },
+  "dependencies": {
+    "js-yaml": "^3.8.2",
+    "jsonwebtoken": "^7.3.0"
   }
 }

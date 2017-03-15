@@ -16,6 +16,24 @@ if (mode === 'development') {
   app.use(developmentLogger)
 }
 
+let yaml = require('js-yaml');
+let fs   = require('fs');
+
+function get_jwt_secure() {
+  let doc = yaml.safeLoad(fs.readFileSync('../secrets/session.yml', 'utf8'));
+  return doc['secure'];
+}
+
+// var jwt = require('jsonwebtoken');
+// var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+// jwt.verify(token, 'shhhhh', { algorithm: 'HS256'});
+// Buffer.from('abc').toString('base64')
+// moment().unix()
+
+console.log('secure: ' + get_jwt_secure());
+// Get document, or throw exception on error
+
+
 app.use(helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"], connectSrc : ["'self'"],
@@ -32,10 +50,77 @@ app.use(cors({
   "methods": ['GET', 'HEAD'],
 }));
 
+
+let path    = require("path");
+
+// app.get('/js/myscript.js', function(req, res) {
+//     res.render('myscript');
+// });
+
+
+
+
+app.get('/signin', function(req, res){
+  res.sendFile(path.join(__dirname, 'login/signin.html'));
+});
+
+app.get('/signup', function(req, res){
+  res.sendFile(path.join(__dirname, 'login/signup.html'));
+});
+
+var oauth_info = {
+  weibo : {
+    app_id: 1234,
+    redirect_url: 'http....'
+  }
+}
+
+let crypto = require('crypto');
+let jwt = require('jsonwebtoken');
+
+function generateCRSFToken() {
+
+  return {crsf: token, signed: signedToken};
+}
+
+// var jwt = require('jsonwebtoken');
+// var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+// jwt.verify(token, 'shhhhh', { algorithm: 'HS256'});
+// Buffer.from('abc').toString('base64')
+// moment().unix()
+
+function renderOAuthSettings(isSignin) {
+
+}
+
+// if (isSignin) {
+//   let crsf = crypto.randomBytes(16).toString('base64');
+//   let data = {token: crsf, timestamp: moment().unix()};
+//   let signed = jwt.sign(data, get_jwt_secure());
+//
+//   res.cookie('_oauth_crsf', signed, {maxAge: 600});
+//
+//   res.write('var _oauth_crsf = "' + crsf + '";');
+//   console.log('234');
+// }
+
+app.get('/login/settings.js', function(req, res) {
+  res.set({
+    'Content-Type': 'application/javascript; charset=utf-8',
+    'Cache-Control': 'private, no-cache, no-store, must-revalidate',
+    'Expires': '0'
+  });
+
+  res.write('var LoginSettings = ' + JSON.stringify(oauth_info) + ';');
+  res.end();
+});
+
+
 app.use(historyHandler({ // 所有没有后缀的访问路径均转向指定的页面
   index: '/index.html',
 }));
 
+app.use('/login', serveStatic('login'));
 app.use('/app', serveStatic('app'));
 app.use('/', serveStatic('webroot'));
 app.use('/', serveStatic('build'));

@@ -1,19 +1,20 @@
 <!doctype html>
 <!-- 在html标前，标记typescript表示启动动态编译typescript，标记debug表示还在开发状态 -->
-<html lang="zh-CN" typescript debug>
+<html lang="zh-CN" typescript debug main="login/main.module">
 <head>
   <base href="/">
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" type="text/css" href="/signin/style.css" >
   <title>登录 - 炼题坊</title>
-  <!-- <script src="index.js"></script> -->
+  <link rel="stylesheet" type="text/css" href="/login/style.css" >
+  <script src="/login/settings.js"></script>
+  <script src="index.js"></script>
 </head>
 
 <body>
-<who></who>
+<oauth-button></oauth-button>
 
 <div>
   <a href="">
