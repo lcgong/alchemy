@@ -13,7 +13,7 @@ import argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument("-p", "--port", type=int, default=8888,
+    parser.add_argument("-p", "--port", type=int, default=8700,
         help="port of service")
     args = parser.parse_args()
 

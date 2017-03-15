@@ -1,11 +1,5 @@
-# Byte-compiled / optimized / DLL files
-webapp/app/MathJax
-webapp/node_modules/
-webapp/jspm_packages/
-*.log
-__pycache__/
-*.bak
 logs
 pg
 setenv
 tmp
+secrets
