@@ -14,7 +14,7 @@ import {MessageService} from "./message.service";
 @Component({
   selector: 'example-app',
   template: `
-  <notification-bar></notification-bar>
+  <message-bar></message-bar>
   <hr>
   <button class="btn btn-success" (click)="notifySuccess()">提示信息</button>
   <button class="btn btn-success" (click)="notifyError()">提示发生错误</button>
@@ -41,16 +41,16 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { NotificationModule } from './notification.module'
+import { MessageBarModule } from './message-bar.module'
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     imports: [
-        BrowserModule,
-        FormsModule, ReactiveFormsModule,
-        HttpModule, NotificationModule,
-        NgbModule.forRoot()
+        BrowserModule, HttpModule, FormsModule, ReactiveFormsModule,
+        NgbModule.forRoot(),
+
+        MessageBarModule
     ],
     declarations: [
         ExampleAppComponent

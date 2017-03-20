@@ -10,9 +10,9 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import {MessageModalContent} from "./error-dialog";
 
 @Component({
-  selector: "notification-bar",
+  selector: "message-bar",
   template: `
-  <div  class="notification-bar">
+  <div  class="message-bar">
     <div *ngFor="let msg of hints" class="alert" [@hintState]="msg"
       [class.alert-warning]="msg.level=='warn'"
       [class.alert-success]="msg.level=='info'">
@@ -40,7 +40,7 @@ import {MessageModalContent} from "./error-dialog";
   ]
 })
 
-export class NotificationBarComponent {
+export class MessageBarComponent {
   hints = new Array<Message>();
 
   errors = new Array<Message>();

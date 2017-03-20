@@ -1,4 +1,4 @@
-.notification-bar {
+.message-bar {
 	position: absolute;
 	width: 100%;
 	top: 0.5rem;
@@ -9,7 +9,7 @@
 	pointer-events: none;
 }
 
-.notification-bar > .alert {
+.message-bar > .alert {
 	display: block;
 	position: relative;
 	width: 30%;
@@ -23,7 +23,7 @@
 	pointer-events: auto;
 }
 
-.notification-bar > .alert.alert-success {
+.message-bar > .alert.alert-success {
   color: #3c763d;
   background-color: hsla(103, 44%, 89%, 0.6);;
   border-color: hsla(103, 44%, 89%, 0.6);;
@@ -45,10 +45,10 @@
 	 border-top: none;
 }
 
-/*.notification-bar > .alert.ng-enter {
+/*.message-bar > .alert.ng-enter {
   animation: zoomInUp 0.5s;
 }
 
-.notification-bar > .alert.ng-leave {
+.message-bar > .alert.ng-leave {
   animation: fadeOutRight 1s;
 }*/
