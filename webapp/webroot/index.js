@@ -62,6 +62,12 @@ function importApplicationScripts() {
       // 加载已编译成js的typescript程序
       return importScript('lib/rt.js', false);
     }
+  // }).then(function() {
+  //   return Promise.all([
+  //     System.import('jquery'),
+  //     System.import('tether'),
+  //     // System.import('twbs/bootstrap/css/bootstrap.min.css'),
+  //   ]);
   }).then(function() {
     return System.import(getMainModuleName());
   }).catch(function(err){ console.error(err); });

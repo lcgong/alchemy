@@ -16,6 +16,24 @@ if (mode === 'development') {
   app.use(developmentLogger)
 }
 
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"], connectSrc : ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-eval'"], //"'unsafe-inline'"
+      styleSrc: ["'self'", "'unsafe-inline'"], imgSrc: ["'self'"],
+      mediaSrc: ["'self'"], fontSrc: ["'self'", "data:"],
+      objectSrc: ["'none'"], frameSrc: ["'none'"],
+      reportUri: '/report-violation',
+    }
+  }));
+
+app.use(cors({
+  "origin": ["*"],
+  "methods": ['GET', 'HEAD'],
+}));
+
+
+
 let yaml = require('js-yaml');
 let fs   = require('fs');
 
@@ -34,21 +52,6 @@ console.log('secure: ' + get_jwt_secure());
 // Get document, or throw exception on error
 
 
-app.use(helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"], connectSrc : ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-eval'"], //"'unsafe-inline'"
-      styleSrc: ["'self'"], imgSrc: ["'self'"],
-      mediaSrc: ["'self'"], fontSrc: ["'self'", "data:"],
-      objectSrc: ["'none'"], frameSrc: ["'none'"],
-      reportUri: '/report-violation',
-    }
-  }));
-
-app.use(cors({
-  "origin": ["*"],
-  "methods": ['GET', 'HEAD'],
-}));
 
 
 let path    = require("path");
