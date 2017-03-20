@@ -1,0 +1,54 @@
+.notification-bar {
+	position: absolute;
+	width: 100%;
+	top: 0.5rem;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	pointer-events: none;
+}
+
+.notification-bar > .alert {
+	display: block;
+	position: relative;
+	width: 30%;
+	min-width: 20em;
+	padding: 5px 30px;
+	margin: 0 0;
+
+	text-align: center;
+
+	z-index: 3000;
+	pointer-events: auto;
+}
+
+.notification-bar > .alert.alert-success {
+  color: #3c763d;
+  background-color: hsla(103, 44%, 89%, 0.6);;
+  border-color: hsla(103, 44%, 89%, 0.6);;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+	letter-spacing: 2px;
+}
+
+.error-message-modal .modal-content {
+  background-color: #690101;
+  color: white;
+	border-radius: 20px;
+}
+
+.error-message-modal .modal-header {
+	 border-bottom: none;
+}
+
+.error-message-modal .modal-footer {
+	 border-top: none;
+}
+
+/*.notification-bar > .alert.ng-enter {
+  animation: zoomInUp 0.5s;
+}
+
+.notification-bar > .alert.ng-leave {
+  animation: fadeOutRight 1s;
+}*/
