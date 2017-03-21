@@ -12,8 +12,12 @@ import "./message-bar.css";
 
 @NgModule({
     imports: [BrowserModule, FormsModule, ReactiveFormsModule, NgbModule],
-    declarations: [MessageBarComponent, MessageModalContent],
-    exports: [MessageBarComponent],
+    declarations: [
+      MessageBarComponent, MessageModalContent,
+    ],
+    exports: [
+        MessageBarComponent,
+    ],
     entryComponents: [MessageModalContent],
     providers: [
       MessageService,
