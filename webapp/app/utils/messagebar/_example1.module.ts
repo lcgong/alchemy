@@ -31,8 +31,9 @@ export class ExampleAppComponent {
       this.message.success(`hi [ count=${this.count++} ]`);
     }
   }
+  
   notifyError() {
-    this.message.error('this errors')
+    this.message.error(`This is error message: count=${this.count++}`)
   }
 };
 

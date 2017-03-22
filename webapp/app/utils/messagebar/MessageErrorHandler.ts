@@ -2,6 +2,8 @@ import { ErrorHandler, Injectable } from "@angular/core";
 import { MessageService } from "./message.service";
 
 
+import {Response} from "@angular/http";
+
 @Injectable()
 export class MessageErrorHandler implements ErrorHandler {
 
@@ -9,10 +11,12 @@ export class MessageErrorHandler implements ErrorHandler {
     }
 
     handleError(error: any) {
-      console.log("ERROR: %O", error);
-      let msg = error instanceof Error ? error.message : error.toString();
-      setTimeout(() => {
-        this.message.error(msg);
-      }, 0);
+      console.error("ERROR: %o", error);
+      if (error instanceof Response) {
+        let msg = error instanceof Error ? error.message : error.toString();
+        setTimeout(() => {
+          this.message.error(msg);
+        }, 0);
+      }
     }
 }
