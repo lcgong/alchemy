@@ -1,4 +1,58 @@
 
+body {
+  background: rgba(178, 203, 247, 0.96) url(/images/background-cloud.png);
+  background-size: 100vw;
+
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center bottom;
+}
+
+.app-header {
+  height: 0px;
+  width: 100%;
+}
+
+.app-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 1.5em);
+  width: 100vw;
+}
+
+.app-footer {
+  height: 1.5em;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.app-footer span {
+  margin: 0 0.5em;
+}
+
+.app-footer span, .app-footer a, .app-footer a:visited {
+  font-size: 90%;
+  color: #777;
+}
+
+signup-app .form > button {
+  width: 100%;
+  font-weight: bolder;
+  letter-spacing: 0.2em;
+}
+
+signup-form {
+  background: #fff;
+  box-shadow: 0 0 6px 0 rgba(0,0,0,.12), 0 26px 24px 0 rgba(118,153,223,.1);
+  padding: 2em 2em;
+}
+
+signup-app .form {
+  width: 30em;
+}
+
 
 .btn-oauth {
   width: 64px;
