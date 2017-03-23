@@ -3,14 +3,16 @@ import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {SetFocusDirective} from "./directives/set-focus";
+import {SiteCopyrightComponent} from "./site-copyright"
 
 @NgModule({
     imports: [],
     declarations: [
-      SetFocusDirective
+      SetFocusDirective,
+      SiteCopyrightComponent
     ],
     exports: [
-        SetFocusDirective,
+        SetFocusDirective, SiteCopyrightComponent
     ],
     // entryComponents: [MessageModalContent],
     // providers: [
