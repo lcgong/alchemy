@@ -11,28 +11,27 @@ if (!WebAppEnviroment.debug) { enableProdMode(); }
 import { NgModule, Component } from '@angular/core';
 
 @Component({
-  selector: 'signin',
+  selector: 'app-signin',
   templateUrl: 'login/signin.component.html',
 })
 export class AppComponent {
-  name: string = '';
-  constructor() {
-  }
 };
 
 // ------------------------------------------------------------------------
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
-import { OAuthButton } from './oauth-button';
+// import { OAuthButton } from './oauth-button';
+import {UtilsModule} from "app/utils/index";
 
 @NgModule({
     imports: [
         BrowserModule,
-        FormsModule
+        FormsModule,
+        UtilsModule,
     ],
     declarations: [
-        AppComponent, OAuthButton,
+        AppComponent//, OAuthButton,
     ],
     bootstrap: [AppComponent]
 })

@@ -1,5 +1,42 @@
-
- <!-- [app-id]="'adc2'", [redirect-url]="'http://2''" -->
-<oauth-button [vendor-id]="'weibo'" ></oauth-button>
-
-<!-- <oauth-button [params]="LoginSettings.baidu"></oauth-button> -->
+<div class="app-header">
+</div>
+<div class="app-content" >
+  <div class="cover-banner">
+  </div>
+  <div class="oauth-login">
+    <h4 class="caption">请使用下面服务授权登录本服务</h4>
+    <ul>
+      <li>
+        <a crsf="state"
+          href="http://openapi.baidu.com/oauth/2.0/authorize?client_id=aQk4RsA5Gployio9CbbNlxz0&response_type=code&scope=basic&redirect_uri=http%3A%2F%2Falchemy.29th.cn%2Foauth%2Fbaidu">
+          <img src="/images/partners/baidu-128x128.png">
+        </a>
+      </li>
+      <li>
+        <a crsf="state"
+          href="https://api.weibo.com/oauth2/authorize?client_id=2915210821&scope=email&redirect_uri=http%3A%2F%2Falchemy.29th.cn%2Foauth%2Fweibo">
+          <img src="/images/partners/sina-weibo-256x256.png">
+        </a>
+      </li>
+      <li>
+        <a crsf="state"
+          href="https://oauth.jd.com/oauth/authorize?response_type=code&redirect_uri=https%3A%2F%2Falchemy.29th.cn%2Foauth%2Fjd&client_id=651009F0C48AAF4545271D9800ADA757">
+          <img src="/images/partners/jd-256x256.png">
+        </a>
+      </li>
+      <li>
+        <a crsf="state"
+          href="https://login.live.com/oauth20_authorize.srf?client_id=ca77c30c-bae5-43ad-bccc-38b4540cad93&scope=wl.signin+wl.emails&response_type=code&redirect_uri=https%3A%2F%2Falchemy.29th.cn%2Foauth%2Fms">
+          <img src="/images/partners/windows-256x256.png">
+        </a>
+      </li>
+      <li>
+        <a crsf="state"
+          href="https://github.com/login/oauth/authorize?redirect_uri=http%3A%2F%2Falchemy.29th.cn%2Foauth%2Fgithub&client_id=a7c694aeeaffc8c32ed4&scope=user%3Aemail">
+          <img src="/images/partners/github-octocat-256x256.png">
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="app-footer"><site-copyright></site-copyright></div>

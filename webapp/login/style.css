@@ -1,11 +1,16 @@
 
 body {
   background: rgba(178, 203, 247, 0.96) url(/images/background-cloud.png);
-  background-size: 100vw;
+  background-size: 100vw 50vh;
 
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center bottom;
+}
+
+.screen {
+  height: 100vh;
+  width: 100vw;
 }
 
 .app-header {
@@ -19,6 +24,7 @@ body {
   justify-content: center;
   height: calc(100vh - 1.5em);
   width: 100vw;
+  flex-direction: column;
 }
 
 .app-footer {
@@ -43,18 +49,65 @@ signup-app .form > button {
   letter-spacing: 0.2em;
 }
 
+signup-app .form {
+  width: 30em;
+}
+
 signup-form {
   background: #fff;
   box-shadow: 0 0 6px 0 rgba(0,0,0,.12), 0 26px 24px 0 rgba(118,153,223,.1);
   padding: 2em 2em;
 }
 
-signup-app .form {
-  width: 30em;
+
+.loading {
+  background-image: url(/images/loading.gif);
+  background-size: 150px Auto;
+  background-repeat: no-repeat;
+  background-position: center center;
+  min-width: 200px;
+  min-height: 38px;
 }
 
+.cover-banner {
+  background: url(/images/banner-testing.png);
+  background-size: 100% 100%;
 
-.btn-oauth {
+  background-repeat: no-repeat;
+  background-position: center center;
+
+  width: 100%;
+  height: 45%;
+}
+
+.oauth-login {
+  width: 50%;
+  min-width: 350px;
+}
+
+.oauth-login > .caption {
+  font-size: 1rem;
+  text-align: center;
+  color: #888;
+}
+
+.oauth-login ul {
+  display: flex;
+  list-style: none;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.oauth-login a {
+  text-decoration: none;
+}
+
+.oauth-login a img{
   width: 64px;
   height: 64px;
+  
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.065);
+  background-color: #f4f4f4;
+  border-radius: 15px;
+  border: 1px solid #d4d4d4;
 }

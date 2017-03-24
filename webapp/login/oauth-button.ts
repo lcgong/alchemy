@@ -2,34 +2,37 @@ import { NgModule, Component, Input } from "@angular/core";
 
 declare var LoginSettings: any;
 
+// let foo = new Foo(),
+//     x = Object.keys(foo) as (keyof Foo)[];
+
 @Component({
   selector: 'oauth-button',
   template: `
     <div (click)="redirectToOAuthServer()">
-      This is a button
+      <ng-content></ng-content>
     </div>
   `,
 })
 export class OAuthButton {
   name: string = '';
 
-  @Input('vendor-id')
-  private vendorId: any;
+  @Input()
+  private uri: string;
 
   constructor() {
+
   }
 
   redirectToOAuthServer() {
 
-    let params = Object.assign({}, LoginSettings[this.vendorId]);
-    params.state = getCookie('_crsf_token');
+    // let params = Object.assign({}, LoginSettings[this.vendorId]);
+    let crsf_token = getCookie('_crsf_token');
 
-    console.log(params, this.vendorId)
+    // console.log(params, this.vendorId)
     let autherize_url = renderRequestURL(params.autherize_url_tmpl, params)
 
     console.log(autherize_url);
     window.location.assign(autherize_url);
-
   }
 };
 
@@ -46,7 +49,6 @@ function renderRequestURL(template: string, params: any) {
   s = s.replace(/{redirect_uri}/, encodeURIComponent(redirect_uri));
   s = s.replace(/{state}/, encodeURIComponent(state));
   s = s.replace(/{scope}/, encodeURIComponent(scope));
-
 
   return s;
 }

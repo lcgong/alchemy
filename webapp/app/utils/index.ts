@@ -2,6 +2,7 @@ import { NgModule, ErrorHandler } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import {CRSFAnchorDirective} from "./directives/crsf-anchor"
 import {SetFocusDirective} from "./directives/set-focus";
 import {SiteCopyrightComponent} from "./site-copyright"
 
@@ -9,10 +10,12 @@ import {SiteCopyrightComponent} from "./site-copyright"
     imports: [],
     declarations: [
       SetFocusDirective,
+      CRSFAnchorDirective,
+
       SiteCopyrightComponent
     ],
     exports: [
-        SetFocusDirective, SiteCopyrightComponent
+        CRSFAnchorDirective, SetFocusDirective, SiteCopyrightComponent
     ],
     // entryComponents: [MessageModalContent],
     // providers: [
