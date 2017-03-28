@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from domainics.db import dbc, transaction, dmerge, drecall
-from domainics.tornice import route_base, rest, webreq
-from domainics import busilogic
-from domainics.domobj import dset, dobject, datt, DSet, DPage
-
-
-from domainics.pillar import P
+from domainics import P, transaction
+from domainics.tornice import route_base, rest
 
 @rest.GET(r'/inc/{n:int}')
 @transaction(alias='sql_a')
