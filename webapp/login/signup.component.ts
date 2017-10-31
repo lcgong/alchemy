@@ -38,13 +38,15 @@ export class SignupForm {
   private frm: FormGroup;
   private username: AbstractControl;
 
-  constructor(fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private message: MessageService,
     private service: ServiceClient,
     private authService : AuthService
   ) {
-
-    this.frm = fb.group({
+  }
+  ngOnInit() {
+    this.frm = this.fb.group({
       'username': ['', Validators.required],
       'title': ['', Validators.required],
       'email': ['', Validators.required]
@@ -58,11 +60,19 @@ export class SignupForm {
       .distinctUntilChanged()
       .subscribe((username: string) => {
         usernameCtrl.setErrors({alreadyTaken: true});
-        authService.checkUserName(username).subscribe((result) => {
+        this.authService.checkUserName(username).subscribe((result) => {
           usernameCtrl.setErrors({alreadyTaken: true});
         });
       });
   }
+
+  // let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+  //
+  // return EMAIL_REGEXP.test(c.value) ? null : {
+  //   validateEmail: {
+  //     valid: false
+  //   }
+  // };
 
   onSubmit(value: string): void {
     console.log('you submitted value: ', value);

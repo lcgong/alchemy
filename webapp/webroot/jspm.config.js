@@ -10,13 +10,18 @@ SystemJS.config({
   packages: {
     "app": {}
   },
+  meta: {
+    "*.css": {
+      "loader": "css"
+    }
+  },
   devConfig: {
     "map": {
       "plugin-typescript": "npm:plugin-typescript@6.0.4",
       "net": "npm:jspm-nodelibs-net@0.2.0",
       "child_process": "npm:jspm-nodelibs-child_process@0.2.0",
       "module": "npm:jspm-nodelibs-module@0.2.0",
-      "readable-stream": "npm:readable-stream@2.2.3",
+      "readable-stream": "npm:readable-stream@2.2.6",
       "typescript": "npm:typescript@2.2.1",
       "elliptic": "npm:elliptic@6.4.0",
       "hmac-drbg": "npm:hmac-drbg@1.0.0",
@@ -58,23 +63,29 @@ SystemJS.config({
     "@angular/platform-browser": "npm:@angular/platform-browser@2.4.8",
     "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.4.8",
     "@angular/router": "npm:@angular/router@3.4.8",
+    "@ng-bootstrap/ng-bootstrap": "npm:@ng-bootstrap/ng-bootstrap@1.0.0-alpha.21",
     "assert": "npm:jspm-nodelibs-assert@0.2.0",
     "buffer": "npm:jspm-nodelibs-buffer@0.2.1",
     "constants": "npm:jspm-nodelibs-constants@0.2.0",
     "crypto": "npm:jspm-nodelibs-crypto@0.2.0",
+    "css": "github:systemjs/plugin-css@0.1.33",
     "events": "npm:jspm-nodelibs-events@0.2.0",
     "fs": "npm:jspm-nodelibs-fs@0.2.0",
+    "jquery": "npm:jquery@3.2.0",
     "markdown-it": "npm:markdown-it@8.3.1",
     "os": "npm:jspm-nodelibs-os@0.2.0",
     "path": "npm:jspm-nodelibs-path@0.2.1",
     "process": "npm:jspm-nodelibs-process@0.2.0",
     "punycode": "npm:jspm-nodelibs-punycode@0.2.0",
+    "ramda": "npm:ramda@0.23.0",
     "reflect-metadata": "npm:reflect-metadata@0.1.10",
     "rxjs": "npm:rxjs@5.1.1",
     "shim": "npm:shim@0.6.0",
     "stream": "npm:jspm-nodelibs-stream@0.2.0",
     "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
+    "tether": "npm:tether@1.4.0",
     "timers": "npm:jspm-nodelibs-timers@0.2.0",
+    "twbs/bootstrap": "github:twbs/bootstrap@4.0.0-alpha.6",
     "util": "npm:jspm-nodelibs-util@0.2.1",
     "vm": "npm:jspm-nodelibs-vm@0.2.0",
     "zone.js": "npm:zone.js@0.7.7"
@@ -116,7 +127,7 @@ SystemJS.config({
         "randombytes": "npm:randombytes@2.0.3",
         "create-hash": "npm:create-hash@1.1.2",
         "bn.js": "npm:bn.js@4.11.6",
-        "parse-asn1": "npm:parse-asn1@5.0.0",
+        "parse-asn1": "npm:parse-asn1@5.1.0",
         "browserify-rsa": "npm:browserify-rsa@4.0.1"
       }
     },
@@ -139,7 +150,7 @@ SystemJS.config({
         "create-hmac": "npm:create-hmac@1.1.4",
         "inherits": "npm:inherits@2.0.3",
         "bn.js": "npm:bn.js@4.11.6",
-        "parse-asn1": "npm:parse-asn1@5.0.0",
+        "parse-asn1": "npm:parse-asn1@5.1.0",
         "browserify-rsa": "npm:browserify-rsa@4.0.1",
         "elliptic": "npm:elliptic@6.4.0"
       }
@@ -200,15 +211,6 @@ SystemJS.config({
         "brorand": "npm:brorand@1.1.0"
       }
     },
-    "npm:parse-asn1@5.0.0": {
-      "map": {
-        "browserify-aes": "npm:browserify-aes@1.0.6",
-        "create-hash": "npm:create-hash@1.1.2",
-        "evp_bytestokey": "npm:evp_bytestokey@1.0.0",
-        "pbkdf2": "npm:pbkdf2@3.0.9",
-        "asn1.js": "npm:asn1.js@4.9.1"
-      }
-    },
     "npm:browserify-rsa@4.0.1": {
       "map": {
         "bn.js": "npm:bn.js@4.11.6",
@@ -246,7 +248,7 @@ SystemJS.config({
     "npm:stream-browserify@2.0.1": {
       "map": {
         "inherits": "npm:inherits@2.0.3",
-        "readable-stream": "npm:readable-stream@2.2.3"
+        "readable-stream": "npm:readable-stream@2.2.6"
       }
     },
     "npm:jspm-nodelibs-buffer@0.2.1": {
@@ -274,17 +276,6 @@ SystemJS.config({
     "npm:timers-browserify@1.4.2": {
       "map": {
         "process": "npm:process@0.11.9"
-      }
-    },
-    "npm:readable-stream@2.2.3": {
-      "map": {
-        "isarray": "npm:isarray@1.0.0",
-        "inherits": "npm:inherits@2.0.3",
-        "string_decoder": "npm:string_decoder@0.10.31",
-        "buffer-shims": "npm:buffer-shims@1.0.0",
-        "core-util-is": "npm:core-util-is@1.0.2",
-        "process-nextick-args": "npm:process-nextick-args@1.0.7",
-        "util-deprecate": "npm:util-deprecate@1.0.2"
       }
     },
     "npm:elliptic@6.4.0": {
@@ -327,6 +318,31 @@ SystemJS.config({
     "npm:jspm-nodelibs-punycode@0.2.0": {
       "map": {
         "punycode-browserify": "npm:punycode@1.4.1"
+      }
+    },
+    "npm:parse-asn1@5.1.0": {
+      "map": {
+        "browserify-aes": "npm:browserify-aes@1.0.6",
+        "create-hash": "npm:create-hash@1.1.2",
+        "evp_bytestokey": "npm:evp_bytestokey@1.0.0",
+        "pbkdf2": "npm:pbkdf2@3.0.9",
+        "asn1.js": "npm:asn1.js@4.9.1"
+      }
+    },
+    "npm:readable-stream@2.2.6": {
+      "map": {
+        "isarray": "npm:isarray@1.0.0",
+        "inherits": "npm:inherits@2.0.3",
+        "string_decoder": "npm:string_decoder@0.10.31",
+        "buffer-shims": "npm:buffer-shims@1.0.0",
+        "core-util-is": "npm:core-util-is@1.0.2",
+        "util-deprecate": "npm:util-deprecate@1.0.2",
+        "process-nextick-args": "npm:process-nextick-args@1.0.7"
+      }
+    },
+    "github:twbs/bootstrap@4.0.0-alpha.6": {
+      "map": {
+        "jquery": "npm:jquery@3.2.0"
       }
     }
   }

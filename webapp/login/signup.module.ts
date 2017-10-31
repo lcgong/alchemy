@@ -16,8 +16,8 @@ import { NgModule, Component } from '@angular/core';
   <div class="app-header">
     <message-bar></message-bar>
   </div>
-  <div class="app-content">
-    <signup-form></signup-form>
+  <div class="app-content" >
+    <signup-form ></signup-form>
   </div>
   <div class="app-footer"><site-copyright></site-copyright></div>
   `
@@ -33,7 +33,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {ErrorHandler} from "@angular/core";
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+// import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { MessageBarModule } from 'app/utils/messagebar/message-bar.module';
 import { MessageErrorHandler } from 'app/utils/messagebar/MessageErrorHandler';
@@ -48,7 +48,7 @@ import {UtilsModule} from "app/utils/index";
 @NgModule({
     imports: [
       BrowserModule,  FormsModule, ReactiveFormsModule,
-      NgbModule.forRoot(),
+      // NgbModule.forRoot(),
       MessageBarModule,
       ServiceModule,
       UtilsModule,

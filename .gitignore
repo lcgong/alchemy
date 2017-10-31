@@ -3,3 +3,7 @@ pg
 setenv
 tmp
 secrets
+pyenv
+etcd
+hello
+h.old
