@@ -45,6 +45,7 @@
       "prefix": "app",
       "styles": [
         "demo/qmark/styles.css",
+        "demo/qmark/forms.css",        
         "../node_modules/bootstrap/dist/css/bootstrap.min.css"
       ],
       "scripts": [],
