@@ -29,21 +29,23 @@
       }
     },
     {
-      "root": "demo/qmark",
-      "outDir": "dist/qmark",
+      "name": "demo-qmark",
+      "root": "src",
+      "outDir": "dist",
       "assets": [
-        "assets",
+        "demo/qmark/assets",
         "favicon.ico"
       ],
-      "index": "index.html",
-      "main": "main.ts",
+      "index": "demo/qmark/index.html",
+      "main": "demo/qmark/main.ts",
       "polyfills": "polyfills.ts",
       "test": "test.ts",
       "tsconfig": "tsconfig.app.json",
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css"
+        "demo/qmark/styles.css",
+        "../node_modules/bootstrap/dist/css/bootstrap.min.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -51,7 +53,7 @@
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }
-    }    
+    }
   ],
   "e2e": {
     "protractor": {
