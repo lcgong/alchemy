@@ -9,17 +9,10 @@ export class QuestionOptionComponent implements OnInit {
 
   @Input()
   no: string;
-  // set data(value: string) {
-  //     if(value){
-  //         this._data = value;
-  //         this.onDataChange(value);
-  //     }
-  // }
 
   constructor() { }
 
   ngOnInit() {
-    console.log('no=', this.no);
   }
 
 }

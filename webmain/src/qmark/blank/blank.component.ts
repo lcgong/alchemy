@@ -10,7 +10,9 @@ export class BlankComponent implements OnInit {
   @Input()
   no: string;
 
-  constructor() { }
+  constructor() { 
+    
+  }
 
   ngOnInit() {
 
