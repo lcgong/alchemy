@@ -7,7 +7,7 @@ import {
   XHRBackend
 } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
-import { MarkdownService } from './markdown.service';
+import { QmarkService } from './qmark.service';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -16,7 +16,7 @@ beforeEach(()=>{
   TestBed.configureTestingModule({
     imports: [HttpModule],
     providers: [
-      MarkdownService,
+      QmarkService,
       MockBackend,
      { provide: XHRBackend, useClass: MockBackend }
     ]
@@ -25,7 +25,7 @@ beforeEach(()=>{
 
 describe('Markdown Service',()=>{
   let http: Http;
-  let markdownService: MarkdownService;
+  let markdownService: QmarkService;
   let mockBackend: MockBackend;
   let response: Response;
 
@@ -33,7 +33,7 @@ describe('Markdown Service',()=>{
 
   beforeEach(() => {
     http = TestBed.get(Http);
-    markdownService = TestBed.get(MarkdownService);
+    markdownService = TestBed.get(QmarkService);
     mockBackend = TestBed.get(MockBackend);
 
 

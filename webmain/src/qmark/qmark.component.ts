@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
 import { OnInit, AfterViewInit } from '@angular/core';
 
 import { Http } from '@angular/http';
@@ -12,25 +13,24 @@ import { QmarkService } from './qmark.service';
             .token.string, .style .token.string {
             background: none;
         }`
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QmarkComponent implements OnInit, AfterViewInit {
     private _data: string;
-    private _raw: any;
-    changeLog: string[] = [];
 
     constructor(
         private qmarkService: QmarkService,
         private el: ElementRef,
-    ) { 
+    ) {
 
     }
 
-    ngOnInit() { 
+    ngOnInit() {
 
     }
     
-    ngAfterViewInit() { 
+    ngAfterViewInit() {
 
     }
 
@@ -44,6 +44,8 @@ export class QmarkComponent implements OnInit, AfterViewInit {
 
     // on input
     onDataChange(data: string) {
+
+        
         if (data) {
             this.el.nativeElement.innerHTML = this.qmarkService.compile(data);
         } else {
