@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModelService } from '../model.service';
 
 @Component({
   selector: 'solution',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SolutionComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private modelService:ModelService
+  ) { 
+
+  }
 
   ngOnInit() {
+    
   }
 
 }

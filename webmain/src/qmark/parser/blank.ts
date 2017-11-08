@@ -5,14 +5,14 @@ export function parseQuestionBlank(state, silent) {
   if (ch !== '_' && ch !== '—') { // tentatively probe this parser
     return false;
   }
-
+ 
   
   var ptn = /[_—]+[\(（]\s*(|[1-9][0-9]{0,2})\s*[）\)][_—]+/g;
   var matched = ptn.exec(state.src.slice(state.pos, state.posMax));
   if (matched == null) {
     return false;
   }
-
+   
   let startPos = state.pos;
   let endPos   = startPos + ptn.lastIndex;  
 
@@ -23,6 +23,9 @@ export function parseQuestionBlank(state, silent) {
     let token;
     token = state.push('question_blank_open', 'question-blank', 1);
     token.attrSet('no', blankNo);
+
+    // console.log('question-blank', state);    
+    // console.log('level %d, token %d', state.level, state.tokens.length);
     
     token = state.push('question_blank_close', 'question-blank', -1);
   }

@@ -3,30 +3,29 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { OnInit, AfterViewInit } from '@angular/core';
 import { ComponentFactoryResolver, ComponentRef } from '@angular/core';
 import { ViewContainerRef, ViewChild } from '@angular/core';
+import { Http } from '@angular/http';
 
 import { NgModule, Compiler, ComponentFactory } from '@angular/core';
 import { QuestionModule } from "./question.module";
-
-import { Http } from '@angular/http';
-import { QmarkService } from './qmark.service';
-
+import { ModelService } from "./model.service";
 
 @Component({
     selector: 'qmark,[qmark]',
-    template: '<div #contentView></div>',
+    template: '<ng-container #contentView></ng-container>',    
     styleUrls: ['./qmark.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [ModelService]
 })
 export class QmarkComponent implements OnInit, AfterViewInit {
-    private markdownContent: string;
+    private markdownContent: string;  
 
     @ViewChild('contentView', { read: ViewContainerRef })
-    contentView: ViewContainerRef;
+    viewContainer: ViewContainerRef;
 
     constructor(
-        private qmarkService: QmarkService,
-        private el: ElementRef,
-        private compiler: Compiler
+        // private viewContainerRef: ViewContainerRef,
+        private compiler: Compiler,
+        private modelService: ModelService
     ) {
     }
 
@@ -47,12 +46,13 @@ export class QmarkComponent implements OnInit, AfterViewInit {
     }
 
     render() {
+        this.viewContainer.clear();
+        
         if (this.markdownContent) {
-            let html = this.qmarkService.compile(this.markdownContent);
-            this.contentView.clear();
-            this.contentView.createComponent(this.getComponentFactory(html));
-        } else {
-            this.contentView.clear();
+            let htmlContent = this.modelService.compile(this.markdownContent);
+            let factory = this.getComponentFactory(htmlContent);
+
+            this.viewContainer.createComponent(factory);
         }
     }
 
@@ -62,7 +62,6 @@ export class QmarkComponent implements OnInit, AfterViewInit {
             template: template
         })
         class DynamicComp {
-            name: string = 'Denys'
         };
 
         @NgModule({

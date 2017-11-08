@@ -51,12 +51,12 @@ export function parseSolution(state, startLine, endLine, silent) {
 
   old_line_max = state.lineMax;
   old_parent = state.parentType;
-  state.parentType = 'question_notes';
+  state.parentType = 'solution';
 
   // this will prevent lazy continuations from ever going past our end marker
   state.lineMax = nextLine;
 
-  token = state.push('question_notes_open', 'solution', 1);
+  token = state.push('solution_open', 'solution', 1);
   token.markup = markerStr;
   token.block = true;
   token.info = resolvedOptions;
@@ -68,7 +68,7 @@ export function parseSolution(state, startLine, endLine, silent) {
 
   state.md.block.tokenize(state, startLine + 1, nextLine);
 
-  token = state.push('question_notes_close', 'solution', -1);
+  token = state.push('solution_close', 'solution', -1);
   token.markup = markerStr;
   token.block = true;
 

@@ -9,7 +9,7 @@ export default function plugin(md: any) {
 
   md.block.ruler.before('heading', 'question', parseQuestion, {
     alt: ['paragraph']
-  });
+  }); 
 
   md.block.ruler.before('blockquote', 'option_group', parseOption, {
     alt: ['paragraph']

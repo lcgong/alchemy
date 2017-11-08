@@ -129,6 +129,10 @@ export function parseQuestion(state, startLine, endLine, silent) {
   token.meta = {};
   parseSettings(token, questionSettings);
 
+  // console.log(tokenType.tag, state);
+  // console.log('level %d, token %d', token.level, state.tokens.length, tokenType.tag);
+  
+
   if (stemBlockEndLine == null) {
     stemBlockEndLine = nextLine;
   }

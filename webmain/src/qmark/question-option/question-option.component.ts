@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ModelService } from "../model.service";
 
 @Component({
   selector: 'question-option',
@@ -10,7 +11,9 @@ export class QuestionOptionComponent implements OnInit {
   @Input()
   no: string;
 
-  constructor() { }
+  constructor(
+    // private modelService:ModelService
+  ) { }
 
   ngOnInit() {
   }

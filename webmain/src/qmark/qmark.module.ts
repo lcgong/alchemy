@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { QmarkComponent } from './qmark.component';
-import { QmarkService } from './qmark.service';
+import { MarkdownService } from './markdown.service';
 
 import { QuestionModule } from "./question.module";
 
@@ -11,7 +11,7 @@ import { QuestionModule } from "./question.module";
   declarations: [
     QmarkComponent,
   ],
-  providers: [QmarkService],
+  providers: [MarkdownService],
   exports: [
     QmarkComponent,
   ],

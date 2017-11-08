@@ -5,7 +5,7 @@ import qmarkParser from './parser';
 
 
 @Injectable()
-export class QmarkService {
+export class MarkdownService {
 
   private _markdown: any;
 
@@ -14,16 +14,21 @@ export class QmarkService {
     this._markdown.disable([ 'code'])
     // this._markdown.use(mathjax); // prevent markdown tag parsed in mathjax
     this._markdown.use(qmarkParser);
+
+    console.log('markdownit: created');
   }
 
-  /* compile markdown into html */
-  public compile(data:string) {
-    let htmlText = this._markdown.render(data);
-    return htmlText;
-  }
+  /** compile markdown into html */
+  public parse(data:string) {
 
-  public getTokens(data:string) {
     return this._markdown.parse(data);
   }
 
+  /** render markdown tokens */
+  public render(tokens: any, opts:{string:any}|{}, env:{string:any}|{}) {
+
+    opts = opts || {};
+    env  = env  || {};
+    return this._markdown.renderer.render(tokens, opts, env);
+  }
 }

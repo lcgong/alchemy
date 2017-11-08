@@ -100,7 +100,7 @@ export function parseOption(state, startLine, endLine, silent) {
   var optionItemStartLine = startLine;
 
   var optionItemOpenToken;
-  optionItemOpenToken = state.push('blank_option_open', 'question-option', 1);
+  optionItemOpenToken = state.push('question_option_open', 'question-option', 1);
   optionItemOpenToken.attrSet('no', marker.optionNo);
   optionItemOpenToken.markup = marker.markerStr;
   optionItemOpenToken.meta = marker.settings;
@@ -123,7 +123,7 @@ export function parseOption(state, startLine, endLine, silent) {
       state.md.block.tokenize(state, optionItemStartLine, nextLine);
 
       var optionItemCloseToken;
-      optionItemCloseToken = state.push('blank_option_close', 'question-option', -1);
+      optionItemCloseToken = state.push('question_option_close', 'question-option', -1);
       optionItemCloseToken.markup = marker.markerStr;
 
       // 开始新标签
@@ -137,7 +137,7 @@ export function parseOption(state, startLine, endLine, silent) {
       state.bMarks[nextLine] = marker.nextPos;
 
       var optionItemOpenToken;
-      optionItemOpenToken = state.push('blank_option_open', 'question-option', 1);
+      optionItemOpenToken = state.push('question_option_open', 'question-option', 1);
       optionItemOpenToken.attrSet('no', marker.optionNo);
       optionItemOpenToken.markup = marker.markerStr;
       optionItemOpenToken.meta = marker.settings;
@@ -174,7 +174,7 @@ export function parseOption(state, startLine, endLine, silent) {
   state.md.block.tokenize(state, optionItemStartLine, nextLine);
 
   var optionItemCloseToken;
-  optionItemCloseToken = state.push('blank_option_close', 'question-option', -1);
+  optionItemCloseToken = state.push('question_option_close', 'question-option', -1);
   optionItemCloseToken.markup = marker.markerStr;
 
   state.parentType = oldOptionItemParentType;
