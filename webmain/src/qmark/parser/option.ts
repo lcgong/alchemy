@@ -149,11 +149,8 @@ export function parseOption(state, startLine, endLine, silent) {
     max = state.eMarks[nextLine];
 
     // 判断是否遇到新题号 question/section/subquestion marker: #1 ##1 ###1
-    if (ch === '#') { // 遇到题号则结束本选项
-      let matched = /^(#{1,3})([1-9][0-9]{0,2})/.exec(state.src.slice(pos, max));
-      if (matched != null) {
+    if (state.src.slice(pos, pos + 2) === '##') { // 遇到题号则结束本选项
         break;
-      }
     }
 
     // 判断是否遇到答案和分析等 notes marker: %%%
