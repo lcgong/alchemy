@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import { focusBlank } from './redux';
+import { focusBlank } from "./redux";
 
 class QuestionBlank extends Component {
-
   static contextTypes = {
     store: PropTypes.object
   };
@@ -56,18 +55,23 @@ class QuestionBlank extends Component {
     const { blankActive, answer } = this.state;
 
     const classnames = [
-      'question-blank',
-      answer && 'answer',
-      blankActive === 1 && 'active',
-      blankActive === -1 && 'unspecified',
-    ].filter(Boolean).join(' ');
+      "question-blank",
+      answer && "answer",
+      blankActive === 1 && "active",
+      blankActive === -1 && "unspecified"
+    ]
+      .filter(Boolean)
+      .join(" ");
 
     let answerChildren = null;
     if (answer) {
       answerChildren = (
         <span className="answer-group">
           {answer.map((optionIdx, i) => (
-            <span className="option-no" key={i}> {getOptionNo(optionIdx)} </span>
+            <span className="option-no" key={i}>
+              {" "}
+              {getOptionNo(optionIdx)}{" "}
+            </span>
           ))}
         </span>
       );
@@ -75,7 +79,7 @@ class QuestionBlank extends Component {
 
     return (
       <span className={classnames} onClick={this.handleClick}>
-        <span className="blank-no">{no + ((answer) ? '.' : '')}</span>
+        <span className="blank-no">{no + (answer ? "." : "")}</span>
         {answerChildren}
       </span>
     );
@@ -83,7 +87,7 @@ class QuestionBlank extends Component {
 }
 
 function getOptionNo(optionIdx) {
-  return String.fromCharCode(65 + optionIdx % 26)
+  return String.fromCharCode(65 + optionIdx % 26);
 }
 
 export default QuestionBlank;

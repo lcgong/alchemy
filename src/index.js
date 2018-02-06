@@ -1,10 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+// import React from 'react';
+import { createElement } from "react";
+import { render } from "react-dom";
+import "./index.css";
+import App from "./App";
+// import registerServiceWorker from './registerServiceWorker';
 
-import 'markdown-it';
-
-ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+//
+render(createElement(App), document.getElementById("root"));
+// registerServiceWorker();
