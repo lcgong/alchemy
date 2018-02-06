@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import './App.css';
 
 import QmarkCard from './qmark/QmarkCard';
-import './qmark/question.css';
+import './qmark/question.scss';
+import './paper.scss';
 
 import { createMarkdown, convertTree } from './qmark/parser';
 
 // import PunchedHRuler from './PunchedHRuler';
 // import PaperCard from './PaperCard';
 
-import './paper.css';
 
 class App extends Component {
 
