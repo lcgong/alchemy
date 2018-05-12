@@ -16,14 +16,17 @@ export class OptionGroupComponent implements OnInit,  AfterContentInit {
 
   constructor(
     private modelService:ModelService
-  ) { 
+  ) {
     
-  } 
+  }
 
   ngOnInit() {
+
   }
-  
+
   ngAfterContentInit() {
+
+
     // this.optionCompnents.forEach(comp => {
     //   console.log('NO:', comp.no)
     // });

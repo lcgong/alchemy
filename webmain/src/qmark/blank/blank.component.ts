@@ -1,11 +1,14 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { ModelService } from "../model.service";
+import { QuestionModel } from "../question/question.model.service";
 import { Subscription }   from 'rxjs/Subscription';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'question-blank',
   templateUrl: './blank.component.html',
-  styleUrls: ['./blank.component.css']
+  styleUrls: ['./blank.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  
 })
 export class BlankComponent implements OnInit {
   subscription: Subscription;
@@ -14,7 +17,7 @@ export class BlankComponent implements OnInit {
   no: string;
 
   constructor(
-    private modelService:ModelService
+    private questionModel: QuestionModel
   ) { 
     // this.subscription = questionService.missionAnnounced$.subscribe(
     //   mission => {

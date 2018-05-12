@@ -16,6 +16,10 @@ export class QuestionOptionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
   }
 
+  clickOption() {
+    console.log('click', this.no)
+  }
 }

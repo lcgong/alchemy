@@ -4,6 +4,7 @@ import { ModelService } from "../model.service";
 import { ContentChildren, AfterViewInit,  AfterContentInit, QueryList } from '@angular/core';
 
 import { OptionGroupComponent } from "../option-group/option-group.component";
+import { BlankComponent } from "../blank/blank.component";
 
 
 @Component({
@@ -17,6 +18,9 @@ export class SubquestionComponent
   @Input()
   no: string;
 
+  @ContentChildren(BlankComponent)
+  private blankCompList: QueryList<BlankComponent>;
+
   @ContentChildren(OptionGroupComponent)
   private optionGroupCompList: QueryList<OptionGroupComponent>;
 
@@ -27,18 +31,22 @@ export class SubquestionComponent
     
   }
 
-  ngOnInit() {
-
+  
+  public forEachBlank(fn: (blank: BlankComponent) => void): void {
+    this.blankCompList.forEach(comp => {
+      fn(comp);
+    });
   }
   
+  ngOnInit() {
+    
+  }
+
   ngAfterViewInit() {
 
   }
 
   ngAfterContentInit() {
-    // console.log(333);
-    // this.optionGroupCompList.forEach(comp => {
-    //   console.log('option-group:', comp)
-    // });
   }
-}
+};
+
