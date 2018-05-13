@@ -4,5 +4,5 @@
         "editor.insertSpaces": true,
         "editor.detectIndentation": false,
     },
-    "python.pythonPath": "${workspaceFolder}/pyenv/bin/python",
+    "python.pythonPath": "${workspaceFolder}/cpy3.6/bin/python",
 }

@@ -36,6 +36,10 @@ route_base('../user/')
 #
 #     return getter
 
+@REST.GET('{user_id}/hi')
+async def hi(user_id: int) -> DObject:
+
+    return {"id": user_id}
 
 
 @REST.GET('{user_id}/session')

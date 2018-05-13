@@ -21,9 +21,13 @@ def setup(app):
 
 #----------------------------------------------------------------------------
 
-def _dobject_value_getter(proto, method, handler, path_params, arg_name):
-    arg_spec = inspect.signature(handler).parameters[arg_name]
+def _dobject_value_getter(route_spec, arg_name):
+    arg_spec = inspect.signature(route_spec.handler_func).parameters[arg_name]
     ann_type = arg_spec.annotation
+
+# def _dobject_value_getter(proto, method, handler, path_params, arg_name):
+#     arg_spec = inspect.signature(handler).parameters[arg_name]
+#     ann_type = arg_spec.annotation
 
 
     if issubclass(ann_type, DSet[DObject]):
@@ -42,9 +46,11 @@ def _dobject_value_getter(proto, method, handler, path_params, arg_name):
 
         return _getter
 
-
-def _dpage_value_getter(proto, method, handler, path_params, arg_name):
-    arg_spec = inspect.signature(handler).parameters[arg_name]
+def _dpage_value_getter(route_spec, arg_name):
+# def _dpage_value_getter(proto, method, handler, path_params, arg_name):
+    # arg_spec = inspect.signature(handler).parameters[arg_name]
+    # ann_type = arg_spec.annotation
+    arg_spec = inspect.signature(route_spec.handler_func).parameters[arg_name]
     ann_type = arg_spec.annotation
 
     if not issubclass(ann_type, DPage):
@@ -57,7 +63,6 @@ def _dpage_value_getter(proto, method, handler, path_params, arg_name):
         # return arg_val
 
     return getter
-
 
 
 
