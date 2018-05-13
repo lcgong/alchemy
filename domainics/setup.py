@@ -35,7 +35,7 @@ class PyTest(TestCommand):
 
 setup(
     name='domainics',
-    version='0.3.5',
+    version='0.4.0',
     license="BSD",
     description='Web Framwork with Domain-orieted architecure',
     author='Chenggong Lyu',
@@ -44,9 +44,10 @@ setup(
     packages=find_packages("."),
     # package_dir = {"": "."},
     zip_safe = False,
-    install_requires = ["tornado>=4.2",
-                        "psycopg2>=2.6.1",
-                        "arrow>=0.6"],
+    install_requires = ["arrow>=0.10",
+                        "redbean>=0.1",
+                        "sqlblock>=0.1",
+                        "pytest-asyncio>=0.6"],
     classifiers = [
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
