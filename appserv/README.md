@@ -3,5 +3,5 @@
 
 启动服务程序
 ```
-python -m redbean run -p 8080 --debug -w . -w ../sqlblock -w ../redbean
+adev runserver -p 8500 app.py
 ```

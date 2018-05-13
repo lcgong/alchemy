@@ -5,8 +5,6 @@ from domainics.domobj.pagination import parse_query_range, parse_header_range
 from domainics.domobj import dset, dobject, DObject, DSet
 
 
-from domainics.pillar import _pillar_history, pillar_class
-
 from redbean.handler_argument import register_argument_getter, read_json
 from redbean.handler_response import register_response_writer
 
