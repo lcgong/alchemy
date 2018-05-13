@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import './App.scss';
 
 import QmarkCard from './qmark/QmarkCard';
 import './qmark/question.scss';
@@ -19,7 +19,7 @@ class App extends Component {
 
     return (
       <div className="App" >
-        <div className="paper-card">
+        <div className="paper-card ripped">
           <QmarkCard model={tagtrees[0]} />
         </div>
 
