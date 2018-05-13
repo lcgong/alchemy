@@ -1,0 +1,24 @@
+{
+  "name": "nn",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cookie-parser": "^1.4.3",
+    "csrf": "^3.0.6",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-scripts": "1.1.4",
+    "rndm": "^1.2.0",
+    "winston": "^2.4.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:5000/"
+}
