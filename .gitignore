@@ -4,6 +4,4 @@ tmp
 secrets
 cpy3.6
 etcd
-hello
-h.old
-ab
+node_modules
