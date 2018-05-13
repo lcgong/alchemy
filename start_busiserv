@@ -1,0 +1,8 @@
+
+
+HOMEPATH=$(dirname $(realpath ${BASH_SOURCE[0]}))
+
+source $HOMEPATH/setenv
+cd appserv
+python -m redbean run -p 8080 --debug \
+    -w . -w $HOMEPATH/sqlblock -w $HOMEPATH/redbean

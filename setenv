@@ -1,0 +1,63 @@
+#! /bin/bash
+
+
+HOMEPATH=$(dirname $(realpath ${BASH_SOURCE[0]}))
+
+echo "PROJECT HOME: $HOMEPATH$"
+
+
+for x in $HOMEPATH/domainics; do # add path
+  case ":$PYTHONPATH:" in
+    *":$x:"*) :;; # already there
+    *)
+		export PYTHONPATH="$x:$PYTHONPATH"
+		echo "set PYTHONPATH[+]: $x"
+	;;
+  esac
+done
+
+for x in $HOMEPATH/sqlblock; do # add path
+  case ":$PYTHONPATH:" in
+    *":$x:"*) :;; # already there
+    *)
+		export PYTHONPATH="$x:$PYTHONPATH"
+		echo "set PYTHONPATH[+]: $x"
+	;;
+  esac
+done
+
+for x in $HOMEPATH/redbean; do # add path
+  case ":$PYTHONPATH:" in
+    *":$x:"*) :;; # already there
+    *)
+		export PYTHONPATH="$x:$PYTHONPATH"
+		echo "set PYTHONPATH[+]: $x"
+	;;
+  esac
+done
+
+for x in $HOMEPATH/pgsql/bin; do # add path
+  case ":$PATH:" in
+    *":$x:"*) :;; # already there
+    *)
+		export PATH="$x:$PATH"
+		echo "set PATH[+]: $x"
+	;;
+  esac
+done
+
+for x in $HOMEPATH/pgsql/lib; do
+  case ":$LD_LIBRARY_PATH:" in
+    *":$x:"*) :;; # already there
+    *)
+		export LD_LIBRARY_PATH="$x:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+		echo "set LD_LIBRARY_PATH[+]: $x"
+	;;
+  esac
+done
+
+export PGUSER=postgres
+export PGHOST=localhost
+
+
+source $HOMEPATH/cpy3.6/bin/activate
