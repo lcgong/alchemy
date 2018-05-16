@@ -27,6 +27,8 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
+const axios = require('axios');
+
 const app = express();
 
 logger.stream = { 
@@ -72,38 +74,71 @@ const jsonBodyParser = bodyParser.json();
 // signid and passwd
 app.post('/signin', authCookieMaker, urlencodedParser, jsonBodyParser, (req, res, next) => {
 
-    const signid = req.body.signid;
-    const passwd = req.body.passwd;
+    const {login_id, client_id, passwd} = req.body;
 
-    if (typeof signid !=='string') {
+    if (typeof login_id !=='string') {
         res.status(400);
-        res.json({error: `Arguments: <signid>, [passwd]`});
+        res.json({error: `Arguments: <login_id>, [passwd]`});
         return;
     }
 
-    // updateBrowserAuthCookies(req, res);
 
+    let creds = {
+        login_id: login_id,
+        client_id: client_id,
+        passwd: passwd
+    }
 
-    axios.post("http://bacon-police.com/auth", creds)
-        .then(response => response.data)
-        .then(auth => {
-            // this is the part where you preconfigure authoken
-            // based on your auth service response
-            req.axios = axios.create({
-                headers: {Authtoken: auth.token}
+    origin = req.get('Origin')
+    const headers = {
+        Origin: origin
+    };
+
+    let val;
+    val = req.get('X-CSRF-Token');
+    if (val) {
+        headers['X-CSRF-Token'] = val;
+    }
+
+    val = req.get('User-Agent')
+    if (val) {
+        headers['User-Agent'] = val;
+    }
+
+    val = req.get('Cookie');
+    if (val) {
+        headers['Cookie'] = val;
+    }
+
+    const signin_url = "http://localhost:8500/api/signin";
+
+    const config = {
+        headers: headers
+    };
+
+    axios.post(signin_url, creds, config)
+        .then(response => {
+            const {token, expires} = response.data;
+            res.cookie('authentication', token, {
+                expires: new Date(expires),
+                httpOnly: true,
+                sameSite: true
             });
-            next(); // <- handing over to the next middleware
+
+            next(); 
         })
         .catch(error => {
-        res.status(401).json({error: "authentication failed"});
+            if (error.response) {
+                res.status(error.response.status).json(error.response.data);
+    
+            } else if (error.request) {
+                res.status(500).json({error: error.message});
+
+            } else {
+                res.status(500).json({error: error.message});
+
+            }
         });
-
-    logger.info(`welcome, ${signid} (${passwd})`);
-
-    res.send('');
-
-    // res.send(`welcome, ${signid} (${passwd})`);
-
 });
 
 
