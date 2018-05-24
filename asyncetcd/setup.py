@@ -100,15 +100,18 @@ class CompileProtoCommand(distutils.cmd.Command):
                 })
 
 def unpack_zipfiles(zipfiles, location):
+    from pip._internal.download import unpack_url
+    from pip._internal.index import Link
+
     location = Path(location)
-    import pip
+
     for prj_id, url in zipfiles.items():
         download_flag = location / ('downloaded_' + prj_id)
         if download_flag.exists():
             logger.info('Skipped: downloading ' + str(url))
             continue
 
-        pip.download.unpack_url(pip.index.Link(url), location / prj_id)
+        unpack_url(Link(url), location / prj_id)
         with open(download_flag, 'w') as outfile:
             outfile.write(url)
 
