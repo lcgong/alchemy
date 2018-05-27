@@ -5,7 +5,6 @@ import asyncio
 
 from pathlib import Path
 
-
 import aiohttp
 from aiohttp.web_runner import AppRunner, TCPSite
 
@@ -17,6 +16,8 @@ from aiohttp_devtools.runserver.serve import check_port_open, HOST
 
 import watchgod
 
+from click import style as _style
+
 class AppTask():
 
     def __init__(self, config: Config, loop: asyncio.AbstractEventLoop):
@@ -27,8 +28,7 @@ class AppTask():
         self._loop = loop
         self._task = None
 
-        # self._path = self._config.code_directory
-        self._path = Path.cwd()
+        self._path = Path.cwd() # self._config.code_directory
         
         self._awatch = watchgod.awatch(self._path)
 
@@ -58,13 +58,12 @@ class AppTask():
 
 
     async def _start_dev_server(self):
-        act = 'Start' if self._reloads == 0 else 'Restart'
         url = f'http://{self._config.host}:{self._config.main_port}'
-        msg = f'{act}ing server at {url}'
         if self._reloads:
-            msg += ' ' + click.style(f'{self._reloads!s:^5}', bg='white', fg='red', bold=True)
+            msg = f'Restarting server at {url} '
+            msg += _style(f'{self._reloads!s:^5}', bg='white', fg='red', bold=True)
         else:
-            msg += ' ●'
+            msg = f'Starting server at {url} ●'
         rs_logger.info(msg)
         
         app = self._config.load_app()

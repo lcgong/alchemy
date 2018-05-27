@@ -63,7 +63,7 @@ def _dpage_value_getter(route_spec, arg_name):
     return getter
 
 
-
+from collections.abc import Mapping, Sequence, Iterable
 # ----------------------------------------------------------------------------
 def _rest_dobject_response_factory(proto, method, handler):
     if proto != 'REST':
