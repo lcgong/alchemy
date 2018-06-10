@@ -1,7 +1,7 @@
 import pytest
 
 from redbean.path_params import parse_path
-from redbean.route import RouteSpec
+from redbean.route_spec import RouteSpec
 
 def test_parse_pathexpr():
     print()

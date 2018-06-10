@@ -1,15 +1,11 @@
 import logging
-import aiohttp
-import re
-import inspect
-from yarl import URL
-from .path_params import parse_path, parse_fields
-
 logger = logging.getLogger(__name__)
 
-from .handler_argument import argument_getter_factory
+import inspect
+from yarl import URL
 
-from .exception import RESTfulDeclarationError
+from .path_params import parse_path, parse_fields
+from .handler_argument import argument_getter_factory
 
 class RouteSpec():
 
