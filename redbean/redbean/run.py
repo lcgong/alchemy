@@ -66,12 +66,19 @@ class AppTask():
             msg = f'Starting server at {url} ●'
         rs_logger.info(msg)
         
-        app = self._config.load_app()
+        app = await self._config.load_app()
 
-        await check_port_open(self._config.main_port, self._loop)
+        try:
+            await check_port_open(self._config.main_port, self._loop)
+        except asyncio.CancelledError:
+            return
+
         self._runner = AppRunner(app, access_log_format='%r %s %b')
         await self._runner.setup()
-        site = TCPSite(self._runner, host=self._config.host, port=self._config.main_port, shutdown_timeout=0.1)
+        site = TCPSite(self._runner, 
+                        host=self._config.host, 
+                        port=self._config.main_port, 
+                        shutdown_timeout=0.1)
 
         await site.start()
         
@@ -147,10 +154,14 @@ def run_devserver(**config):
 
             start = loop.time()
             try:
-                loop.run_until_complete(main_manager._runner.cleanup())
+                loop.run_until_complete(main_manager.close())
+                # loop.run_until_complete(main_manager._runner.cleanup())
+            except asyncio.CancelledError:
+                pass
             except (asyncio.TimeoutError, KeyboardInterrupt):
                 pass
-            rs_logger.debug('shutdown took %0.2fs', loop.time() - start)        
+            finally:
+                rs_logger.debug('shutdown took %0.2fs', loop.time() - start)        
 
     except aiohttp_devtools.exceptions.AiohttpDevException as e:
         if config['verbose']:

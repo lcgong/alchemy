@@ -12,8 +12,6 @@ from aiohttp.web_exceptions import HTTPException
 
 from inspect import getmodule
 
-# from .handler import request_handler_factory
-
 from .path_params import parse_path, parse_fields
 from .route_spec import RouteMethodDecorator
 from .secure.secure import SecureLayer
@@ -121,9 +119,9 @@ class RESTfulModules():
         app.logger.info('Route Definition:\n' + '\n'.join(infos) + '\n')
 
     async def _app_on_cleanup(self, app):
-        logger.debug('cleanup routes') 
-        for callback in self._on_cleanup_callbacks:
-            await callback()
+        if self._on_cleanup_callbacks:
+            for callback in self._on_cleanup_callbacks:
+                await callback()
                        
     def _inc_spec_no(self):
         self._spec_max_no += 1
@@ -234,7 +232,10 @@ class DynamicResource(aiohttp.web_urldispatcher.Resource):
                                           for k, v in parts.items()})
         return URL.build(path=url)
 
-
+    @property
+    def canonical(self):
+        return self._formatter
+        
     def __repr__(self):
         name = "'" + self.name + "' " if self.name is not None else ""
         return ("<DynamicResource {name} {formatter}>"
