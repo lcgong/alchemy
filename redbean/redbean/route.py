@@ -69,7 +69,11 @@ class Routes():
     def set_path(self, path):
         assert len(path) >= 1
         module = inspect.getmodule(sys._getframe(1))
-        self._module_paths[module.__name__] = path
+
+        if module.__name__ in self._module_paths:
+            self._module_paths[module.__name__] += '/' + path    
+        else:
+            self._module_paths[module.__name__] = path
 
     def add_module(self, module_name, *, prefix='/'):
         self._root_modules[module_name] = prefix
@@ -119,6 +123,7 @@ class Routes():
         app.logger.info('Route Definition:\n' + '\n'.join(infos) + '\n')
 
     async def _app_on_cleanup(self, app):
+        logger.debug('cleanup')
         if self._on_cleanup_callbacks:
             for callback in self._on_cleanup_callbacks:
                 await callback()
@@ -246,29 +251,21 @@ from pkgutil import walk_packages
 
 def deep_load_moduels(root_names):
     for module_name in root_names:
-        for module in _iter_submodules(module_name):
-            pass  
+        _walk_submodules(module_name)
            
 
-def _iter_submodules(module):
+def _walk_submodules(module):
     """  """
     if isinstance(module, str):
         logger.debug('dynamic loading module: ' + module)    
         module = importlib.import_module(module)
     
-    if not hasattr(module, '__path__'):
-        yield module
+    if not hasattr(module, '__path__'): # package含有__path__
         return
-
-    if isinstance(module.__path__, list): # no namespace package
-        yield module
 
     prefix = module.__name__ + '.'
 
     for loader, module_name, ispkg in walk_packages(module.__path__, prefix):
+        logger.debug('dynamic loading module: ' + module_name)
         module = loader.find_module(module_name).load_module(module_name)
-        if ispkg and not isinstance(module.__path__, list):
-            continue
-
-        yield module
 

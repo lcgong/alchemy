@@ -78,7 +78,7 @@ class RouteMethodDecorator():
     def _get_module_prefix(self, module_name):
         module_paths = self._routes._module_paths
 
-        prefix = self._routes._module_paths.get(module_name)
+        prefix = module_paths.get(module_name)
         if prefix is not None and prefix.startswith('/'):
             return prefix
 
