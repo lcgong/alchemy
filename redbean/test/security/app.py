@@ -2,14 +2,18 @@
 import logging
 logger = logging.getLogger(__name__)
 
+
 from redbean.logs import setup_logging 
 from pathlib import Path 
 setup_logging(config=Path(__file__).parent / 'logging.yaml')
 
-
 import aiohttp
 
-from .config import rest
+import redbean
+rest = redbean.Routes() 
+
+secure_key = 'DjwennlKciQiTlxKmYtWqH8N'
+etcd_endpoint = "127.0.0.1:2379"
 
 def create_app():
 

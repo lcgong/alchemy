@@ -18,7 +18,7 @@ from .secure.secure import SecureLayer
 
 from redbean.exception import RESTfulServerError, RESTfulDeclarationError
 
-class RESTfulModules():
+class Routes():
 
     def __init__(self):
 
@@ -235,7 +235,7 @@ class DynamicResource(aiohttp.web_urldispatcher.Resource):
     @property
     def canonical(self):
         return self._formatter
-        
+
     def __repr__(self):
         name = "'" + self.name + "' " if self.name is not None else ""
         return ("<DynamicResource {name} {formatter}>"

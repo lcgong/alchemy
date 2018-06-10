@@ -5,8 +5,7 @@ from redbean.secure.identity import SessionIdentity
 from redbean.secure.keeper import UserIdentityKeeper
 from redbean.asyncid import AsyncID64
 
-from ..config import etcd_endpoint
-from test.security.app import rest
+from test.security.app import rest, etcd_endpoint
 
 user_id_generator = AsyncID64('/asyncid/user_sn', etcd_endpoint)
 keeper = UserIdentityKeeper(etcd_endpoint, user_id_generator=user_id_generator)
