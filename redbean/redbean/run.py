@@ -20,15 +20,19 @@ from click import style as _style
 
 class AppTask():
 
-    def __init__(self, config: Config, loop: asyncio.AbstractEventLoop):
-        self._config = config
+    def __init__(self, app_module, host, port, loop: asyncio.AbstractEventLoop):
         self._reloads = 0
         self._runner = None
+
+        self._host = host
+        self._port = port
+        self._app_module = app_module
 
         self._loop = loop
         self._task = None
 
-        self._path = Path.cwd() # self._config.code_directory
+
+        self._path = Path.cwd()
         
         self._awatch = watchgod.awatch(self._path)
 
@@ -58,26 +62,24 @@ class AppTask():
 
 
     async def _start_dev_server(self):
-        url = f'http://{self._config.host}:{self._config.main_port}'
+        url = f'http://{self._host}:{self._port}'
         if self._reloads:
             msg = f'Restarting server at {url} '
             msg += _style(f'{self._reloads!s:^5}', bg='white', fg='red', bold=True)
         else:
             msg = f'Starting server at {url} ●'
         rs_logger.info(msg)
-        
-        app = await self._config.load_app()
 
+        app = await load_app(self._app_module)
+        
         try:
-            await check_port_open(self._config.main_port, self._loop)
+            await check_port_open(self._port, self._loop)
         except asyncio.CancelledError:
             return
 
         self._runner = AppRunner(app, access_log_format='%r %s %b')
         await self._runner.setup()
-        site = TCPSite(self._runner, 
-                        host=self._config.host, 
-                        port=self._config.main_port, 
+        site = TCPSite(self._runner, host=self._host, port=self._port, 
                         shutdown_timeout=0.1)
 
         await site.start()
@@ -95,6 +97,72 @@ class AppTask():
                 if self._task.done():
                     self._task.result()
                 self._task.cancel()
+
+
+APP_FACTORY_NAMES = [
+    'app',
+    'app_factory',
+    'get_app',
+    'create_app',
+]
+
+from aiohttp_devtools.exceptions import AiohttpDevConfigError as AdevConfigError
+from aiohttp_devtools.logs import rs_dft_logger as logger
+
+import aiohttp
+import inspect
+import importlib
+
+async def load_app(module_name):
+
+    try:
+        module_spec = importlib.util.find_spec(module_name)
+        if module_spec is None:
+            raise AdevConfigError(f"error importing '{module_name}'")
+
+        module = module_spec.loader.load_module(module_name)
+    except ImportError as exc:
+        raise AdevConfigError(f"error importing '{module_name}'") from exc
+
+    rs_logger.debug(f"successfully loaded '{module_name}'")
+
+    try:
+        factory_name = next(an for an in APP_FACTORY_NAMES if hasattr(module, an))
+    except StopIteration as exc:
+        raise AdevConfigError('No name supplied and no default app factory '
+                                f'found in {module_name}') from exc
+    else:
+        rs_logger.debug(f"found default attribute '{factory_name}'"
+                     f"in module '{module_name}'")
+
+    try:
+        app_factory = getattr(module, factory_name)
+    except AttributeError as exc:
+        raise AdevConfigError(f"Module '{module_name}' does not define "
+                            f"a '{factory_name}' attribute/class") from exc
+
+    if isinstance(app_factory, aiohttp.web.Application):
+        app = app_factory
+        return app
+
+    # should be a proper factory with signature (loop): -> Application
+    signature = inspect.signature(app_factory)
+    if 'loop' in signature.parameters:
+        loop = asyncio.get_event_loop()
+        app = app_factory(loop=loop)
+    else:
+        app = app_factory() # loop argument missing, assume no arguments
+
+    if asyncio.iscoroutine(app):
+        app = await app
+
+    if not isinstance(app, aiohttp.web.Application):
+        raise AdevConfigError(f"app factory '{factory_name}' "
+                    f"returned '{app.__class__.__name__}' not an "
+                    f"aiohttp.web.Application")
+
+    return app
+
 
 
 def _formatChanges(reloads, changes):
@@ -119,12 +187,20 @@ _file_dir_existing = click.Path(exists=True, dir_okay=True, file_okay=True)
 host_help = ('host with default of localhost. env variable AIO_HOST')
 port_help = 'Port to serve app from, default 8000. env variable: AIO_PORT'
 @click.command()
-@click.argument('app-path', envvar='AIO_APP_PATH', type=_file_dir_existing, required=False)
-@click.option('-H', '--host', default='localhost', help=host_help)
-@click.option('-p', '--port', 'main_port', envvar='AIO_PORT', type=click.INT, help=port_help)
+@click.argument('app-module', type=str, required=True)
+@click.option('-H', '--host', envvar='AIO_HOST', default='localhost', help=host_help)
+@click.option('-p', '--port', 'port', envvar='AIO_PORT', type=click.INT, help=port_help)
 @click.option('-v', '--verbose', is_flag=True, help='Enable verbose output.')
 @click.option('--prod', is_flag=True, default=False, help='Enable production mode')
 def main(**config):
+    aiohttp_devtools.logs.setup_logging(config['verbose'])
+    
+    app_module = config['app_module']
+    module_spec = importlib.util.find_spec(app_module)
+    if module_spec is None:
+        msg = click.style(f"Not Found Module: '{app_module}'", fg='red')
+        rs_logger.warn(msg)
+        exit(1)
 
     is_prod = config.pop('prod')
     if not is_prod:
@@ -133,14 +209,15 @@ def main(**config):
         run_prodserver(**config)
 
 def run_devserver(**config):
-
-    active_config = {k: v for k, v in config.items() if v is not None}
-    aiohttp_devtools.logs.setup_logging(config['verbose'])
+    
     try:
         loop = asyncio.get_event_loop()
 
-        config = Config(**active_config)
-        main_manager = AppTask(config, loop)
+        app_module = config['app_module']
+        host = config['host']
+        port = config['port']
+
+        main_manager = AppTask(app_module, host, port, loop)
 
         try:
             loop.run_until_complete(main_manager.start())
@@ -148,14 +225,11 @@ def run_devserver(**config):
         except KeyboardInterrupt:  # pragma: no branch
             pass
         finally:
-            loop.run_until_complete(main_manager.close())
-
             rs_logger.info('shutting down server...')
-
             start = loop.time()
             try:
                 loop.run_until_complete(main_manager.close())
-                # loop.run_until_complete(main_manager._runner.cleanup())
+                loop.run_until_complete(main_manager._runner.cleanup())
             except asyncio.CancelledError:
                 pass
             except (asyncio.TimeoutError, KeyboardInterrupt):

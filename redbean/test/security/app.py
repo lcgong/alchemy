@@ -12,17 +12,17 @@ import aiohttp
 import redbean
 rest = redbean.Routes() 
 
-secure_key = 'DjwennlKciQiTlxKmYtWqH8N'
+secure_key = 'DjwennlKciQiTlxKmYtWqH8N' 
 etcd_endpoint = "127.0.0.1:2379"
 
-def create_app():
-
-    app = aiohttp.web.Application()
+def create_app(): 
+    app = aiohttp.web.Application() 
     app['secure_key'] = 'DjwennlKciQiTlxKmYtWqH8N'
     app['etcd_endpoint'] = "127.0.0.1:2379"
 
+    print(33211)
     rest.setup(app)
-    rest.add_module('test.security.serv', prefix='/api')
+    rest.add_module('test.security.serv', prefix='/api') 
     
     return app
 

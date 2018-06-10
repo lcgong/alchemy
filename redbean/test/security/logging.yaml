@@ -23,3 +23,6 @@ loggers:
     aiohttp.web:
         level: DEBUG
         handlers: [console]
+    adev:
+        level: INFO
+        handlers: [console]
