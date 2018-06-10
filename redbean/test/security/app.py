@@ -10,8 +10,6 @@ setup_logging(config=Path(__file__).parent / 'logging.yaml')
 import aiohttp
 
 from .config import rest
-from .config import secure_key 
-
 
 def create_app():
 
