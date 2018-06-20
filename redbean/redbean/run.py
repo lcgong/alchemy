@@ -10,7 +10,7 @@ from aiohttp.web_runner import AppRunner, TCPSite
 
 import aiohttp_devtools
 from aiohttp_devtools.logs import main_logger, rs_dft_logger as rs_logger
-from aiohttp_devtools.runserver.config import Config
+# from aiohttp_devtools.runserver.config import Config
 from aiohttp_devtools.runserver.serve import check_port_open, HOST
 
 
@@ -49,9 +49,9 @@ class AppTask():
         except:
             rs_logger.error('Exception in loading app: ', exc_info=True)
 
-        async for changes in self._awatch:
+        async for changes in self._awatch: # 等待目录里的文件发生变更
             self._reloads += 1
-            if any(f.endswith('.py') for _, f in changes):
+            if any(f.endswith('.py') for _, f in changes): # 发生变更的文件
                 rs_logger.info(_formatChanges(self._reloads, changes) + '\n')
 
                 try:
@@ -64,7 +64,7 @@ class AppTask():
     async def _start_dev_server(self):
         url = f'http://{self._host}:{self._port}'
         if self._reloads:
-            msg = f'Restarting server at {url} '
+            msg = _style(f'Restarting server at {url} ', fg='green')
             msg += _style(f'{self._reloads!s:^5}', bg='white', fg='red', bold=True)
         else:
             msg = f'Starting server at {url} ●'
@@ -189,7 +189,7 @@ port_help = 'Port to serve app from, default 8000. env variable: AIO_PORT'
 @click.command()
 @click.argument('app-module', type=str, required=True)
 @click.option('-H', '--host', envvar='AIO_HOST', default='localhost', help=host_help)
-@click.option('-p', '--port', 'port', envvar='AIO_PORT', type=click.INT, help=port_help)
+@click.option('-p', '--port', envvar='AIO_PORT', type=click.INT, help=port_help)
 @click.option('-v', '--verbose', is_flag=True, help='Enable verbose output.')
 @click.option('--prod', is_flag=True, default=False, help='Enable production mode')
 def main(**config):

@@ -81,28 +81,3 @@ def _rest_dobject_response_factory(proto, method, handler):
 
     return _response
 
-#
-#
-# def service_func_handler(proto, service_func, service_name, path_sig) :
-#
-#     def rest_handler(self, *args, **kwargs):
-#         obj = http_handler(self, *args, **kwargs)
-#
-#         if not isinstance(obj, (list, tuple, DSetBase)):
-#             obj = [obj] if obj is not None else []
-#
-#         if isinstance(obj, DSetBase) and hasattr(obj, '_page'):
-#             content_range = obj._page.format_content_range()
-#             self.set_header('Content-Range', content_range)
-#             if obj._page.start != 0 or obj._page.limit is not None:
-#                 self.set_status(206)
-#
-#         self.set_header('Content-Type', 'application/json; charset=UTF-8')
-#         self.write(_json.dumps(obj))
-#
-#     if proto == 'REST':
-#         return rest_handler
-#     elif proto == 'HTTP':
-#         return http_handler
-#     else:
-#         raise ValueError('Unknown')

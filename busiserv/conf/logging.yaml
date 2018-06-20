@@ -1,18 +1,21 @@
-formatters:
-    simple:
-        format: '%(levelname)s %(name)s %(asctime)s | %(message)s'
-        datefmt: '%H:%M:%S'
+version: 1
+disable_existing_loggers: False
 
+formatters:
+    console: 
+        format: '[%(asctime)s] %(message)s'
+        datefmt: '%H:%M:%S'
+    
     full:
         format: '%(levelname)s %(name)s %(asctime)s | %(message)s'
         datefmt: '%Y-%m-%d %H:%M:%S'
 
 handlers:
     console:
-        class: logging.StreamHandler
-        formatter: simple
         level: DEBUG
-        stream: ext://sys.stdout
+        # 'class': 'aiohttp_devtools.logs.DefaultHandler',
+        class: 'logging.StreamHandler'
+        formatter: console
 
     file:
         class : logging.handlers.TimedRotatingFileHandler
@@ -24,28 +27,16 @@ handlers:
         backupCount: 100
 
 loggers:
-    webapp:
+    test:
         level: DEBUG
-        handlers: [console, file]
-        propagate: 0
-
-    tornado.access:
+        handlers: [console]
+    redbean:
         level: DEBUG
-        handlers: [console, file]
-        propagate: 0
-
-    tornado.application:
+        handlers: [console]
+    aiohttp.web:
         level: DEBUG
-        handlers: [console, file]
-        propagate: 0
-
-    tornado.general:
-        level: DEBUG
-        handlers: [console, file]
-        propagate: 0
-
-
-
-root:
-    level: DEBUG
-    handlers: [console, file]
+        handlers: [console]
+    adev:
+        level: INFO
+        handlers: [console]
+        
