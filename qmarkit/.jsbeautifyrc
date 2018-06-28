@@ -2,7 +2,7 @@
     "js": {
         "allowed_file_extensions": ["js", "jsx", "json", "eslintrc", "jsbeautifyrc"],
         "indent_size": 4,
-        "bracepadding": true,
+        "bracepadding": true, 
         "end_with_newline": true,
         "brace_style": "collapse,preserve-inline",
         "max_preserve_newlines": 3

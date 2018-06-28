@@ -1,8 +1,0 @@
-{
-    "[javascriptreact]": {
-        "editor.tabSize": 2,
-        "editor.insertSpaces": true,
-        "editor.detectIndentation": false,
-    },
-    "python.pythonPath": "${workspaceFolder}/cpy3.6/bin/python",
-}
