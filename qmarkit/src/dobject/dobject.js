@@ -166,6 +166,10 @@ var DListProxyHandler = {
             return Reflect.get(...arguments);
         }
 
+        if (typeof idx !== 'number') { // array index as string
+            idx = parseInt(idx);
+        }
+
         return target.get(idx);
     },
     set: function(target, index, value, receiver) {
@@ -186,7 +190,9 @@ class DList extends DObject {
 
 
     get(index, notSetValue) {
+        
         const mutableList = getImmutableObject(this);
+        // console.log('index: ', index, typeof index, mutableList.get(index));
         return mutableList.get(index, notSetValue);
     }
 

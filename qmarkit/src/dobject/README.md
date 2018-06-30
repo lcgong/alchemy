@@ -15,3 +15,4 @@
 .details.item_name
 ```
 
+在同一个时间锥下，dobject和dlist对象的赋值均视为Link。
