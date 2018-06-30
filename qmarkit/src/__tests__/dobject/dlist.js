@@ -17,6 +17,26 @@ test("dlist get and set", () => {
     expect(obj[2]).toBe(30);
 });
 
+test("dlist of dobject", () => {
+
+    let obj = dobject.fromJS([{ a: 123 }, { a: 456 }, 789]);
+
+    expect(obj[0]).toBeInstanceOf(dobject.DObject);
+    expect(obj[0].a).toBe(123);
+    expect(obj[1].a).toBe(456);
+    expect(obj[2]).toBe(789);
+
+    obj = dobject.fromJS({ a: 123, b: [{ a: 456 }, 789] });
+
+    expect(obj).toBeInstanceOf(dobject.DObject);
+    expect(obj.b).toBeInstanceOf(dobject.DList);
+    expect(obj.b[0]).toBeInstanceOf(dobject.DObject);
+    expect(obj.b[0].a).toBe(456);
+    expect(obj.b[1]).toBe(789);
+
+});
+
+
 test("cache the immutable object of list", () => {
     let obj = dobject.fromJS([10, 20, 30]);
 
@@ -32,7 +52,7 @@ test("cache the immutable object of list", () => {
 
 test("push/pop", () => {
     let obj = dobject.fromJS([10, 20, 30]);
-    
+
     expect(obj.push(40, 50)).toBe(obj);
     expect(obj.push(60)).toBe(obj);
     expect(obj[-1]).toBe(60);
@@ -41,14 +61,14 @@ test("push/pop", () => {
 
     expect(obj.pop()).toBe(obj);
     expect(obj[-1]).toBe(50);
-    
+
     expect(obj.pop()).toBe(obj);
     expect(obj[-1]).toBe(40);
 });
 
 test("unshift/shift", () => {
     let obj = dobject.fromJS([10, 20, 30]);
-    
+
     expect(obj.unshift(50, 40)).toBe(obj);
     expect(obj.unshift(60)).toBe(obj);
     expect(obj[0]).toBe(60);
@@ -57,7 +77,7 @@ test("unshift/shift", () => {
 
     expect(obj.shift()).toBe(obj);
     expect(obj[0]).toBe(50);
-    
+
     expect(obj.shift()).toBe(obj);
     expect(obj[0]).toBe(40);
 });

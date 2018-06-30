@@ -4,10 +4,6 @@ import { Map, List } from "immutable/dist/immutable";
 import { Iterator } from "immutable/dist/immutable";
 import Immutable from "immutable/dist/immutable";
 
-// from {iterateList}
-
-// console.log('Immutable', Immutable);
-
 class DObject {
     constructor(cone, path, value) {
         this.__cone = cone;
@@ -21,47 +17,6 @@ class DObject {
     }
 }
 
-
-function getImmutableObject(dobj) {
-    if (dobj.__object != undefined) {
-        return dobj.__object;
-    }
-
-    const immutable = dobj.__cone.root.getIn(dobj.__path);
-    dobj.__object = immutable;
-    return immutable;
-}
-
-function setImmutablePropeties(dobj, prop, value) {
-    const root = dobj.__cone.root;
-    dobj.__cone.root = root.setIn([...dobj.__path, prop], value);
-}
-
-function updateImmutable(dobj, func) {
-    const cone = dobj.__cone;
-    const path = dobj.__path;
-
-    const immutable = getImmutableObject(dobj);
-    cone.root = cone.root.setIn(path, func(immutable));
-
-    // console.log(4422255, cone.root);
-    dobj.__object = undefined;
-}
-
-
-// function arrayPathEquals(path1, path2) {
-//     if (path1.length != path2.length)
-//         return false;
-
-//     for (var i = 0, l = path1.length; i < l; i++) {
-//         if (path1[i] != path2[i]) {
-//             return false;
-//         }
-//     }
-//     return true;
-// }
-
-
 function fromJS(jsobj) {
 
     const immutable = Immutable.fromJS(jsobj);
@@ -70,7 +25,7 @@ function fromJS(jsobj) {
         root: immutable
     };
 
-    const obj = makeObject(cone, [], immutable);
+    const obj = wrapObject(cone, [], immutable);
     if (!obj) {
         throw new InvalidDataError();
     }
@@ -80,32 +35,79 @@ function fromJS(jsobj) {
 
 
 // A function which returns a value representing an unique ID for a cone.
-function ConeID() {
+function ConeID() {}
 
-}
+function wrapObject(cone, path, immutableValue) {
+    if (Map.isMap(immutableValue)) {
 
-function makeObject(cone, path, immutableObj) {
-    if (immutableObj !== undefined) {
-        if (Map.isMap(immutableObj)) {
+        return new DObjectDefaultProxy(cone, path, immutableValue);
+    } else if (List.isList(immutableValue)) {
 
-            return new DObjectDefaultProxy(cone, path, immutableObj);
-        } else if (List.isList(immutableObj)) {
-
-            return new DList(cone, path, immutableObj);
-        }
-    } else {
-        immutableObj = cone.root.getIn(path);
-        if (Map.isMap(immutableObj)) {
-
-            return new DObjectDefaultProxy(cone, path, immutableObj);
-        } else if (List.isList(immutableObj)) {
-
-            return new DList(cone, path, immutableObj);
-        }
+        return new DList(cone, path, immutableValue);
     }
 
+    return undefined;
 }
 
+function getImmutableObject(dobj) {
+    if (dobj.__object !== undefined) {
+        return dobj.__object;
+    }
+
+    const immutable = dobj.__cone.root.getIn(dobj.__path);
+    dobj.__object = immutable;
+    return immutable;
+}
+
+function getIndexedValue(dobj, index, notSetValue) {
+
+    const cone = dobj.__cone;
+    const path = dobj.__path;
+
+    const immutableObj = getImmutableObject(dobj);
+
+    let value = immutableObj.get(index);
+
+    if (value !== undefined) {
+        const valueObject = wrapObject(cone, [...path, index], value);
+        if (valueObject !== undefined) {
+            return valueObject;
+        }
+
+        return value;
+    }
+
+    if (notSetValue) {
+        return notSetValue;
+    }
+}
+
+function updateImmutable(dobj, func) {
+    const cone = dobj.__cone;
+
+    const immutable = getImmutableObject(dobj);
+    cone.root = cone.root.setIn(dobj.__path, func(immutable));
+
+    dobj.__object = undefined;
+}
+
+const DObjectProxyHandler = {
+    get: function(target, prop, receiver) {
+        if (prop in target || typeof prop === 'symbol' || prop === 'inspect') {
+            return Reflect.get(...arguments);
+        }
+
+        return getIndexedValue(target, prop);
+    },
+    set: function(target, index, value, receiver) {
+
+        updateImmutable(target, (immutable) => {
+            return immutable.set(index, value);
+        });
+
+        return true;
+    }
+};
 
 class DObjectDefaultProxy extends DObject {
 
@@ -121,46 +123,7 @@ class DObjectDefaultProxy extends DObject {
     }
 }
 
-const DObjectProxyHandler = {
-    get: function(target, prop, receiver) {
-        // console.log('prop: ', prop, prop in target);
-        // if (prop in target) {
-        //     return target[prop];
-        // }
-
-        // if (typeof prop === 'symbol') {
-        //     return Reflect.get(...arguments)
-        // }
-        if (prop in target || typeof prop === 'symbol' || prop === 'inspect') {
-            return Reflect.get(...arguments);
-        }
-
-        const cone = target.__cone;
-        const path = target.__path;
-
-        let immutableObj = cone.root.getIn(path);
-        let propValue = immutableObj.get(prop);
-        // console.log(111, prop, value);
-        if (propValue !== undefined) {
-            const obj = makeObject(cone, [...path, prop], propValue);
-            if (obj instanceof DObject) {
-                return obj;
-            }
-
-            return propValue;
-        }
-
-        return Reflect.get(...arguments);
-    },
-    set: function(target, prop, value, receiver) {
-        setImmutablePropeties(target, prop, value);
-        return true; // Indicate success
-    }
-
-};
-
-
-var DListProxyHandler = {
+const DListProxyHandler = {
     get: function(target, idx, receiver) {
         if (idx in target || typeof idx === 'symbol' || idx === 'inspect') {
             return Reflect.get(...arguments);
@@ -190,10 +153,8 @@ class DList extends DObject {
 
 
     get(index, notSetValue) {
-        
-        const mutableList = getImmutableObject(this);
-        // console.log('index: ', index, typeof index, mutableList.get(index));
-        return mutableList.get(index, notSetValue);
+
+        return getIndexedValue(this, index, notSetValue);
     }
 
     [Symbol.iterator]() {
@@ -271,21 +232,10 @@ class DList extends DObject {
 
         return this;
     }
-
-
 }
-
-// Object.defineProperty(DList.prototype, "[]", {
-//     value: function(index) {
-//         console.log(2233444, index);
-//         return this.myArray[index];
-//     }
-// });
-
 
 export {
     fromJS,
     DObject,
-    setImmutablePropeties,
-    updateImmutable
+    DList
 };
