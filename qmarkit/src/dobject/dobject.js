@@ -1,241 +1,115 @@
 /*jshint esversion: 6 */
 
-import { Map, List } from "immutable/dist/immutable";
-import { Iterator } from "immutable/dist/immutable";
 import Immutable from "immutable/dist/immutable";
+import { isArrayObject, isPlainObject, NOT_SET_VALUE } from "./utils";
 
-class DObject {
-    constructor(cone, path, value) {
-        this.__cone = cone;
-        this.__path = path;
+class AbstractDObject {
 
-        if (value !== undefined) {
-            this.__object = value;
-        } else {
-            this.__object = cone.root.getIn(path);
-        }
-    }
-}
+    constructor(parent, index) {
+        this.__parent = parent;
+        this.__index = index;
 
-function fromJS(jsobj) {
-
-    const immutable = Immutable.fromJS(jsobj);
-    const cone = {
-        coneID: new ConeID(),
-        root: immutable
-    };
-
-    const obj = wrapObject(cone, [], immutable);
-    if (!obj) {
-        throw new InvalidDataError();
+        this.__referred = null;
+        this.__object = null;
     }
 
-    return obj;
 }
 
+function updateImmutable(target, index, updateFn) {
 
-// A function which returns a value representing an unique ID for a cone.
-function ConeID() {}
+    const newImmutable = updateFn(target.__object);
 
-function wrapObject(cone, path, immutableValue) {
-    if (Map.isMap(immutableValue)) {
+    if (target.__parent === null) {
+        target.__object = newImmutable;
 
-        return new DObjectDefaultProxy(cone, path, immutableValue);
-    } else if (List.isList(immutableValue)) {
+    } else {
 
-        return new DList(cone, path, immutableValue);
+        const newObject = new(target.constructor)(null, index);
+        newObject.__object = newImmutable;
+        const parent = setImmutable(target.__parent, target.__index, newObject);
+        newObject.__parent = parent;
+
+        return newObject;
+
+    }
+    return target;
+}
+
+function setImmutable(target, index, value) {
+
+    const newImmutable = target.__object.set(index, value);
+
+    if (target.__parent === null) {
+
+        target.__object = newImmutable;
+
+    } else {
+
+        const newObject = new(target.constructor)(null, index);
+        newObject.__object = newImmutable;
+        const parent = setImmutable(target.__parent, target.__index, newObject);
+        newObject.__parent = parent;
+
+        return newObject;
     }
 
-    return undefined;
+    return target;
 }
 
-function getImmutableObject(dobj) {
-    if (dobj.__object !== undefined) {
-        return dobj.__object;
-    }
-
-    const immutable = dobj.__cone.root.getIn(dobj.__path);
-    dobj.__object = immutable;
-    return immutable;
-}
-
-function getIndexedValue(dobj, index, notSetValue) {
-
-    const cone = dobj.__cone;
-    const path = dobj.__path;
-
-    const immutableObj = getImmutableObject(dobj);
-
-    let value = immutableObj.get(index);
-
-    if (value !== undefined) {
-        const valueObject = wrapObject(cone, [...path, index], value);
-        if (valueObject !== undefined) {
-            return valueObject;
-        }
-
-        return value;
-    }
-
-    if (notSetValue) {
-        return notSetValue;
-    }
-}
-
-function updateImmutable(dobj, func) {
-    const cone = dobj.__cone;
-
-    const immutable = getImmutableObject(dobj);
-    cone.root = cone.root.setIn(dobj.__path, func(immutable));
-
-    dobj.__object = undefined;
-}
 
 const DObjectProxyHandler = {
-    get: function(target, prop, receiver) {
-        if (prop in target || typeof prop === 'symbol' || prop === 'inspect') {
+    get: function(target, index, receiver) {
+
+        if (index in target || typeof index === 'symbol' || index === 'inspect') {
             return Reflect.get(...arguments);
         }
 
-        return getIndexedValue(target, prop);
+        let value = target.__object.get(index, NOT_SET_VALUE);
+        if (value !== NOT_SET_VALUE) {
+            return value;
+        }
     },
     set: function(target, index, value, receiver) {
+        if (index.startsWith('__')) {
+            return Reflect.set(...arguments);
+        }
 
-        updateImmutable(target, (immutable) => {
-            return immutable.set(index, value);
+        setImmutable(target, index, value);
+
+        return true;
+    },
+    deleteProperty(target, index) {
+
+        updateImmutable(target, index, (immutable) => {
+            return immutable.delete(index);
         });
 
         return true;
     }
 };
 
-class DObjectDefaultProxy extends DObject {
+class DList extends AbstractDObject {
 
-    constructor(cone, path) {
+}
 
-        super(cone, path);
+class DObject extends AbstractDObject {
+
+    constructor(parent, index) {
+        super(parent, index);
         return new Proxy(this, DObjectProxyHandler);
     }
 
     toString() {
-        let immutable = this.__cone.root.getIn(this.__path);
-        return `DObject ${immutable}`;
+        const items = [];
+        for (let [k, v] of this.__object.entries()) {
+            items.push(`"${k}": ${v}`);
+        }
+        return `DObject {${items.join(', ')}}`;
     }
 }
 
-const DListProxyHandler = {
-    get: function(target, idx, receiver) {
-        if (idx in target || typeof idx === 'symbol' || idx === 'inspect') {
-            return Reflect.get(...arguments);
-        }
-
-        if (typeof idx !== 'number') { // array index as string
-            idx = parseInt(idx);
-        }
-
-        return target.get(idx);
-    },
-    set: function(target, index, value, receiver) {
-        if (index.startsWith('__')) {
-            return Reflect.set(...arguments);
-        }
-        target.set(index, value);
-        return true; // required to indicate success
-    }    
-};
-
-class DList extends DObject {
-    constructor(cone, path) {
-
-        super(cone, path);
-        return new Proxy(this, DListProxyHandler);
-    }
-
-
-    get(index, notSetValue) {
-
-        return getIndexedValue(this, index, notSetValue);
-    }
-
-    [Symbol.iterator]() {
-        const immutableList = getImmutableObject(this);
-        const iterator = immutableList.__iterator(1); // 1 means Iterator.VALUES
-
-        return {
-            next: () => {
-                const nextValue = iterator.next();
-                // console.log(8888, nextValue);
-                return nextValue;
-            }
-        }
-    }
-
-    set(index, value) {
-        updateImmutable(this, (immutable) => {
-            return immutable.set(index, value);
-        });
-
-        return this;
-    }
-
-    remove(index) {
-        updateImmutable(this, (immutable) => {
-            return immutable.remove(index);
-        });
-
-        return this;
-    }
-
-    insert(index, value) {
-        updateImmutable(this, (immutable) => {
-            return immutable.insert(index, value);
-        });
-
-        return this;
-    }
-
-    clear() {
-        updateImmutable(this, (immutable) => {
-            return immutable.clear();
-        });
-
-        return this;
-    }
-
-    push( /*...values*/ ) {
-        updateImmutable(this, (immutable) => {
-            return immutable.push(...arguments);
-        });
-
-        return this;
-    }
-
-    pop() {
-        updateImmutable(this, (immutable) => {
-            return immutable.pop();
-        });
-        return this;
-    }
-
-    unshift( /*...values*/ ) {
-        updateImmutable(this, (immutable) => {
-            return immutable.unshift(...arguments);
-        });
-
-        return this;
-    }
-
-    shift() {
-        updateImmutable(this, (immutable) => {
-            return immutable.shift();
-        });
-
-        return this;
-    }
-}
 
 export {
-    fromJS,
-    DObject,
-    DList
+    DList,
+    DObject
 };

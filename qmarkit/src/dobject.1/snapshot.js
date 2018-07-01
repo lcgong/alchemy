@@ -7,12 +7,17 @@ function snapshot(dobj) {
         throw new TypeError('should be a object pf DObject or DList');
     }
 
-    return new Snapshot(dobj.__object);
+    let { coneID, root } = dobj.__cone;
+
+    return new Snapshot(coneID, root, [...dobj.__path])
 }
 
 class Snapshot {
 
-    constructor(immutable) {
+    constructor(coneID, root, path) {
+        this.__coneID = coneID;
+        this.__root = root;
+        this.__path = path;
         this.__object = null;
     }
 

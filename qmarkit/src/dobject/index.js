@@ -1,7 +1,16 @@
 /*jshint esversion: 6 */
 
 import { snapshot } from "./snapshot";
-import { fromJS, DObject, DList } from "./dobject";
+import { DObject, DList } from "./dobject";
+import { fromJS } from "./fromjs";
+import { keys } from "./utils";
 
-export default { fromJS, DObject, DList, snapshot };
-export { fromJS, DObject, DList, snapshot };
+export default {
+    DObject,
+    DList,
+    fromJS,
+    snapshot,
+    keys
+};
+
+// export { fromJS, DObject, DList, snapshot, keys };

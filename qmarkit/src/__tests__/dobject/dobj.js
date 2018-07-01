@@ -2,16 +2,6 @@
 
 import dobject from "../../dobject";
 
-let jsobj = {
-    a: {
-        b: {
-            c: 100,
-        },
-        x: {
-            y: 200,
-        }
-    }
-};
 
 test("dobject get/set case1", () => {
     let obj = dobject.fromJS({ a: 123 });
@@ -23,8 +13,21 @@ test("dobject get/set case1", () => {
 });
 
 
+test("dobject delete", () => {
+    let obj = dobject.fromJS({ a: 123, b: 456 });
+
+    expect(obj.b).toBe(456);
+    expect([...dobject.keys(obj)]).toEqual(['a', 'b']);
+
+    delete obj.b;
+
+    expect(obj.b).toBeUndefined();
+    expect([...dobject.keys(obj)]).toEqual(['a']);
+});
+
+
 test("dobject get and set", () => {
-    let obj = dobject.fromJS(jsobj = {
+    let obj = dobject.fromJS({
         a: {
             b: {
                 c: 100,
@@ -35,11 +38,20 @@ test("dobject get and set", () => {
         }
     });
 
+    console.log(obj.toString());
+
     expect(obj).toBeInstanceOf(dobject.DObject);
     expect(obj.a).toBeInstanceOf(dobject.DObject);
     expect(obj.a.b).toBeInstanceOf(dobject.DObject);
-
     expect(obj.a.b.c).toBe(100);
+
+
+    expect(obj.a.b.__parent).toBe(obj.a);
+    expect(obj.a.__parent).toBe(obj);
+
+    expect(obj.a.__index).toBe('a');
+    expect(obj.a.b.__index).toBe('b');
+
 
     obj.a.b.c = 101;
 
