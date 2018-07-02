@@ -18,52 +18,48 @@ function updateImmutable(target, updateFn) {
     newObject.__object = updateFn(target.__object);
 
     const root = target.__cone.root;
-    const path = target.__path;
-
-    const newRoot = _setImmutable(root, path, 0, newObject);
+    const newRoot = _setImmutable(root, target.__path, 0, newObject);
     root.__object = newRoot.__object;
+}
+
+function spawnDObject(dobj) {
+    return new(dobj.constructor)(dobj.__cone, dobj.__path);
 }
 
 function setImmutable(target, index, value) {
 
     const root = target.__cone.root;
-    const path = target.__path;
-
-    const newRoot = _setImmutable(root, [...path, index], 0, value);
+    const newRoot = _setImmutable(root, [...target.__path, index], 0, value);
     root.__object = newRoot.__object;
 }
 
-function _setImmutable(dobj, path, pathIdx, value) {
+function _setImmutable(dobj, path, level, value) {
 
     if (path.length === 0) {
         if (!(value instanceof AbstractDObject)) {
             throw new TypeError('value should be a dobject or dlist');
         }
 
-        const newobj = new(dobj.constructor)(dobj.__cone, dobj.__path);
+        const newobj = spawnDObject(dobj);
         newobj.__object = value.__object;
         return newobj;
     }
 
-    if (pathIdx < path.length - 1) {
+    if (level < path.length - 1) {
 
-        const thisobj = dobj.__object;
-        const thisIdx = path[pathIdx];
-        const newobj = new(dobj.constructor)(dobj.__cone, dobj.__path);
+        const newobj = spawnDObject(dobj);
 
-        const newValue = _setImmutable(
-            thisobj.get(thisIdx), path, pathIdx + 1, value);
+        const propValue = _setImmutable(
+            dobj.__object.get(path[level]), path, level + 1, value);
 
-        newobj.__object = thisobj.set(thisIdx, newValue);
+        newobj.__object = dobj.__object.set(path[level], propValue);
 
         return newobj;
     }
 
     // the last index of path
-    const index = path[pathIdx];
-
-    const newobj = new(dobj.constructor)(dobj.__cone, dobj.__path);
-    newobj.__object = dobj.__object.set(index, value);
+    const newobj = spawnDObject(dobj);
+    newobj.__object = dobj.__object.set(path[level], value);
 
     return newobj;
 }
