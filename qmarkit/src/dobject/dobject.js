@@ -1,35 +1,47 @@
 /*jshint esversion: 6 */
 
 import Immutable from "immutable/dist/immutable";
-import { isArrayObject, isPlainObject, NOT_SET_VALUE, isImmutable } from "./utils";
+
+import {
+    NOT_SET_VALUE,
+    isImmutable,
+    formatSignature,
+    parseSignature
+} from "./utils";
 
 class AbstractDObject {
 
-    constructor(cone, path) {
+    constructor(cone, signature) {
         this.__cone = cone;
-        this.__path = path;
+        this.__signature = signature;
         this.__object = null;
     }
 }
 
-function updateImmutable(target, updateFn) {
+function updateImmutable(dobj, updateFn) {
 
-    const newObject = new(target.constructor)(target.__cone, target.__path);
-    newObject.__object = updateFn(target.__object);
+    const newObject = spawnDObject(dobj);
+    newObject.__object = updateFn(dobj.__object);
 
-    const root = target.__cone.root;
-    const newRoot = _setImmutable(root, target.__path, 0, newObject);
+    const root = dobj.__cone.root;
+    const path = parseSignature(dobj.__signature);
+
+    const newRoot = _setImmutable(root, path, 0, newObject);
     root.__object = newRoot.__object;
 }
 
 function spawnDObject(dobj) {
-    return new(dobj.constructor)(dobj.__cone, dobj.__path);
+    return new(dobj.constructor)(dobj.__cone, dobj.__signature);
 }
 
-function setImmutable(target, index, value) {
+function setImmutable(dobj, index, value) {
 
-    const root = target.__cone.root;
-    const newRoot = _setImmutable(root, [...target.__path, index], 0, value);
+    const root = dobj.__cone.root;
+
+    const path = parseSignature(dobj.__signature);
+    path.push(index);
+
+    const newRoot = _setImmutable(root, path, 0, value);
     root.__object = newRoot.__object;
 }
 
@@ -72,7 +84,7 @@ function getImmutable(dobj, index, notSetValue) {
     const cone = dobj.__cone;
 
     let current = cone.root;
-    for (let idx of dobj.__path) {
+    for (let idx of parseSignature(dobj.__signature)) {
         current = current.__object.get(idx, notSetValue);
         if (current === notSetValue) {
             return notSetValue;

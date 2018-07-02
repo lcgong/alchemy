@@ -32,7 +32,7 @@ function keys(dobj) {
     return dobj.__object.keys();
 }
 
-function formatPath(path) {
+function formatSignature(path) {
 
     const iter = path[Symbol.iterator]();
 
@@ -62,6 +62,55 @@ function formatPath(path) {
     return parts.join('');
 }
 
+function parseSignature(signature) {
+    const len = signature.length;
+
+    let parts = [],
+        pos = 0,
+        ch = null,
+        bgn = 0;
+
+    while (pos < len) {
+        ch = signature.charAt(pos);
+
+        if (ch === '.') {
+            if (bgn < pos) {
+                parts.push(signature.slice(bgn, pos));
+            }
+            pos++;
+            bgn = pos;
+
+            continue;
+        }
+
+        if (ch === '[') {
+            if (bgn < pos) {
+                parts.push(signature.slice(bgn, pos));
+            }
+            pos++;
+            bgn = pos;
+
+            for (; pos < len && signature.charAt(pos) !== ']'; pos++);
+
+            if (bgn < pos) {
+                parts.push(parseInt(signature.slice(bgn, pos)));
+            }
+            pos++;
+            bgn = pos;
+
+            continue;
+        }
+
+        pos++;
+    }
+
+    if (bgn < pos) {
+        parts.push(signature.slice(bgn, pos));
+    }
+
+    return parts;
+}
+
 export {
     ImmutableMap,
     ImmutableList,
@@ -70,7 +119,8 @@ export {
     isImmutable,
     isImmutableMap,
     isImmutableList,
-    formatPath,
+    formatSignature,
+    parseSignature,
     keys,
     NOT_SET_VALUE,
     ConeID

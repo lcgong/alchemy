@@ -7,13 +7,15 @@ test("dobject fromJS", () => {
 
     obj = dobject.fromJS({ a: { b: { c: 100 } } });
 
+    console.log(obj.a.b);
+
     expect(obj).toBeInstanceOf(dobject.DObject);
     expect(obj.a).toBeInstanceOf(dobject.DObject);
     expect(obj.a.b).toBeInstanceOf(dobject.DObject);
     expect(obj.a.b.c).toEqual(100);
 
-    expect(obj.a.__path).toEqual(['a']);
-    expect(obj.a.b.__path).toEqual(['a', 'b']);
+    expect(obj.a.__signature).toBe('a');
+    expect(obj.a.b.__signature).toBe('a.b');
 
     let current;
 

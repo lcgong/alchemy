@@ -12,7 +12,8 @@ import {
     isArrayObject,
     isPlainObject,
     NOT_SET_VALUE,
-    ConeID
+    ConeID,
+    formatSignature
 } from "./utils";
 
 
@@ -40,7 +41,7 @@ function _fromJS(cone, path, index, value) {
             entries.push([k, _fromJS(cone, _path, k, v)]);
         }
 
-        const dobj = new DObject(cone, _path);
+        const dobj = new DObject(cone, formatSignature(_path));
         dobj.__object = ImmutableMap(entries);
         return dobj;
 
@@ -55,7 +56,7 @@ function _fromJS(cone, path, index, value) {
             listIdx += 1;
         }
 
-        const dobj = new DList(cone, _path);
+        const dobj = new DList(cone, formatSignature(_path));
         dobj.__object = ImmutableList(entries);
         return dobj;
 
