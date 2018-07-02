@@ -11,44 +11,51 @@ import {
     ImmutableList,
     isArrayObject,
     isPlainObject,
-    NOT_SET_VALUE
+    NOT_SET_VALUE,
+    ConeID
 } from "./utils";
 
 
 function fromJS(jsobj) {
-    return _fromJS([], null, null, jsobj);
+    const cone = {
+        coneId: new ConeID(),
+        root: null,
+    };
+
+    const obj = _fromJS(cone, [], null, jsobj);
+    obj.__cone.root = obj;
+
+    return obj;
 }
 
 
-function _fromJS(path, index, parent, value) {
+function _fromJS(cone, path, index, value) {
 
     if (isPlainObject(value)) {
 
-        const dobj = new DObject(parent, index);
-
         const _path = (index === null) ? [...path] : [...path, index];
-
 
         let entries = [];
         for (let [k, v] of Object.entries(value)) {
-            entries.push([k, _fromJS(_path, k, dobj, v)]);
+            entries.push([k, _fromJS(cone, _path, k, v)]);
         }
 
+        const dobj = new DObject(cone, _path);
         dobj.__object = ImmutableMap(entries);
         return dobj;
 
     } else if (isArrayObject(value)) {
 
-        const dobj = new DList(parent, index);
         const _path = (index === null) ? [...path] : [...path, index];
 
         let entries = [],
             listIdx = 0;
         for (let v of value) {
-            entries.push(_fromJS(_path, listIdx, dobj, v));
+            entries.push(_fromJS(cone, _path, listIdx, v));
             listIdx += 1;
         }
 
+        const dobj = new DList(cone, _path);
         dobj.__object = ImmutableList(entries);
         return dobj;
 

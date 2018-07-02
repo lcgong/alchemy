@@ -23,6 +23,11 @@ const ImmutableList = Immutable.List;
 // than itself, and nothing that could be provided externally.
 const NOT_SET_VALUE = {};
 
+
+// A function which returns a value representing an unique ID for a cone.
+function ConeID() {}
+
+
 function keys(dobj) {
     return dobj.__object.keys();
 }
@@ -67,5 +72,6 @@ export {
     isImmutableList,
     formatPath,
     keys,
-    NOT_SET_VALUE
+    NOT_SET_VALUE,
+    ConeID
 };
