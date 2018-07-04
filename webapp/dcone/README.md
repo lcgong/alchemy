@@ -1,2 +1,2 @@
-# dcone.js
-Domain cone for representational state 
+dcone.js - Domain Cone for representational state 
+
