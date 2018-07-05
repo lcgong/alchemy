@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+//
 
 import { snapshot } from "./snapshot";
 import { DObject, DList } from "./dobject";

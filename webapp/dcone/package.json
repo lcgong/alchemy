@@ -1,0 +1,41 @@
+{
+  "name": "dcone",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "repository": "https://github.com/lcgong/dcone.js.git",
+  "author": "Chenggong Lyu",
+  "license": "MIT",
+  "dependencies": {
+    "immutable": "^3.8.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.2.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-react-app": "^3.1.2",
+    "jest": "^23.3.0",
+    "regenerator-runtime": "^0.12.0"
+  },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/test/**/*.{js,jsx,mjs}",
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,mjs}",
+      "<rootDir>/src/**/?(*.)(spec|test).{js,jsx,mjs}"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx|mjs)$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs)$"
+    ],
+    "moduleFileExtensions": [
+      "web.js",
+      "mjs",
+      "js",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ]
+  }
+}

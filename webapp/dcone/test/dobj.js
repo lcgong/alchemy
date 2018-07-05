@@ -1,17 +1,17 @@
 /*jshint esversion: 6 */
 
-import dobject from "../../dobject";
+import dcone from "../src";
 
 test("dobject fromJS", () => {
     let obj;
 
-    obj = dobject.fromJS({ a: { b: { c: 100 } } });
+    obj = dcone.fromJS({ a: { b: { c: 100 } } });
 
     console.log(obj.a.b);
 
-    expect(obj).toBeInstanceOf(dobject.DObject);
-    expect(obj.a).toBeInstanceOf(dobject.DObject);
-    expect(obj.a.b).toBeInstanceOf(dobject.DObject);
+    expect(obj).toBeInstanceOf(dcone.DObject);
+    expect(obj.a).toBeInstanceOf(dcone.DObject);
+    expect(obj.a.b).toBeInstanceOf(dcone.DObject);
     expect(obj.a.b.c).toEqual(100);
 
     expect(obj.a.__signature).toBe('a');
@@ -34,13 +34,13 @@ test("dobject fromJS", () => {
 test("dobject set", () => {
     let obj;
 
-    obj = dobject.fromJS({ a: 1 });
+    obj = dcone.fromJS({ a: 1 });
     expect(obj.a).toBe(1);
     obj.a = 10;
     expect(obj.a).toBe(10);
 
 
-    obj = dobject.fromJS({
+    obj = dcone.fromJS({
         a: {
             b: {
                 c: {
@@ -61,15 +61,15 @@ test("dobject set", () => {
 
 
 test("dobject delete", () => {
-    let obj = dobject.fromJS({ a: 123, b: 456 });
+    let obj = dcone.fromJS({ a: 123, b: 456 });
 
     expect(obj.b).toBe(456);
-    expect([...dobject.keys(obj)]).toEqual(['a', 'b']);
+    expect([...dcone.keys(obj)]).toEqual(['a', 'b']);
 
     delete obj.b;
     expect(obj.b).toBeUndefined();
 
     expect(obj.b).toBeUndefined();
-    expect([...dobject.keys(obj)]).toEqual(['a']);
+    expect([...dcone.keys(obj)]).toEqual(['a']);
 });
 

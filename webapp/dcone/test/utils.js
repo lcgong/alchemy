@@ -1,9 +1,5 @@
-/*jshint esversion: 6 */
-
-
 import Immutable from "immutable/dist/immutable";
-import { formatSignature, parseSignature } from "../../dobject/utils";
-
+import { formatSignature, parseSignature } from "../src/utils";
 
 test("format path", () => {
 
