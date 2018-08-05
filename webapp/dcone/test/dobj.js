@@ -3,73 +3,85 @@
 import dcone from "../src";
 
 test("dobject fromJS", () => {
-    let obj;
+    let dobj;
 
-    obj = dcone.fromJS({ a: { b: { c: 100 } } });
+    dobj = dcone.fromJS({ a: { b: { c: 100, d: ['x', 'y'] } } });
 
-    console.log(obj.a.b);
 
-    expect(obj).toBeInstanceOf(dcone.DObject);
-    expect(obj.a).toBeInstanceOf(dcone.DObject);
-    expect(obj.a.b).toBeInstanceOf(dcone.DObject);
-    expect(obj.a.b.c).toEqual(100);
+    let dobj2 = dcone.branch(dobj);
 
-    expect(obj.a.__signature).toBe('a');
-    expect(obj.a.b.__signature).toBe('a.b');
+    expect(dobj.a.b.c).toBe(100);
+    dobj.a.b.c = 200;
+    expect(dobj.a.b.c).toBe(200);
 
-    let current;
 
-    current = obj.__cone.root.__object;
-    expect(obj.__object).toBe(current);
+    console.log(dobj.a.b);
+    console.log(dobj2.a.b);
+    
 
-    current = current.get('a').__object;
-    expect(obj.a.__object).toBe(current);
 
-    current = current.get('b').__object;
-    expect(obj.a.b.__object).toBe(current);
-    // console.log(current);
+    return;
+
+    //     expect(obj).toBeInstanceOf(dcone.DObject);
+    //     expect(obj.a).toBeInstanceOf(dcone.DObject);
+    //     expect(obj.a.b).toBeInstanceOf(dcone.DObject);
+    //     expect(obj.a.b.c).toEqual(100);
+
+    //     expect(obj.a.__signature).toBe('a');
+    //     expect(obj.a.b.__signature).toBe('a.b');
+
+    //     let current;
+
+    //     current = obj.__cone.root.__object;
+    //     expect(obj.__object).toBe(current);
+
+    //     current = current.get('a').__object;
+    //     expect(obj.a.__object).toBe(current);
+
+    //     current = current.get('b').__object;
+    //     expect(obj.a.b.__object).toBe(current);
+    //     // console.log(current);
 });
 
 
-test("dobject set", () => {
-    let obj;
+// test("dobject set", () => {
+//     let obj;
 
-    obj = dcone.fromJS({ a: 1 });
-    expect(obj.a).toBe(1);
-    obj.a = 10;
-    expect(obj.a).toBe(10);
-
-
-    obj = dcone.fromJS({
-        a: {
-            b: {
-                c: {
-                    d: 1,
-                    m: 100
-                },
-                z: 10
-            },
-            y: 20
-        },
-        x: 30
-    });
-    expect(obj.a.b.c.d).toBe(1);
-    obj.a.b.c.d = 10;
-    expect(obj.a.b.c.d).toBe(10);
-    // console.log(obj);
-});
+//     obj = dcone.fromJS({ a: 1 });
+//     expect(obj.a).toBe(1);
+//     obj.a = 10;
+//     expect(obj.a).toBe(10);
 
 
-test("dobject delete", () => {
-    let obj = dcone.fromJS({ a: 123, b: 456 });
+//     obj = dcone.fromJS({
+//         a: {
+//             b: {
+//                 c: {
+//                     d: 1,
+//                     m: 100
+//                 },
+//                 z: 10
+//             },
+//             y: 20
+//         },
+//         x: 30
+//     });
+//     expect(obj.a.b.c.d).toBe(1);
+//     obj.a.b.c.d = 10;
+//     expect(obj.a.b.c.d).toBe(10);
+//     // console.log(obj);
+// });
 
-    expect(obj.b).toBe(456);
-    expect([...dcone.keys(obj)]).toEqual(['a', 'b']);
 
-    delete obj.b;
-    expect(obj.b).toBeUndefined();
+// test("dobject delete", () => {
+//     let obj = dcone.fromJS({ a: 123, b: 456 });
 
-    expect(obj.b).toBeUndefined();
-    expect([...dcone.keys(obj)]).toEqual(['a']);
-});
+//     expect(obj.b).toBe(456);
+//     expect([...dcone.keys(obj)]).toEqual(['a', 'b']);
 
+//     delete obj.b;
+//     expect(obj.b).toBeUndefined();
+
+//     expect(obj.b).toBeUndefined();
+//     expect([...dcone.keys(obj)]).toEqual(['a']);
+// });

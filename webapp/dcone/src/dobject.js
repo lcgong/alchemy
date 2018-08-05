@@ -6,98 +6,27 @@ import {
     NOT_SET_VALUE,
     isImmutable,
     formatSignature,
+    isImmutableMap,
+    isImmutableList,
     parseSignature
 } from "./utils";
-
-class AbstractDObject {
-
-    constructor(cone, signature) {
-        this.__cone = cone;
-        this.__signature = signature;
-        this.__object = null;
-    }
-}
-
-function updateImmutable(dobj, updateFn) {
-
-    const newObject = spawnDObject(dobj);
-    newObject.__object = updateFn(dobj.__object);
-
-    const root = dobj.__cone.root;
-    const path = parseSignature(dobj.__signature);
-
-    const newRoot = _setImmutable(root, path, 0, newObject);
-    root.__object = newRoot.__object;
-}
-
-function spawnDObject(dobj) {
-    return new(dobj.constructor)(dobj.__cone, dobj.__signature);
-}
-
-function setImmutable(dobj, index, value) {
-
-    const root = dobj.__cone.root;
-
-    const path = parseSignature(dobj.__signature);
-    path.push(index);
-
-    const newRoot = _setImmutable(root, path, 0, value);
-    root.__object = newRoot.__object;
-}
-
-function _setImmutable(dobj, path, level, value) {
-
-    if (path.length === 0) {
-        if (!(value instanceof AbstractDObject)) {
-            throw new TypeError('value should be a dobject or dlist');
-        }
-
-        const newobj = spawnDObject(dobj);
-        newobj.__object = value.__object;
-        return newobj;
-    }
-
-    if (level < path.length - 1) {
-
-        const newobj = spawnDObject(dobj);
-
-        const propValue = _setImmutable(
-            dobj.__object.get(path[level]), path, level + 1, value);
-
-        newobj.__object = dobj.__object.set(path[level], propValue);
-
-        return newobj;
-    }
-
-    // the last index of path
-    const newobj = spawnDObject(dobj);
-    newobj.__object = dobj.__object.set(path[level], value);
-
-    return newobj;
-}
+import { throws } from "assert";
 
 
-function getImmutable(dobj, index, notSetValue) {
+import { DNode, getValueInNode, setValueInCone } from './cone';
 
-    console.assert(dobj instanceof AbstractDObject);
 
-    const cone = dobj.__cone;
+function changedEventHandler(cone, newroot, changes) {
 
-    let current = cone.root;
-    for (let idx of parseSignature(dobj.__signature)) {
-        current = current.__object.get(idx, notSetValue);
-        if (current === notSetValue) {
-            return notSetValue;
+    const subjects = cone.changedSubjects;
+
+    for (let changed of changes) { // fire changed event
+        let subject = subjects[changed.obpath];
+        if (subject) {
+
+            subject.next(changed);
         }
     }
-
-    let value = current.__object.get(index, notSetValue);
-
-    if (value === notSetValue) {
-        return notSetValue;
-    }
-
-    return value;
 }
 
 const DObjectProxyHandler = {
@@ -106,20 +35,16 @@ const DObjectProxyHandler = {
             return Reflect.get(...arguments);
         }
 
-        let value = getImmutable(target, index, NOT_SET_VALUE);
-        if (value !== NOT_SET_VALUE) {
-            return value;
-        }
-
-        return undefined;
-
+        const value = getNode(target).object.get(index);
+        return decorateValue(target.__cone, value);
     },
     set: function(target, index, value, receiver) {
         if (index.startsWith('__')) {
             return Reflect.set(...arguments);
         }
 
-        setImmutable(target, index, value);
+        const obpath = `${target.__node.obpath}.${index}`;
+        setValueInCone(target.__cone, obpath, value, );
 
         return true;
     },
@@ -133,28 +58,109 @@ const DObjectProxyHandler = {
     }
 };
 
-class DList extends AbstractDObject {
+function branch(dobj) {
 
+    const cone = dobj.__cone.branch();
+    const root = cone.root;
+
+    return createDObject(cone, root, root);
+}
+
+function isIdenticalBy(target, whole) {
+
+    let wholeNode = getNode(whole);
+    let targetNode = getNode(target);
+
+    return isIdenticalNodeBy()
+
+    if (wholeNode.obpath.indexOf(targetNode.obpath) === 0) {
+        // the obpath of target is the prefix of whole's
+
+        let relPath = targetNode.obpath.slice(wholeNode.obpath.length);
+
+
+    }
+
+    return false;
+}
+
+// is identical with
+
+function getNode(dobj) {
+
+    const root = dobj.__cone.root;
+
+    if (dobj.__root !== root) {
+        // 如果快照的根与cone的根的不一致，说明数据已经发生变更，重新更新访问对象缓存的对象
+
+        let node = getValueInNode(root, dobj.__node.obpath);
+        console.assert(node instanceof DNode);
+
+        dobj.__node = node;
+        dobj.__root = root;
+    }
+
+    return dobj.__node;
+}
+
+function decorateValue(cone, value) {
+    if (value instanceof DNode) {
+        return createDObject(cone, cone.root, value);
+    }
+
+    return value;
+}
+
+function createDObject(cone, root, node) {
+    const object = node.object;
+    if (isImmutableMap(object)) {
+        return new DObject(cone, root, node);
+    } else if (isImmutableList(object)) {
+        return new DList(cone, root, node);
+    }
+}
+
+class AbstractDObject {
+
+    constructor(cone, root, node) {
+
+        this.__cone = cone;
+        this.__node = node;
+        this.__root = root;
+    }
 }
 
 class DObject extends AbstractDObject {
 
-    constructor(parent, index) {
-        super(parent, index);
+    constructor(cone, root, node) {
+
+        super(cone, root, node);
         return new Proxy(this, DObjectProxyHandler);
     }
 
-    toString() {
-        const items = [];
-        for (let [k, v] of this.__object.entries()) {
-            items.push(`"${k}": ${v}`);
-        }
-        return `DObject {${items.join(', ')}}`;
+    // toString() {
+    //     const items = [];
+    //     for (let [k, v] of this.__object.entries()) {
+    //         items.push(`"${k}": ${v}`);
+    //     }
+    //     return `DObject {${items.join(', ')}}`;
+    // }
+}
+
+class DList extends AbstractDObject {
+
+    constructor(cone, root, node) {
+
+        super(cone, root, node);
+        return new Proxy(this, DObjectProxyHandler);
     }
+
 }
 
 
 export {
     DList,
-    DObject
+    DObject,
+    branch,
+    createDObject
 };

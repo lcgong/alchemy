@@ -6,7 +6,8 @@
   "author": "Chenggong Lyu",
   "license": "MIT",
   "dependencies": {
-    "immutable": "^3.8.2"
+    "immutable": "^3.8.2",
+    "rxjs": "^6.2.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

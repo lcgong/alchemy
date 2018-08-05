@@ -1,83 +1,62 @@
-/*jshint esversion: 6 */
-
 
 import {
-    DObject,
-    DList
+    createDObject
 } from "./dobject";
+
+import { Cone } from "../src/cone";
 
 import {
     ImmutableMap,
     ImmutableList,
     isArrayObject,
     isPlainObject,
-    NOT_SET_VALUE,
-    ConeID,
-    formatSignature
 } from "./utils";
+
+import {
+    DNode,
+} from "./cone";
 
 
 function fromJS(jsobj) {
-    const cone = {
-        coneId: new ConeID(),
-        root: null,
-    };
 
-    const obj = _fromJS(cone, [], null, jsobj);
-    obj.__cone.root = obj;
+    const root = buildNodeFromJS(jsobj);
 
-    return obj;
+    return createDObject(new Cone(root), root, root);
 }
 
+function buildNodeFromJS(jsobj) {
+    return _fromJS('', jsobj)
+}
 
-function _fromJS(cone, path, index, value) {
+function _fromJS(apath, value) {
 
     if (isPlainObject(value)) {
 
-        const _path = (index === null) ? [...path] : [...path, index];
-
         let entries = [];
         for (let [k, v] of Object.entries(value)) {
-            entries.push([k, _fromJS(cone, _path, k, v)]);
+
+            entries.push([k, _fromJS(apath + '.' + k, v)]);
         }
 
-        const dobj = new DObject(cone, formatSignature(_path));
-        dobj.__object = ImmutableMap(entries);
-        return dobj;
+        return new DNode(apath, ImmutableMap(entries));
 
     } else if (isArrayObject(value)) {
 
-        const _path = (index === null) ? [...path] : [...path, index];
-
-        let entries = [],
-            listIdx = 0;
+        let entries = [];
+        let idx = 0;
         for (let v of value) {
-            entries.push(_fromJS(cone, _path, listIdx, v));
-            listIdx += 1;
+            entries.push(_fromJS(apath + '#' + idx, v));
+            idx += 1;
         }
 
-        const dobj = new DList(cone, formatSignature(_path));
-        dobj.__object = ImmutableList(entries);
-        return dobj;
-
-
-        // } else if (value instanceof DReferentProxiedObject) {
-
-        //     return new DReferent(value.__path, value.__referent.__real);
-
-        // } else if (value instanceof DObject) {
-
-        //     if (dobj.__cone.coneID != value.__cone.coneID) {
-        //         // came from different cone. use the immutable object.
-        //         return getImmutableObject(value);
-        //     } else {
-        //         return new DReferent(value.__path, value.__path);
-        //     }
-
+        return new DNode(apath, ImmutableList(entries));
     } else {
         return value;
     }
 }
 
 
-export { fromJS };
+export {
+    fromJS,
+    buildNodeFromJS
+};

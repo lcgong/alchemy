@@ -1,7 +1,7 @@
 //
 
 import { snapshot } from "./snapshot";
-import { DObject, DList } from "./dobject";
+import { DObject, DList, branch } from "./dobject";
 import { fromJS } from "./fromjs";
 import { keys } from "./utils";
 
@@ -10,6 +10,7 @@ export default {
     DList,
     fromJS,
     snapshot,
+    branch,
     keys
 };
 
