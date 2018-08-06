@@ -1,20 +1,6 @@
-import {
-    forwardCursor
-} from "./path";
-
-import {
-    ImmutableMap,
-    ImmutableList,
-    isArrayObject,
-    isPlainObject,
-    isImmutableMap,
-    isImmutableList,
-    NOT_SET_VALUE,
-    ConeID,
-    formatSignature
-} from "./utils";
-
 import { Subject } from "rxjs";
+import { forwardCursor } from "./path";
+import { isImmutableMap, isImmutableList } from "./utils";
 
 class DNode {
     constructor(obpath, object) {
@@ -70,74 +56,6 @@ class DNode {
         return `${obj}`;
     }
 }
-
-
-/**
- * 按照obpath设置值.
- * 
- * @param {DNode} node 
- * @param {*} cursor 
- * @param {*} value 
- * @param {*} changed 
- */
-function _setValue(node, cursor, value) {
-
-    let stack = [];
-    let name;
-
-    while (true) {
-
-        if (cursor === undefined) {
-            break;
-        }
-
-        name = cursor.name;
-        // console.log(1111, name, node);
-
-        stack.push([node, name]);
-
-        node = node.object.get(name);
-
-        cursor = cursor.next();
-    }
-
-    let newnode, oldnode;
-
-    // 末端节点
-    let idx = stack.length - 1;
-    [oldnode, name] = stack[idx];
-
-
-    let oldobj = oldnode.object;
-    let newobj = oldobj.set(name, value);
-    if (newobj === oldobj) {
-        return; // no change
-    }
-
-    // 对象的值已经发生改变
-
-    newnode = new DNode(oldnode.obpath, newobj);
-    oldnode.successor = newnode;
-
-    let change = { node: newnode };
-
-    idx -= 1;
-
-    while (idx >= 0) {
-        [oldnode, name] = stack[idx];
-
-        newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new DNode(oldnode.obpath, newobj);
-        oldnode.successor = newnode;
-
-        idx -= 1;
-    }
-
-    change.root = newnode;
-
-    return change;
-}
-
 
 /**
  * 
@@ -237,6 +155,72 @@ class Cone {
     makeChangeMessage(change) {
         return change;
     }
+}
+
+
+/**
+ * 按照obpath设置值.
+ * 
+ * @param {DNode} node 
+ * @param {*} cursor 
+ * @param {*} value 
+ * @param {*} changed 
+ */
+function _setValue(node, cursor, value) {
+
+    let stack = [];
+    let name;
+
+    while (true) {
+
+        if (cursor === undefined) {
+            break;
+        }
+
+        name = cursor.name;
+
+        stack.push([node, name]);
+
+        node = node.object.get(name);
+
+        cursor = cursor.next();
+    }
+
+    let newnode, oldnode;
+
+    // 末端节点
+    let idx = stack.length - 1;
+    [oldnode, name] = stack[idx];
+
+
+    let oldobj = oldnode.object;
+    let newobj = oldobj.set(name, value);
+    if (newobj === oldobj) {
+        return; // no change
+    }
+
+    // 对象的值已经发生改变
+
+    newnode = new DNode(oldnode.obpath, newobj);
+    oldnode.successor = newnode;
+
+    let change = { node: newnode };
+
+    idx -= 1;
+
+    while (idx >= 0) {
+        [oldnode, name] = stack[idx];
+
+        newobj = oldnode.object.set(name, newnode); // set new child node
+        newnode = new DNode(oldnode.obpath, newobj);
+        oldnode.successor = newnode;
+
+        idx -= 1;
+    }
+
+    change.root = newnode;
+
+    return change;
 }
 
 
