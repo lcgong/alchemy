@@ -59,6 +59,10 @@
 
  }
 
+function forwardCursor(obpath) {
+    return new PathForwardCursor(obpath).next()
+}
+
 function forwardName(path, name) {
     return (path.length === 0) ? name : path + '.' + name;
 }
@@ -240,5 +244,6 @@ function forwardIndex(path, index) {
 // };
 
 export {
-    PathForwardCursor
+    PathForwardCursor,
+    forwardCursor
 };
