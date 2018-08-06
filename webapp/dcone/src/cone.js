@@ -72,7 +72,6 @@ class DNode {
 }
 
 
-
 /**
  * 按照obpath设置值.
  * 
@@ -81,31 +80,64 @@ class DNode {
  * @param {*} value 
  * @param {*} changed 
  */
-function _setValue(node, cursor, value, change) {
+function _setValue(node, cursor, value) {
 
-    const obj = node.object;
-    const name = cursor.name;
+    let stack = [];
+    let name;
 
-    const next = cursor.next();
-    if (next !== undefined) {
-        value = _setValue(obj.get(name), next, value, change);
+    while (true) {
+
+        if (cursor === undefined) {
+            break;
+        }
+
+        name = cursor.name;
+        // console.log(1111, name, node);
+
+        stack.push([node, name]);
+
+        node = node.object.get(name);
+
+        cursor = cursor.next();
     }
 
-    const newobj = obj.set(name, value);
-    if (newobj === obj) { // 设置的值和原来的是同一个，因此，节点也保持原来的那个
-        return node;
+    let newnode, oldnode;
+
+    // 末端节点
+    let idx = stack.length - 1;
+    [oldnode, name] = stack[idx];
+
+
+    let oldobj = oldnode.object;
+    let newobj = oldobj.set(name, value);
+    if (newobj === oldobj) {
+        return; // no change
     }
 
     // 对象的值已经发生改变
-    let newnode = new DNode(node.obpath, newobj);
-    node.successor = newnode;
 
-    if (change.node === undefined) { // 仅标记最末端实质性发生变更的节点
-        change.node = newnode;
+    newnode = new DNode(oldnode.obpath, newobj);
+    oldnode.successor = newnode;
+
+    let change = { node: newnode };
+
+    idx -= 1;
+
+    while (idx >= 0) {
+        [oldnode, name] = stack[idx];
+
+        newobj = oldnode.object.set(name, newnode); // set new child node
+        newnode = new DNode(oldnode.obpath, newobj);
+        oldnode.successor = newnode;
+
+        idx -= 1;
     }
 
-    return newnode;
+    change.root = newnode;
+
+    return change;
 }
+
 
 /**
  * 
@@ -116,7 +148,6 @@ class Cone {
         this.root = root;
         this._subjects = {};
     }
-
 
 
     /**
@@ -130,7 +161,7 @@ class Cone {
         for (let cur = forwardCursor(obpath); cur !== undefined; cur = cur.next()) {
             node = node.object.get(cur.name);
         }
-    
+
         return node;
     }
 
@@ -140,20 +171,15 @@ class Cone {
      * @param {*} value 
      */
     setValue(obpath, value) {
-    
-        let change = {}; // root, node
-    
-        const oldRoot = this.root;
-    
-        let newRoot = _setValue(this.root, forwardCursor(obpath), value, change);
-    
-        if (oldRoot === newRoot) {
+
+        // change: {node, root}, the source node of change, the new root    
+        let change = _setValue(this.root, forwardCursor(obpath), value);
+        if (change === undefined) {
             return;
         }
-    
-        this.root = newRoot;
-        change.root = newRoot;
-    
+
+        this.root = change.root;
+
         return change;
     }
 
@@ -164,7 +190,7 @@ class Cone {
         const cone = new Cone(this.root);
         return cone;
     }
-    
+
     /**
      * 
      */
@@ -194,13 +220,13 @@ class Cone {
         }
 
         const pathsToNotify = [''];
-        for (let cur = forwardCursor(change.node.obpath); cur !== undefined; cur=cur.next()) {
+        for (let cur = forwardCursor(change.node.obpath); cur !== undefined; cur = cur.next()) {
             pathsToNotify.push(cur.path);
         }
 
         const subjects = this._subjects;
 
-        for (let idx = pathsToNotify.length -1; idx>=0; idx -= 1) {
+        for (let idx = pathsToNotify.length - 1; idx >= 0; idx -= 1) {
             let subject = subjects[pathsToNotify[idx]];
             if (subject) {
                 subject.next(this.makeChangeMessage(change));

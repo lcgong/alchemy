@@ -1,12 +1,27 @@
-import {
-    Cone,
-    getValueInNode,
-    setValueInCone
-} from "../src/cone";
+import { Cone } from "../src/cone";
 import { buildNodeFromJS } from "../src/fromjs";
 
 
-import { catchError } from 'rxjs/operators';
+test("setValue", () => {
+    let cone, change, cone1, cone2;
+
+    cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+    cone1 = cone.branch();
+
+    change = cone.setValue('.a.b.c', 120);
+    cone2 = cone.branch();
+
+    expect(cone1.getValue('.a.b.c')).toBe(100);
+    expect(cone2.getValue('.a.b.c')).toBe(120);
+
+    expect(cone1.getValue('.a.b').successor).toBe(cone2.getValue('.a.b'));
+    expect(cone1.getValue('.a').successor).toBe(cone2.getValue('.a'));
+    expect(cone1.getValue('').successor).toBe(cone2.getValue(''));
+
+    expect(change.node).toBe(cone2.getValue('.a.b'));
+    expect(change.root).toBe(cone2.getValue(''));
+
+});
 
 test("cone fromJS", () => {
     let root1, root2, root3;
@@ -23,6 +38,7 @@ test("cone fromJS", () => {
     let change;
 
     cone1 = new Cone(root1);
+
 
     expect(cone1.getValue('')).toBe(root1);
     expect(cone1.getValue('.a.b.c')).toBe(100);
@@ -120,4 +136,3 @@ test("changed event", (done) => { // 使用jest的异步测试，利用jest的do
 
     setTimeout(() => { done.fail('no change event'); }, 500);
 });
-
