@@ -37,7 +37,7 @@ class DNode {
             oldNode.successors = [this];
         } else {
             oldNode.successors.push(this);
-        }    
+        }
     }
 
     toString() {
@@ -100,6 +100,17 @@ class Cone {
 
         // change: {node, root}, the source node of change, the new root    
         let change = _setValue(this.root, forwardCursor(path), value);
+        if (change === undefined) {
+            return;
+        }
+
+        this.root = change.root;
+
+        return change;
+    }
+
+    delete(path) {
+        let change = _delete(this.root, path)
         if (change === undefined) {
             return;
         }
@@ -235,6 +246,66 @@ function _setValue(node, cursor, value) {
     change.root = newnode;
 
     return change;
+}
+
+
+function _delete(node, path) {
+
+    let stack = [];
+
+    for (let cur = forwardCursor(path); cur != undefined; cur = cur.next()) {
+
+        const name = cur.name;
+
+        stack.push([node, name]);
+
+        node = node.object.get(name);
+    }
+
+    let name;
+
+    let newnode, oldnode;
+
+    // 末端节点
+    let idx = stack.length - 1;
+    [oldnode, name] = stack[idx];
+
+
+    let oldobj = oldnode.object;
+
+    let deleted = oldobj.get(name);
+    let newobj = oldobj.delete(name);
+    if (newobj === oldobj) {
+        return; // no change
+    }
+
+    if (deleted instanceof DNode) { // 如果删除属性的值是DNode，以[]表示已经删除
+        deleted.successors = [];
+    }
+
+    // 对象的值已经发生改变
+
+    newnode = new DNode(oldnode.path, newobj);
+    newnode.succeed(oldnode);
+
+    let change = { node: undefined };
+
+    idx -= 1;
+
+    while (idx >= 0) {
+        [oldnode, name] = stack[idx];
+
+        newobj = oldnode.object.set(name, newnode); // set new child node
+        newnode = new DNode(oldnode.path, newobj);
+        newnode.succeed(oldnode);
+
+        idx -= 1;
+    }
+
+    change.root = newnode;
+
+    return change;
+
 }
 
 

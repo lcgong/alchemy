@@ -23,6 +23,34 @@ test("setValue", () => {
 
 });
 
+test("delete", () => {
+    let cone, change, cone1, cone2, cone3;
+
+    cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+    cone1 = cone.branch();
+
+    change = cone.delete('.a.b.c');
+    cone2 = cone.branch();
+
+    expect(cone1.getValue('.a.b').successors[0]).toBe(cone2.getValue('.a.b'));
+    expect(cone1.getValue('.a').successors[0]).toBe(cone2.getValue('.a'));
+    expect(cone1.getValue('').successors[0]).toBe(cone2.getValue(''));
+
+    change = cone.delete('.a.b');
+    expect(change.node).toBeUndefined();
+
+    cone3 = cone.branch();
+
+    change = cone.delete('.a.b');
+    console.log(change);
+
+    expect(cone3.getValue('.a.b')).toBeUndefined();
+
+    expect(cone2.getValue('.a').successors[0]).toBe(cone3.getValue('.a'));
+    expect(cone2.getValue('.a.b').successors).toEqual([]);
+
+});
+
 test("cone fromJS", () => {
     let root1, root2, root3;
     let node;
