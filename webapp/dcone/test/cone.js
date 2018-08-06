@@ -14,9 +14,9 @@ test("setValue", () => {
     expect(cone1.getValue('.a.b.c')).toBe(100);
     expect(cone2.getValue('.a.b.c')).toBe(120);
 
-    expect(cone1.getValue('.a.b').successor).toBe(cone2.getValue('.a.b'));
-    expect(cone1.getValue('.a').successor).toBe(cone2.getValue('.a'));
-    expect(cone1.getValue('').successor).toBe(cone2.getValue(''));
+    expect(cone1.getValue('.a.b').successors[0]).toBe(cone2.getValue('.a.b'));
+    expect(cone1.getValue('.a').successors[0]).toBe(cone2.getValue('.a'));
+    expect(cone1.getValue('').successors[0]).toBe(cone2.getValue(''));
 
     expect(change.node).toBe(cone2.getValue('.a.b'));
     expect(change.root).toBe(cone2.getValue(''));
@@ -114,7 +114,7 @@ test("changed event", (done) => { // 使用jest的异步测试，利用jest的do
 
     let subscription = cone.subject().subscribe((chg) => {
         try {
-            expect(chg.node.obpath).toBe('.a.b');
+            expect(chg.node.path).toBe('.a.b');
 
             expect(cone.root).not.toBe(cone1.root);
 

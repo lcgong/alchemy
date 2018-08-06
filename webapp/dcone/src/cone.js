@@ -3,21 +3,21 @@ import { forwardCursor } from "./path";
 import { isImmutableMap, isImmutableList } from "./utils";
 
 class DNode {
-    constructor(obpath, object) {
-        this.obpath = obpath;
+    constructor(path, object) {
+        this.path = path;
         this.object = object;
-        this.successor = undefined; // 如果该对象存在继承者，说明其已经陈旧 
+        // successors
     }
 
     isIdenticalIn(node) {
         // console.log()
-        if (this.obpath.indexOf(node.obpath) !== 0) {
+        if (this.path.indexOf(node.path) !== 0) {
             return false;
         }
 
-        // the obpath pf branch's node should be the prefix of this node
+        // the path pf branch's node should be the prefix of this node
 
-        const relpath = this.obpath.slice(node.obpath.length);
+        const relpath = this.path.slice(node.path.length);
 
         if (relpath.length > 0) {
             // find forwardly the same opath node in branch node    
@@ -30,6 +30,14 @@ class DNode {
         }
 
         return this.object === node.object;
+    }
+
+    succeed(oldNode) {
+        if (oldNode.successors === undefined) {
+            oldNode.successors = [this];
+        } else {
+            oldNode.successors.push(this);
+        }    
     }
 
     toString() {
@@ -69,14 +77,14 @@ class Cone {
 
 
     /**
-     * 根据obpath取值.
+     * 根据path取值.
      * @param {*} root 
-     * @param {*} obpath 
+     * @param {*} path 
      */
-    getValue(obpath) {
+    getValue(path) {
 
         let node = this.root;
-        for (let cur = forwardCursor(obpath); cur !== undefined; cur = cur.next()) {
+        for (let cur = forwardCursor(path); cur !== undefined; cur = cur.next()) {
             node = node.object.get(cur.name);
         }
 
@@ -84,14 +92,14 @@ class Cone {
     }
 
     /**
-     * 按照obpath设置值.
-     * @param {*} obpath 
+     * 按照path设置值.
+     * @param {*} path 
      * @param {*} value 
      */
-    setValue(obpath, value) {
+    setValue(path, value) {
 
         // change: {node, root}, the source node of change, the new root    
-        let change = _setValue(this.root, forwardCursor(obpath), value);
+        let change = _setValue(this.root, forwardCursor(path), value);
         if (change === undefined) {
             return;
         }
@@ -119,15 +127,15 @@ class Cone {
     }
 
     // object
-    subject(obpath) {
-        if (obpath === undefined) {
-            obpath = '';
+    subject(path) {
+        if (path === undefined) {
+            path = '';
         }
 
-        let subject = this._subjects[obpath];
+        let subject = this._subjects[path];
         if (subject === undefined) {
             subject = new Subject();
-            this._subjects[obpath] = subject;
+            this._subjects[path] = subject;
         }
         return subject;
     }
@@ -138,7 +146,7 @@ class Cone {
         }
 
         const pathsToNotify = [''];
-        for (let cur = forwardCursor(change.node.obpath); cur !== undefined; cur = cur.next()) {
+        for (let cur = forwardCursor(change.node.path); cur !== undefined; cur = cur.next()) {
             pathsToNotify.push(cur.path);
         }
 
@@ -158,8 +166,14 @@ class Cone {
 }
 
 
+function merge(target, path, node) {
+
+    node.keys();
+
+}
+
 /**
- * 按照obpath设置值.
+ * 按照path设置值.
  * 
  * @param {DNode} node 
  * @param {*} cursor 
@@ -201,8 +215,8 @@ function _setValue(node, cursor, value) {
 
     // 对象的值已经发生改变
 
-    newnode = new DNode(oldnode.obpath, newobj);
-    oldnode.successor = newnode;
+    newnode = new DNode(oldnode.path, newobj);
+    newnode.succeed(oldnode);
 
     let change = { node: newnode };
 
@@ -212,8 +226,8 @@ function _setValue(node, cursor, value) {
         [oldnode, name] = stack[idx];
 
         newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new DNode(oldnode.obpath, newobj);
-        oldnode.successor = newnode;
+        newnode = new DNode(oldnode.path, newobj);
+        newnode.succeed(oldnode);
 
         idx -= 1;
     }
@@ -227,4 +241,5 @@ function _setValue(node, cursor, value) {
 export {
     DNode,
     Cone,
+    merge
 };
