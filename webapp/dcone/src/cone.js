@@ -9,29 +9,6 @@ class DNode {
         // successors
     }
 
-    isIdenticalIn(node) {
-        // console.log()
-        if (this.path.indexOf(node.path) !== 0) {
-            return false;
-        }
-
-        // the path pf branch's node should be the prefix of this node
-
-        const relpath = this.path.slice(node.path.length);
-
-        if (relpath.length > 0) {
-            // find forwardly the same opath node in branch node    
-            for (let cur = forwardCursor(relpath); cur !== undefined; cur = cur.next()) {
-                node = node.object.get(cur.name);
-                if (node === undefined) {
-                    return false;
-                }
-            }
-        }
-
-        return this.object === node.object;
-    }
-
     succeed(oldNode) {
         if (oldNode.successors === undefined) {
             oldNode.successors = [this];
@@ -73,6 +50,9 @@ class DListNode extends DNode {
 
 }
 
+
+
+
 /**
  * 
  */
@@ -91,15 +71,7 @@ class Cone {
      */
     getValue(path) {
 
-        // console.log('path:', path)
-
-        let node = this.root;
-        for (let cur = forwardCursor(path); cur !== undefined; cur = cur.next()) {
-            // console.log(cur.name);
-            node = node.object.get(cur.name);
-        }
-
-        return node;
+        return _getValue(this.root, path);
     }
 
     /**
@@ -187,6 +159,17 @@ class Cone {
     }
 }
 
+function _getValue(node, path) {
+    console.assert(node instanceof DNode);
+    console.assert(path.length == 0 ||
+        path.length > 0 && (path[0] === '.' || path[0] === '#'));
+
+    for (let cur = forwardCursor(path); cur !== undefined; cur = cur.next()) {
+        node = node.object.get(cur.name);
+    }
+
+    return node;
+}
 
 /**
  * 按照path设置值.
@@ -328,9 +311,38 @@ function _delete(node, path) {
 }
 
 
+function isIdenticalIn(childRoot, childPath, parentRoot, parentPath) {
+
+    if (childPath.indexOf(parentPath) !== 0) {
+        return false;
+    }
+
+    // the path pf branch's node should be the prefix of this node
+    const relpath = childPath.slice(parentPath.length);
+
+
+    let node = _getValue(parentRoot, parentPath);
+
+    if (relpath.length > 0) {
+        // find forwardly the same opath node in branch node
+        for (let cur = forwardCursor(relpath); cur !== undefined; cur = cur.next()) {
+            node = node.object.get(cur.name);
+
+            if (node === undefined) {
+                return false;
+            }
+        }
+    }
+
+    const childNode = _getValue(childRoot, childPath);
+
+    return childNode.object === node.object;
+}
+
 export {
     DNode,
     DObjectNode,
     DListNode,
     Cone,
+    isIdenticalIn
 };
