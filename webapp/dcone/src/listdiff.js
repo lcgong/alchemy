@@ -1,8 +1,13 @@
 // https://blog.mgechev.com/2017/11/14/angular-iterablediffer-keyvaluediffer-custom-differ-track-by-fn-performance/
+// https://github.com/cubicdaiya/onp
+
+
+// 在list比较元素时，存在仅仅是交换位置，并没有修改内容，因此，引入intact属性，为true时，表示没有修改
+
+
 function listDiff(newlst, oldlst) {
 
     const mapnew = new Map();
-    const mapold = new Map();
     const newListSize = newlst.size;
     const oldListSize = oldlst.size;
 
@@ -17,10 +22,17 @@ function listDiff(newlst, oldlst) {
         }
     }
 
+    const oldObjSet = new Set();
+
     // 找出删除的项目
     let delitems = new Map();
     for (let i = 0, n = oldlst.size; i < n; i++) {
         let obj = oldlst.get(i);
+
+        if (obj !== undefined) { // 登记旧版本里的对象
+            oldObjSet.add(obj);
+        }
+
         let idxs = mapnew.get(obj);
         if (idxs === undefined) {
             delitems.set(i, obj);
@@ -97,7 +109,19 @@ function listDiff(newlst, oldlst) {
         let newObj = newlst.get(newIdx);
         let oldObj = oldlst.get(oldIdx);
         if (newObj !== oldObj) {
-            changeset.push([oldIdx, { new: newObj, old: oldObj }]);
+            if (oldObjSet.has(newObj)) {
+                changeset.push([oldIdx, {
+                    new: newObj,
+                    old: oldObj,
+                    intact: true
+                }]);
+            } else {
+                changeset.push([oldIdx, {
+                    new: newObj,
+                    old: oldObj
+                }]);
+            }
+
         }
 
 

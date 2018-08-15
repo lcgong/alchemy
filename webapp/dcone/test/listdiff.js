@@ -69,15 +69,33 @@ test("diff a list", () => {
     expect(changeset.length).toBe(1);
     expect(changeset[0]).toEqual([4, { old: 50 }]);
 
+});
+
+test("swap items of list", () => {
+
+    let changeset;
+    let newlst, oldlst;
+
     // 交换位置的变更
     oldlst = Immutable.List([10, 20, 30, 40, 50]);
-    newlst = swapListItem(oldlst, 1, 3); // 交换1和3位置的内容
+    newlst = swapListItem(oldlst, 1, 3); // 交换1和3位置的内容，内容没有发生变化
     changeset = listDiff(newlst, oldlst);
     expect(changeset.length).toBe(2);
-    expect(changeset[0]).toEqual([1, { new: 40, old: 20 }]);
-    expect(changeset[1]).toEqual([3, { new: 20, old: 40 }]);
+    expect(changeset[0]).toEqual([1, { new: 40, old: 20, intact: true }]);
+    expect(changeset[1]).toEqual([3, { new: 20, old: 40, intact: true }]);
 
+
+    oldlst = Immutable.List([10, 20, 30, 40, 50]);
+    newlst = swapListItem(oldlst, 2, 3); 
+    newlst = swapListItem(newlst, 1, 2);
+    // 20, 30, 40 ==> 40, 20, 30,
+    changeset = listDiff(newlst, oldlst);
+    expect(changeset.length).toBe(3);
+    expect(changeset[0]).toEqual([1, { new: 40, old: 20, intact: true }]);
+    expect(changeset[1]).toEqual([2, { new: 20, old: 30, intact: true }]);
+    expect(changeset[2]).toEqual([3, { new: 30, old: 40, intact: true }]);
 });
+
 
 test("diff a list", () => {
 
@@ -110,11 +128,11 @@ test("BAD CASE: shifting circularly", () => {
     changeset = listDiff(newlst, oldlst);
 
     expect(changeset.length).toBe(5);
-    expect(changeset[0]).toEqual([0, { new: 20, old: 10 }]);
-    expect(changeset[1]).toEqual([1, { new: 30, old: 20 }]);
-    expect(changeset[2]).toEqual([2, { new: 40, old: 30 }]);
-    expect(changeset[3]).toEqual([3, { new: 50, old: 40 }]);
-    expect(changeset[4]).toEqual([4, { new: 10, old: 50 }]);
+    expect(changeset[0]).toEqual([0, { new: 20, old: 10, intact: true }]);
+    expect(changeset[1]).toEqual([1, { new: 30, old: 20, intact: true }]);
+    expect(changeset[2]).toEqual([2, { new: 40, old: 30, intact: true }]);
+    expect(changeset[3]).toEqual([3, { new: 50, old: 40, intact: true }]);
+    expect(changeset[4]).toEqual([4, { new: 10, old: 50, intact: true }]);
 });
 
 test("BAD CASE: delete a duplicate value", () => {
@@ -131,8 +149,8 @@ test("BAD CASE: delete a duplicate value", () => {
     // 因此默认最后一个，导致部分向前移动位置
     expect(changeset.length).toBe(5);
     expect(changeset[0]).toEqual([5, { 'old': 88 }]);
-    expect(changeset[1]).toEqual([1, { 'new': 20, 'old': 88 }]);
-    expect(changeset[2]).toEqual([2, { 'new': 88, 'old': 20 }]);
-    expect(changeset[3]).toEqual([3, { 'new': 30, 'old': 88 }]);
-    expect(changeset[4]).toEqual([4, { 'new': 88, 'old': 30 }]);
+    expect(changeset[1]).toEqual([1, { 'new': 20, 'old': 88, intact: true }]);
+    expect(changeset[2]).toEqual([2, { 'new': 88, 'old': 20, intact: true }]);
+    expect(changeset[3]).toEqual([3, { 'new': 30, 'old': 88, intact: true }]);
+    expect(changeset[4]).toEqual([4, { 'new': 88, 'old': 30, intact: true }]);
 });
