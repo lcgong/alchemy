@@ -1,5 +1,3 @@
-/*jshint esversion: 6 */
-
 import dcone from "../src";
 
 test("dobject fromJS", () => {
@@ -13,11 +11,20 @@ test("dobject fromJS", () => {
     expect(dobj.a.b.c).toBe(100);
     dobj.a.b.c = 200;
     expect(dobj.a.b.c).toBe(200);
+    expect(dobj2.a.b.c).toBe(100);
+
+    dobj = dcone.fromJS({
+        a: { x: 100 },
+        b: { x: 110 },
+    });
+
+    expect(dobj.b.x).toBe(110);
+    delete dobj.b;
+    expect(dobj.b).toBeUndefined();
 
 
-    console.log(dobj.a.b);
-    console.log(dobj2.a.b);
-    
+    // console.log(dobj.a.b);
+    // console.log(dobj2.a.b);
 
 
     return;
