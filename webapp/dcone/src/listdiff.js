@@ -1,7 +1,8 @@
 // https://blog.mgechev.com/2017/11/14/angular-iterablediffer-keyvaluediffer-custom-differ-track-by-fn-performance/
 // https://github.com/cubicdaiya/onp
-
-
+// https://github.com/livoras/list-diff
+// https://github.com/angular/angular/blob/master/packages/core/src/change_detection/differs/default_iterable_differ.ts
+// https://en.wikipedia.org/wiki/Merge_(version_control)
 // 在list比较元素时，存在仅仅是交换位置，并没有修改内容，因此，引入intact属性，为true时，表示没有修改
 
 
@@ -88,17 +89,20 @@ function listDiff(newlst, oldlst) {
         changeset.push([idx, { new: newObj }]);
     }
 
+    let offsetAmend = 0;
     // 排除删除和新增的，对其新旧列表（大小应该一样），比较差异
     let newIdx = 0,
         oldIdx = 0;
     while (true) {
         if (newitems.has(newIdx)) {
             newIdx += 1;
+            offsetAmend += 1; // 下标修正新的
             continue;
         }
 
         if (delitems.has(oldIdx)) {
             oldIdx += 1;
+            offsetAmend -= 1; // 下标修正已经删除的
             continue;
         }
 
@@ -110,13 +114,13 @@ function listDiff(newlst, oldlst) {
         let oldObj = oldlst.get(oldIdx);
         if (newObj !== oldObj) {
             if (oldObjSet.has(newObj)) {
-                changeset.push([oldIdx, {
+                changeset.push([oldIdx + offsetAmend, {
                     new: newObj,
                     old: oldObj,
                     intact: true
                 }]);
             } else {
-                changeset.push([oldIdx, {
+                changeset.push([oldIdx + offsetAmend, {
                     new: newObj,
                     old: oldObj
                 }]);

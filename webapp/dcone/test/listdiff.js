@@ -114,6 +114,36 @@ test("diff a list", () => {
     expect(changeset[3]).toEqual([4, { new: 20 }]);
 });
 
+test("diff a list", () => {
+
+    let changeset;
+    let newlst, oldlst;
+
+    // 例子来自于 https://github.com/seperman/deepdiff
+    newlst = Immutable.List([1, 3, 1, 4]);
+    oldlst = Immutable.List([4, 4, 1]);
+    changeset = listDiff(newlst, oldlst);
+    // console.log(changeset);
+    expect(changeset.length).toBe(4);
+    expect(changeset[0]).toEqual([ 2, { new: 1 } ]);
+    expect(changeset[1]).toEqual([ 0,  { new: 1, old: 4, intact: true } ]);
+    expect(changeset[2]).toEqual([ 1,  { new: 3, old: 4 } ]);
+    expect(changeset[3]).toEqual([ 3,  { new: 4, old: 1, intact: true } ]);
+
+
+    newlst = Immutable.List([4, 4, 1]);
+    oldlst = Immutable.List([1, 3, 1, 4]);
+    changeset = listDiff(newlst, oldlst);
+    // console.log(changeset);
+
+    expect(changeset.length).toBe(4);
+    expect(changeset[0]).toEqual([ 2, { old: 1 } ]);
+    expect(changeset[1]).toEqual([ 0, { new: 4, old: 1, intact: true } ]);
+    expect(changeset[2]).toEqual([ 1, { new: 4, old: 3, intact: true } ]);
+    expect(changeset[3]).toEqual([ 2, { new: 1, old: 4, intact: true } ]);
+
+});
+
 
 test("BAD CASE: shifting circularly", () => {
 
