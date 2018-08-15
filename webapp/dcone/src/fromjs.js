@@ -13,7 +13,7 @@ import {
 } from "./utils";
 
 import {
-    DNode,
+    DNode, DObjectNode, DListNode
 } from "./cone";
 
 
@@ -38,7 +38,7 @@ function _fromJS(apath, value) {
             entries.push([k, _fromJS(apath + '.' + k, v)]);
         }
 
-        return new DNode(apath, ImmutableMap(entries));
+        return new DObjectNode(apath, ImmutableMap(entries));
 
     } else if (isArrayObject(value)) {
 
@@ -49,7 +49,7 @@ function _fromJS(apath, value) {
             idx += 1;
         }
 
-        return new DNode(apath, ImmutableList(entries));
+        return new DListNode(apath, ImmutableList(entries));
     } else {
         return value;
     }

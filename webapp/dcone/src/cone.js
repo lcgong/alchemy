@@ -65,6 +65,14 @@ class DNode {
     }
 }
 
+class DObjectNode extends DNode {
+
+}
+
+class DListNode extends DNode {
+
+}
+
 /**
  * 
  */
@@ -83,8 +91,11 @@ class Cone {
      */
     getValue(path) {
 
+        // console.log('path:', path)
+
         let node = this.root;
         for (let cur = forwardCursor(path); cur !== undefined; cur = cur.next()) {
+            // console.log(cur.name);
             node = node.object.get(cur.name);
         }
 
@@ -177,12 +188,6 @@ class Cone {
 }
 
 
-function merge(target, path, node) {
-
-    node.keys();
-
-}
-
 /**
  * 按照path设置值.
  * 
@@ -226,10 +231,18 @@ function _setValue(node, cursor, value) {
 
     // 对象的值已经发生改变
 
-    newnode = new DNode(oldnode.path, newobj);
+
+    newnode = new oldnode.constructor(oldnode.path, newobj);
     newnode.succeed(oldnode);
 
-    let change = { node: newnode };
+    let change = {
+        node: newnode,
+        action: {
+            type: 'set',
+            index: name,
+            value: value
+        }
+    };
 
     idx -= 1;
 
@@ -237,7 +250,7 @@ function _setValue(node, cursor, value) {
         [oldnode, name] = stack[idx];
 
         newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new DNode(oldnode.path, newobj);
+        newnode = new oldnode.constructor(oldnode.path, newobj);
         newnode.succeed(oldnode);
 
         idx -= 1;
@@ -285,10 +298,16 @@ function _delete(node, path) {
 
     // 对象的值已经发生改变
 
-    newnode = new DNode(oldnode.path, newobj);
+    newnode = new oldnode.constructor(oldnode.path, newobj);
     newnode.succeed(oldnode);
 
-    let change = { node: undefined };
+    let change = {
+        node: newnode,
+        action: {
+            type: 'del',
+            index: name
+        }
+    };
 
     idx -= 1;
 
@@ -296,7 +315,7 @@ function _delete(node, path) {
         [oldnode, name] = stack[idx];
 
         newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new DNode(oldnode.path, newobj);
+        newnode = new oldnode.constructor(oldnode.path, newobj);
         newnode.succeed(oldnode);
 
         idx -= 1;
@@ -311,6 +330,7 @@ function _delete(node, path) {
 
 export {
     DNode,
+    DObjectNode,
+    DListNode,
     Cone,
-    merge
 };
