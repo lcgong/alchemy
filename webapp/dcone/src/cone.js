@@ -81,7 +81,7 @@ class Cone {
 
         const root = this.root;
 
-        let result = _setValue(root, forwardCursor(path), value);
+        let result = _setValue(root, path, value);
         if (result.newRoot !== undefined) { // root为undifined表示没有变化
             result.oldRoot = root;
             this.root = result.newRoot;
@@ -142,20 +142,6 @@ class Cone {
 
         _emitChangeEvent(this._subjects, '',
             changeset, newRoot, oldRoot, this.makeChangeMessage)
-
-        // const pathsToNotify = [''];
-        // for (let cur = forwardCursor(change.node.path); cur !== undefined; cur = cur.next()) {
-        //     pathsToNotify.push(cur.path);
-        // }
-
-        // const subjects = this._subjects;
-
-        // for (let idx = pathsToNotify.length - 1; idx >= 0; idx -= 1) {
-        //     let subject = subjects[pathsToNotify[idx]];
-        //     if (subject) {
-        //         subject.next(this.makeChangeMessage(change));
-        //     }
-        // }
     }
 
     makeChangeMessage(change) {
@@ -207,11 +193,12 @@ function _getValue(node, path) {
  * @param {*} value 
  * @param {*} changed 
  */
-function _setValue(node, cursor, value) {
+function _setValue(node, path, value) {
 
     let stack = [];
     let name;
 
+    let cursor = forwardCursor(path)
     while (true) {
 
         if (cursor === undefined) {
@@ -220,18 +207,18 @@ function _setValue(node, cursor, value) {
 
         name = cursor.name;
 
-        stack.push([node, name]);
+        stack.push([node, cursor.path, name]);
 
         node = node.object.get(name);
 
         cursor = cursor.next();
     }
 
-    let newnode, oldnode;
+    let newnode, oldnode, oldpath;
 
     // 末端节点
     let idx = stack.length - 1;
-    [oldnode, name] = stack[idx];
+    [oldnode, oldpath, name] = stack[idx];
 
 
     let oldobj = oldnode.object;
@@ -241,7 +228,7 @@ function _setValue(node, cursor, value) {
     }
 
     // 对象的值已经发生改变
-    newnode = new oldnode.constructor(oldnode.path, newobj);
+    newnode = new oldnode.constructor(oldpath, newobj);
     newnode.succeed(oldnode);
 
     // [change1, change2, ..., {new:..., old:...}, ... ]
@@ -253,10 +240,10 @@ function _setValue(node, cursor, value) {
     idx -= 1;
 
     while (idx >= 0) {
-        [oldnode, name] = stack[idx];
+        [oldnode, oldpath, name] = stack[idx];
 
         newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new oldnode.constructor(oldnode.path, newobj);
+        newnode = new oldnode.constructor(oldpath, newobj);
         newnode.succeed(oldnode);
 
         changeset = [
@@ -281,18 +268,18 @@ function _delete(node, path) {
 
         const name = cur.name;
 
-        stack.push([node, name]);
+        stack.push([node, cur.path, name]);
 
         node = node.object.get(name);
     }
 
     let name;
 
-    let newnode, oldnode;
+    let newnode, oldnode, oldpath;
 
     // 末端节点
     let idx = stack.length - 1;
-    [oldnode, name] = stack[idx];
+    [oldnode, oldpath, name] = stack[idx];
 
 
     let oldobj = oldnode.object;
@@ -311,7 +298,7 @@ function _delete(node, path) {
 
     // 对象的值已经发生改变
 
-    newnode = new oldnode.constructor(oldnode.path, newobj);
+    newnode = new oldnode.constructor(oldpath, newobj);
     newnode.succeed(oldnode);
 
     // [change1, change2, ..., {new:..., old:...}, ... ]
@@ -322,10 +309,10 @@ function _delete(node, path) {
     idx -= 1;
 
     while (idx >= 0) {
-        [oldnode, name] = stack[idx];
+        [oldnode, oldpath, name] = stack[idx];
 
         newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new oldnode.constructor(oldnode.path, newobj);
+        newnode = new oldnode.constructor(oldpath, newobj);
         newnode.succeed(oldnode);
 
         changeset = [
