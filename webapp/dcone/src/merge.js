@@ -133,9 +133,7 @@ function diffDListNodes(newNode, oldNode, diffFn) {
 }
 
 
-function pathJoin(path, idx) {
-    return `${path}${Number.isInteger(idx)?'#':'.'}${idx}`;
-}
+
 
 function _patch(changeset, tgtNode, origNode) {
 

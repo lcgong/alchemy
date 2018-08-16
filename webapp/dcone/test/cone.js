@@ -1,14 +1,24 @@
-import { Cone, isIdenticalIn } from "../src/cone";
+import { Cone, isIdenticalIn, _getValue } from "../src/cone";
 import { buildNodeFromJS } from "../src/fromjs";
 
 
 test("setValue", () => {
-    let cone, change, cone1, cone2;
+    let cone, cone1, change, cone2;
 
     cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
     cone1 = cone.branch();
 
     change = cone.setValue('.a.b.c', 120);
+    expect(_getValue(change.newRoot, '.a.b.c')).toBe(120);
+    expect(_getValue(change.oldRoot, '.a.b.c')).toBe(100);
+    expect(change.changeset).toEqual([
+        ["a", [
+            ["b", [
+                ["c", { "new": 120, "old": 100 }]
+            ]]
+        ]]
+    ]);
+
     cone2 = cone.branch();
 
     expect(cone1.getValue('.a.b.c')).toBe(100);
@@ -17,9 +27,6 @@ test("setValue", () => {
     expect(cone1.getValue('.a.b').successors[0]).toBe(cone2.getValue('.a.b'));
     expect(cone1.getValue('.a').successors[0]).toBe(cone2.getValue('.a'));
     expect(cone1.getValue('').successors[0]).toBe(cone2.getValue(''));
-
-    expect(change.node).toBe(cone2.getValue('.a.b'));
-    expect(change.root).toBe(cone2.getValue(''));
 
 });
 
@@ -30,6 +37,16 @@ test("delete", () => {
     cone1 = cone.branch();
 
     change = cone.delete('.a.b.c');
+    expect(_getValue(change.newRoot, '.a.b.c')).toBeUndefined(); // deleted
+    expect(_getValue(change.oldRoot, '.a.b.c')).toBe(100);
+    expect(change.changeset).toEqual([
+        ["a", [
+            ["b", [
+                ["c", { "old": 100 }] // for deleting, attr new is undefined
+            ]]
+        ]]
+    ])
+
     cone2 = cone.branch();
 
     expect(cone1.getValue('.a.b').successors[0]).toBe(cone2.getValue('.a.b'));
@@ -37,13 +54,12 @@ test("delete", () => {
     expect(cone1.getValue('').successors[0]).toBe(cone2.getValue(''));
 
     change = cone.delete('.a.b');
-    expect(change.node.path).toBe('.a');
-    expect(change.action).toEqual({ type: 'del', index: 'b' });
+    expect(cone.getValue('.a.b')).toBeUndefined()
 
     cone3 = cone.branch();
 
     change = cone.delete('.a.b');
-    console.log(change);
+    expect(change.changeset.length).toBe(0);
 
     expect(cone3.getValue('.a.b')).toBeUndefined();
 
@@ -75,7 +91,7 @@ test("cone fromJS", () => {
     node = cone1.getValue('.a.b')
 
     let root;
-    
+
     root = cone1.root;
     expect(isIdenticalIn(root, '.a.b', root, '.a.b')).toBeTruthy();
     expect(isIdenticalIn(root, '.a.b', root, '.a')).toBeTruthy();
@@ -86,7 +102,8 @@ test("cone fromJS", () => {
     cone2 = cone1.branch();
 
     change = cone2.setValue('.a.b.c', 100); // 设置相同的值或对象，不应该发生变化
-    expect(change).toBeUndefined();
+    expect(change.newRoot).toBeUndefined(); // no change
+    expect(change.changeset.length).toBe(0); // no change
 
     expect(cone2.root).toBe(cone1.root); // the root of cone is not modified.
 
@@ -109,103 +126,93 @@ test("cone fromJS", () => {
     expect(isIdenticalIn(cone3.root, '.a.x', cone1.root, '.a.x')).toBeTruthy();
     expect(isIdenticalIn(cone3.root, '.a.x', cone1.root, '.a')).toBeTruthy();
     expect(isIdenticalIn(cone3.root, '.a.x', cone1.root, '')).toBeTruthy();
-
-    
-    // expect(node.isIdenticalIn(cone1.getValue('.a.x'))).toBeTruthy();
-    // expect(node.isIdenticalIn(cone1.getValue('.a'))).toBeTruthy();
-    // expect(node.isIdenticalIn(cone1.getValue(''))).toBeTruthy();
-
 });
 
 
-// test("changed event", (done) => { // 使用jest的异步测试，利用jest的done参数告知
+test("changed event", (done) => { // 使用jest的异步测试，利用jest的done参数告知
 
-//     let cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+    let cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
 
-//     let cone1 = cone.branch(); // 
+    let cone1 = cone.branch(); // 
 
-//     let subscription = cone.subject('.a.b').subscribe((chg) => {
-//         try {
-//             expect(cone.root).not.toBe(cone1.root);
+    let subscription = cone.subject('.a.b').subscribe((chg) => {
+        try {
+            expect(cone.root).not.toBe(cone1.root);
+
+            expect(chg.path).toBe('.a.b');
+
+            expect(_getValue(chg.newRoot, '.a.b.c')).toBe(120);
+            expect(_getValue(chg.oldRoot, '.a.b.c')).toBe(100);
 
 
-//             expect(chg.node.isIdenticalIn(cone.getValue('.a.b'))).toBeTruthy();
-//             expect(chg.node.isIdenticalIn(cone1.getValue('.a.b'))).toBeFalsy();
+            subscription.unsubscribe();
+        } catch (e) { // 捕捉expect的异常，并通过done对象告知jest
+            done.fail(e);
+        }
+        done(); // jest: asynchronous testing
+    });
 
-//             expect(cone.getValue('.a.b.c')).toBe(120);
-//             expect(cone1.getValue('.a.b.c')).toBe(100);
+    let change = cone.setValue('.a.b.c', 120); // 发生变更，会触发变更事件
+    cone.emitChangeEvent(change);
 
-//             subscription.unsubscribe();
-//         } catch (e) { // 捕捉expect的异常，并通过done对象告知jest
-//             done.fail(e);
-//         }
-//         done(); // jest: asynchronous testing
-//     });
+    setTimeout(() => { done.fail('no change event'); }, 500);
+});
 
-//     let change = cone.setValue('.a.b.c', 120); // 发生变更，会触发变更事件
-//     cone.emitChangeEvent(change);
+test("changed event", (done) => { // 使用jest的异步测试，利用jest的done参数告知
 
-//     setTimeout(() => { done.fail('no change event'); }, 500);
-// });
+    let cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
 
-// test("changed event", (done) => { // 使用jest的异步测试，利用jest的done参数告知
+    let cone1 = cone.branch(); // 
 
-//     let cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+    let subscription = cone.subject().subscribe((chg) => {
+        try {
+            expect(cone.root).not.toBe(cone1.root);
 
-//     let cone1 = cone.branch(); // 
+            expect(chg.path).toBe('');
 
-//     let subscription = cone.subject().subscribe((chg) => {
-//         try {
-//             expect(chg.node.path).toBe('.a.b');
+            expect(_getValue(chg.newRoot, '.a.b.c')).toBe(120);
+            expect(_getValue(chg.oldRoot, '.a.b.c')).toBe(100);
 
-//             expect(cone.root).not.toBe(cone1.root);
+            subscription.unsubscribe();
+        } catch (e) { // 捕捉expect的异常，并通过done对象告知jest
+            done.fail(e);
+        }
+        done(); // jest: asynchronous testing
+    });
 
-//             expect(chg.node.isIdenticalIn(cone.getValue('.a.b'))).toBeTruthy();
-//             expect(chg.node.isIdenticalIn(cone1.getValue('.a.b'))).toBeFalsy();
+    let change = cone.setValue('.a.b.c', 120); // 发生变更，会触发变更事件
+    cone.emitChangeEvent(change);
 
-//             expect(cone.getValue('.a.b.c')).toBe(120);
-//             expect(cone1.getValue('.a.b.c')).toBe(100);
+    setTimeout(() => { done.fail('no change event'); }, 500);
+});
 
-//             subscription.unsubscribe();
-//         } catch (e) { // 捕捉expect的异常，并通过done对象告知jest
-//             done.fail(e);
-//         }
-//         done(); // jest: asynchronous testing
-//     });
+test("delete event", (done) => { // 使用jest的异步测试，利用jest的done参数告知
 
-//     let change = cone.setValue('.a.b.c', 120); // 发生变更，会触发变更事件
-//     cone.emitChangeEvent(change);
+    let cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
 
-//     setTimeout(() => { done.fail('no change event'); }, 500);
-// });
+    let cone1 = cone.branch(); // 
 
-// test("delete event", (done) => { // 使用jest的异步测试，利用jest的done参数告知
+    let subscription = cone.subject().subscribe((chg) => {
+        try {
+            expect(cone.root).not.toBe(cone1.root);
+            // console.log(1111, chg);
 
-//     let cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+            expect(cone.root).not.toBe(cone1.root);
 
-//     let cone1 = cone.branch(); // 
+            expect(chg.path).toBe('');
 
-//     let subscription = cone.subject().subscribe((chg) => {
-//         try {
-//             expect(cone.root).not.toBe(cone1.root);
-//             // console.log(1111, chg);
+            expect(_getValue(chg.newRoot, '.a.b')).toBeUndefined();
+            expect(_getValue(chg.oldRoot, '.a.b')).not.toBeUndefined();
 
-//             expect(chg.node.path).toBe('.a');
-//             expect(chg.action).toEqual({ type: 'del', index: 'b' });
-            
-//             expect(cone.getValue('.a.b')).toBeUndefined();
+            subscription.unsubscribe();
+        } catch (e) { // 捕捉expect的异常，并通过done对象告知jest
+            done.fail(e);
+        }
+        done(); // jest: asynchronous testing
+    });
 
-//             expect(cone1.getValue('.a.b.c')).toBe(100);
+    let change = cone.delete('.a.b');
+    cone.emitChangeEvent(change);
 
-//             subscription.unsubscribe();
-//         } catch (e) { // 捕捉expect的异常，并通过done对象告知jest
-//             done.fail(e);
-//         }
-//         done(); // jest: asynchronous testing
-//     });
-
-//     let change = cone.delete('.a.b');
-//     cone.emitChangeEvent(change);
-
-//     setTimeout(() => { done.fail('no change event'); }, 500);
-// });
+    setTimeout(() => { done.fail('no change event'); }, 500);
+});

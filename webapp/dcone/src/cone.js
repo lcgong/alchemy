@@ -51,8 +51,6 @@ class DListNode extends DNode {
 }
 
 
-
-
 /**
  * 
  */
@@ -81,26 +79,27 @@ class Cone {
      */
     setValue(path, value) {
 
-        // change: {node, root}, the source node of change, the new root    
-        let change = _setValue(this.root, forwardCursor(path), value);
-        if (change === undefined) {
-            return;
+        const root = this.root;
+
+        let result = _setValue(root, forwardCursor(path), value);
+        if (result.newRoot !== undefined) { // root为undifined表示没有变化
+            result.oldRoot = root;
+            this.root = result.newRoot;
         }
-
-        this.root = change.root;
-
-        return change;
+        
+        return result;
     }
 
     delete(path) {
-        let change = _delete(this.root, path)
-        if (change === undefined) {
-            return;
+        const root = this.root;
+
+        let result = _delete(this.root, path)
+        if (result.newRoot !== undefined) { // root为undifined表示没有变化
+            result.oldRoot = root;
+            this.root = result.newRoot;
         }
-
-        this.root = change.root;
-
-        return change;
+        
+        return result;
     }
 
     /**
@@ -139,23 +138,52 @@ class Cone {
             return;
         }
 
-        const pathsToNotify = [''];
-        for (let cur = forwardCursor(change.node.path); cur !== undefined; cur = cur.next()) {
-            pathsToNotify.push(cur.path);
-        }
+        const { changeset, newRoot, oldRoot } = change;
 
-        const subjects = this._subjects;
+        _emitChangeEvent(this._subjects, '',
+            changeset, newRoot, oldRoot, this.makeChangeMessage)
 
-        for (let idx = pathsToNotify.length - 1; idx >= 0; idx -= 1) {
-            let subject = subjects[pathsToNotify[idx]];
-            if (subject) {
-                subject.next(this.makeChangeMessage(change));
-            }
-        }
+        // const pathsToNotify = [''];
+        // for (let cur = forwardCursor(change.node.path); cur !== undefined; cur = cur.next()) {
+        //     pathsToNotify.push(cur.path);
+        // }
+
+        // const subjects = this._subjects;
+
+        // for (let idx = pathsToNotify.length - 1; idx >= 0; idx -= 1) {
+        //     let subject = subjects[pathsToNotify[idx]];
+        //     if (subject) {
+        //         subject.next(this.makeChangeMessage(change));
+        //     }
+        // }
     }
 
     makeChangeMessage(change) {
         return change;
+    }
+}
+
+function pathJoin(path, idx) {
+    return `${path}${Number.isInteger(idx)?'#':'.'}${idx}`;
+}
+
+function _emitChangeEvent(subjects, path, changeset, newRoot, oldRoot, messageFn) {
+
+    for (let [name, delta] of changeset) {
+        const childPath = pathJoin(path, name);
+        if (Array.isArray(delta)) {
+            _emitChangeEvent(subjects, childPath, delta, newRoot, oldRoot, messageFn);
+        }
+    }
+
+    // 节点的对象内，一处还是多处修改，都触发一次变更事件/ 
+    let subject = subjects[path];
+    if (subject) {
+        subject.next(messageFn({
+            path: path,
+            newRoot: newRoot,
+            oldRoot: oldRoot
+        }));
     }
 }
 
@@ -209,23 +237,18 @@ function _setValue(node, cursor, value) {
     let oldobj = oldnode.object;
     let newobj = oldobj.set(name, value);
     if (newobj === oldobj) {
-        return; // no change
+        return { changeset: [] }; // no change
     }
 
     // 对象的值已经发生改变
-
-
     newnode = new oldnode.constructor(oldnode.path, newobj);
     newnode.succeed(oldnode);
 
-    let change = {
-        node: newnode,
-        action: {
-            type: 'set',
-            index: name,
-            value: value
-        }
-    };
+    // [change1, change2, ..., {new:..., old:...}, ... ]
+    let changeset = [
+        [name, { new: value, old: oldobj.get(name) }]
+    ];
+
 
     idx -= 1;
 
@@ -236,12 +259,17 @@ function _setValue(node, cursor, value) {
         newnode = new oldnode.constructor(oldnode.path, newobj);
         newnode.succeed(oldnode);
 
+        changeset = [
+            [name, changeset]
+        ];
+
         idx -= 1;
     }
 
-    change.root = newnode;
-
-    return change;
+    return {
+        newRoot: newnode,
+        changeset: changeset
+    };
 }
 
 
@@ -272,7 +300,9 @@ function _delete(node, path) {
     let deleted = oldobj.get(name);
     let newobj = oldobj.delete(name);
     if (newobj === oldobj) {
-        return; // no change
+        return {
+            changeset: [],
+        }; // no change
     }
 
     if (deleted instanceof DNode) { // 如果删除属性的值是DNode，以[]表示已经删除
@@ -284,13 +314,10 @@ function _delete(node, path) {
     newnode = new oldnode.constructor(oldnode.path, newobj);
     newnode.succeed(oldnode);
 
-    let change = {
-        node: newnode,
-        action: {
-            type: 'del',
-            index: name
-        }
-    };
+    // [change1, change2, ..., {new:..., old:...}, ... ]
+    let changeset = [
+        [name, { old: deleted }]
+    ];
 
     idx -= 1;
 
@@ -301,13 +328,17 @@ function _delete(node, path) {
         newnode = new oldnode.constructor(oldnode.path, newobj);
         newnode.succeed(oldnode);
 
+        changeset = [
+            [name, changeset]
+        ];
+
         idx -= 1;
     }
 
-    change.root = newnode;
-
-    return change;
-
+    return {
+        newRoot: newnode,
+        changeset: changeset
+    };
 }
 
 
@@ -344,5 +375,7 @@ export {
     DObjectNode,
     DListNode,
     Cone,
-    isIdenticalIn
+    isIdenticalIn,
+    pathJoin,
+    _getValue
 };
