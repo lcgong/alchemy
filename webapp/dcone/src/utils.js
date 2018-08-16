@@ -28,9 +28,6 @@ const NOT_SET_VALUE = {};
 function ConeID() {}
 
 
-function keys(dobj) {
-    return dobj.__object.keys();
-}
 
 function formatSignature(path) {
 
@@ -121,7 +118,6 @@ export {
     isImmutableList,
     formatSignature,
     parseSignature,
-    keys,
     NOT_SET_VALUE,
     ConeID
 };

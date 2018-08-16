@@ -197,20 +197,17 @@ function _setValue(node, path, value) {
     let stack = [];
     let name;
 
-    let cursor = forwardCursor(path)
-    while (true) {
+    
+    for (let cur = forwardCursor(path); cur !== undefined; cur = cur.next()) {
 
-        if (cursor === undefined) {
-            break;
-        }
-
-        name = cursor.name;
+        name = cur.name;
 
         stack.push([node, name]);
-
         node = node.object.get(name);
 
-        cursor = cursor.next();
+        if (!(node instanceof DNode)) { // 直到末端不是节点
+            break;
+        }
     }
 
     let newnode, oldnode;

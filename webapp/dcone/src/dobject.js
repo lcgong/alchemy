@@ -4,26 +4,150 @@ import {
     isImmutableList,
 } from "./utils";
 
-import { DNode } from './cone';
+import {
+    Cone,
+    DNode,
+    DObjectNode,
+    DListNode,
+    _getValue,
+    pathJoin
+} from './cone';
+
+
+
+
+function branch(dobj) {
+
+    const stub = dobj.__stub;
+
+    const cone = stub.cone.branch();
+    const node = _getValue(cone.root, stub.path);
+
+    return createDObject(cone, cone.root, stub.path, node);
+}
+
+function keys(dobj) {
+    return dobj.__stub.node.object.keys();
+}
+
+function size(dobj) {
+    return dobj.__stub.node.object.size;
+}
+
+
+function isIdenticalIn(targetObj, parentObj) {
+    const targetStub = targetObj.__stub;
+    const parentStub = parentObj.__stub;
+
+    return isIdenticalIn(targetStub.root, targetStub.path,
+        parentStub.root, parentStub.path);
+}
+
 
 /**
  * 先从对象的缓存读取节点，如果根与cone的根不一致，重新读取更新缓存
  * @param {*} dobj 
  */
-function getNode(dobj) {
+function getNodeFromStub(stub) {
 
-    const cone = dobj.__cone;
+    const root = stub.cone.root; // cone当前最新的root
 
-    const root = dobj.__cone.root;
-
-    if (dobj.__root !== cone.root) {
+    if (stub.root !== root) {
         // 如果快照的根与cone的根的不一致，说明数据已经发生变更，重新更新访问对象缓存的对象
 
-        dobj.__node = cone.getValue(dobj.__node.path);
-        dobj.__root = cone.root;
+        const node = _getValue(root, stub.path);
+        stub.node = node
+        stub.root = root;
+
+        return node;
+
+    } else {
+
+        return stub.node;
+    }
+}
+
+function getValueOfStubObject(stub, name) {
+    const node = stub.node;
+    const value = node.object.get(name);
+
+    if (value instanceof DNode) {
+        const path = pathJoin(stub.path, name);
+        return createDObject(stub.cone, stub.root, path, value);
     }
 
-    return dobj.__node;
+    return value;
+}
+
+
+function setValueOfStubObject(stub, name, value) {
+    const path = pathJoin(stub.path, name);
+    let change = stub.cone.setValue(pathJoin(path, name), value);
+}
+
+
+function deletePropertyOfStubObject(stub, name) {
+
+    let change = stub.cone.delete(pathJoin(stub.path, name));
+}
+
+function createDObject(cone, root, path, node) {
+
+    let dobjectConstructor;
+    if (node instanceof DObjectNode) {
+        dobjectConstructor = DObject;
+    } else if (node instanceof DListNode) {
+        dobjectConstructor = DList;
+    } else throw new TypeError('should be a DNode')
+
+    const stub = new DStub(cone, root, path, node);
+    return new dobjectConstructor(stub);
+}
+
+
+class DObjectCone extends Cone {
+
+}
+
+// stub: {cone, root, node, path}
+// 在stub里，如果和cone的root不一致，则该代理的对象已经发生更改
+
+class DStub {
+
+    constructor(cone, root, path, node) {
+        this._cone = cone;
+        this._root = root;
+        this._path = path;
+        this._node = node;
+    }
+
+    get cone() {
+        return this._cone;
+    }
+
+    get path() {
+        return this._path;
+    }
+
+    get root() {
+        this._check();
+        return this._root;
+    }
+
+    get node() {
+        this._check();
+        return this._node;
+    }
+
+    _check() {
+        const root = this._cone.root; // cone当前最新的root
+
+        if (this._root !== root) {
+            const node = _getValue(root, this._path);
+            this._node = node
+            this._root = root;
+        }
+    }
 }
 
 const DObjectProxyHandler = {
@@ -32,76 +156,40 @@ const DObjectProxyHandler = {
             return Reflect.get(...arguments);
         }
 
-        const value = getNode(target).object.get(name);
-        return decorateValue(target.__cone, value);
+        return getValueOfStubObject(target.__stub, name);
     },
     set: function(target, name, value, receiver) {
-        if (name.startsWith('__')) {
+        if (name === '__stub') { //  name.startsWith('__')
             return Reflect.set(...arguments);
         }
 
-        const cone = target.__cone;
-        const path = `${target.__node.path}.${name}`;
-        let change = cone.setValue(path, value);
+        setValueOfStubObject(target.__stub, name, value);
+
         return true;
     },
     deleteProperty(target, name) {
-        const cone = target.__cone;
-        let change = cone.delete(`${target.__node.path}.${name}`)
-        console.log(111, change);
+
+        deletePropertyOfStubObject(target.__stub, name)
 
         return true;
     }
 };
 
-function branch(dobj) {
 
-    const cone = dobj.__cone.branch();
-    const root = cone.root;
-
-    return createDObject(cone, root, root);
-}
-
-function isIdenticalIn(targetObj, parentObj) {
-
-    return getNode(targetObj).isIdenticalIn(getNode(parentObj))
-}
-
-
-
-
-function decorateValue(cone, value) {
-    if (value instanceof DNode) {
-        return createDObject(cone, cone.root, value);
-    }
-
-    return value;
-}
-
-function createDObject(cone, root, node) {
-    const object = node.object;
-    if (isImmutableMap(object)) {
-        return new DObject(cone, root, node);
-    } else if (isImmutableList(object)) {
-        return new DList(cone, root, node);
-    }
-}
 
 class AbstractDObject {
 
-    constructor(cone, root, node) {
+    constructor(stub) {
 
-        this.__cone = cone;
-        this.__node = node;
-        this.__root = root;
+        this.__stub = stub;
     }
 }
 
 class DObject extends AbstractDObject {
 
-    constructor(cone, root, node) {
+    constructor(stub) {
 
-        super(cone, root, node);
+        super(stub);
         return new Proxy(this, DObjectProxyHandler);
     }
 
@@ -116,9 +204,9 @@ class DObject extends AbstractDObject {
 
 class DList extends AbstractDObject {
 
-    constructor(cone, root, node) {
+    constructor(cone, root, node, path) {
 
-        super(cone, root, node);
+        super(cone, root, node, path);
         return new Proxy(this, DObjectProxyHandler);
     }
 
@@ -144,7 +232,7 @@ const DListProxyHandler = {
         }
         target.set(index, value);
         return true; // required to indicate success
-    }    
+    }
 };
 
 class DList2 extends DObject {
@@ -239,8 +327,11 @@ class DList2 extends DObject {
 
 
 export {
+    DObjectCone,
     DList,
     DObject,
     branch,
-    createDObject
+    createDObject,
+    keys,
+    size
 };

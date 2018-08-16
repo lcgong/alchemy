@@ -1,94 +1,93 @@
 import dcone from "../src";
+import D from "../src";
 
-test("dobject fromJS", () => {
-    let dobj;
-
-    dobj = dcone.fromJS({ a: { b: { c: 100, d: ['x', 'y'] } } });
+import { exportNodetoJS } from "../src/jsobj";
 
 
-    let dobj2 = dcone.branch(dobj);
+test("dobject", () => {
+    let dobj1, dobj2;;
 
-    expect(dobj.a.b.c).toBe(100);
-    dobj.a.b.c = 200;
-    expect(dobj.a.b.c).toBe(200);
-    expect(dobj2.a.b.c).toBe(100);
+    dobj1 = D.fromJS({ a: { b: { c: 100, d: ['x', 'y'] } } });
 
-    dobj = dcone.fromJS({
+    expect(dobj1.a.b.__stub.path).toBe('.a.b');
+    expect(dobj1.a.b.c).toBe(100);
+
+    dobj2 = D.branch(dobj1);
+
+    expect(dobj2.__stub.cone).not.toBe(dobj1.__stub.cone);
+    expect(dobj2.__stub.root).toBe(dobj1.__stub.root);
+
+    dobj2.a.b.c = 110;
+    // 只要操作，会自动更新stub.root与cone.root一致
+    expect(dobj2.__stub.root).toBe(dobj2.__stub.cone.root);
+    expect(dobj2.a.__stub.root).toBe(dobj2.__stub.cone.root);
+    expect(dobj2.a.b.__stub.root).toBe(dobj2.__stub.cone.root);
+    expect(dobj2.a.b.c).toBe(110);
+
+    dobj2.a.b.c = 150;
+    expect(dobj2.a.b.c).toBe(150);
+
+    expect(dobj1.a.b.c).toBe(100); // 最早的值
+
+    let node; // 根据节点的successors的追溯变更历史
+    node = dobj1.a.b.__stub.node;
+    expect(node.object.get('c')).toBe(100);
+
+    node = node.successors[0];
+    expect(node.object.get('c')).toBe(110);
+
+    node = node.successors[0];
+    expect(node.object.get('c')).toBe(150);
+
+});
+
+test("dobject", () => {
+
+    let dobj1, dobj2;
+
+    dobj1 = D.fromJS({
         a: { x: 100 },
         b: { x: 110 },
     });
 
-    expect(dobj.b.x).toBe(110);
-    delete dobj.b;
-    expect(dobj.b).toBeUndefined();
+    dobj2 = D.branch(dobj1);
+
+    expect(dobj2.a.x).not.toBeUndefined();
+    delete dobj2.a.x;
+    expect(dobj2.a.x).toBeUndefined();
+
+    expect(dobj2.b.x).not.toBeUndefined();
+    delete dobj2.b.x;
+    expect(dobj2.b.x).toBeUndefined();
+
+    expect(dobj2.b).not.toBeUndefined();
+    delete dobj2.b;
+    expect(dobj2.b).toBeUndefined();
+
+    expect(D.toJS(dobj2)).toEqual({ a: {} });
 
 
-    // console.log(dobj.a.b);
-    // console.log(dobj2.a.b);
+    let node; // 根据节点的successors的追溯变更历史
+    node = dobj1.b.__stub.node;
+    expect(exportNodetoJS(node)).toEqual({ x: 110 });
 
-
-    return;
-
-    //     expect(obj).toBeInstanceOf(dcone.DObject);
-    //     expect(obj.a).toBeInstanceOf(dcone.DObject);
-    //     expect(obj.a.b).toBeInstanceOf(dcone.DObject);
-    //     expect(obj.a.b.c).toEqual(100);
-
-    //     expect(obj.a.__signature).toBe('a');
-    //     expect(obj.a.b.__signature).toBe('a.b');
-
-    //     let current;
-
-    //     current = obj.__cone.root.__object;
-    //     expect(obj.__object).toBe(current);
-
-    //     current = current.get('a').__object;
-    //     expect(obj.a.__object).toBe(current);
-
-    //     current = current.get('b').__object;
-    //     expect(obj.a.b.__object).toBe(current);
-    //     // console.log(current);
+    node = node.successors[0];
+    expect(exportNodetoJS(node)).toEqual({});
+    expect(node.successors).toEqual([]); // 后面的b删除了，因此后继是空
 });
 
+test("keys and size of dobject", () => {
+    let dobj1;
 
-// test("dobject set", () => {
-//     let obj;
+    dobj1 = D.fromJS({ a: 1, b: 2 });
+    expect([...D.keys(dobj1)]).toEqual(['a', 'b']);
+    expect(D.size(dobj1)).toBe(2);
 
-//     obj = dcone.fromJS({ a: 1 });
-//     expect(obj.a).toBe(1);
-//     obj.a = 10;
-//     expect(obj.a).toBe(10);
+    delete dobj1.b;
+    expect([...D.keys(dobj1)]).toEqual(['a']);
+    expect(D.size(dobj1)).toBe(1);
 
-
-//     obj = dcone.fromJS({
-//         a: {
-//             b: {
-//                 c: {
-//                     d: 1,
-//                     m: 100
-//                 },
-//                 z: 10
-//             },
-//             y: 20
-//         },
-//         x: 30
-//     });
-//     expect(obj.a.b.c.d).toBe(1);
-//     obj.a.b.c.d = 10;
-//     expect(obj.a.b.c.d).toBe(10);
-//     // console.log(obj);
-// });
-
-
-// test("dobject delete", () => {
-//     let obj = dcone.fromJS({ a: 123, b: 456 });
-
-//     expect(obj.b).toBe(456);
-//     expect([...dcone.keys(obj)]).toEqual(['a', 'b']);
-
-//     delete obj.b;
-//     expect(obj.b).toBeUndefined();
-
-//     expect(obj.b).toBeUndefined();
-//     expect([...dcone.keys(obj)]).toEqual(['a']);
-// });
+    dobj1 = D.fromJS([10, 20, 30, 40]);
+    expect([...D.keys(dobj1)]).toEqual([0, 1, 2, 3]);
+    expect(D.size(dobj1)).toBe(4);
+});
