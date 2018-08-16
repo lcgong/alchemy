@@ -1,11 +1,11 @@
 import { Cone, isIdenticalIn, _getValue } from "../src/cone";
-import { buildNodeFromJS } from "../src/fromjs";
+import { loadNodeFromJS } from "../src/jsobj";
 
 
 test("setValue", () => {
     let cone, cone1, change, cone2;
 
-    cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+    cone = new Cone(loadNodeFromJS({ a: { b: { c: 100 } } }));
     cone1 = cone.branch();
 
     change = cone.setValue('.a.b.c', 120);
@@ -33,7 +33,7 @@ test("setValue", () => {
 test("delete", () => {
     let cone, change, cone1, cone2, cone3;
 
-    cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+    cone = new Cone(loadNodeFromJS({ a: { b: { c: 100 } } }));
     cone1 = cone.branch();
 
     change = cone.delete('.a.b.c');
@@ -72,7 +72,7 @@ test("cone fromJS", () => {
     let root1, root2, root3;
     let node;
 
-    root1 = buildNodeFromJS({
+    root1 = loadNodeFromJS({
         a: {
             b: { c: 100 },
             x: { y: 200 }
@@ -131,7 +131,7 @@ test("cone fromJS", () => {
 
 test("changed event", (done) => { // 使用jest的异步测试，利用jest的done参数告知
 
-    let cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+    let cone = new Cone(loadNodeFromJS({ a: { b: { c: 100 } } }));
 
     let cone1 = cone.branch(); // 
 
@@ -160,7 +160,7 @@ test("changed event", (done) => { // 使用jest的异步测试，利用jest的do
 
 test("changed event", (done) => { // 使用jest的异步测试，利用jest的done参数告知
 
-    let cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+    let cone = new Cone(loadNodeFromJS({ a: { b: { c: 100 } } }));
 
     let cone1 = cone.branch(); // 
 
@@ -188,7 +188,7 @@ test("changed event", (done) => { // 使用jest的异步测试，利用jest的do
 
 test("delete event", (done) => { // 使用jest的异步测试，利用jest的done参数告知
 
-    let cone = new Cone(buildNodeFromJS({ a: { b: { c: 100 } } }));
+    let cone = new Cone(loadNodeFromJS({ a: { b: { c: 100 } } }));
 
     let cone1 = cone.branch(); // 
 
