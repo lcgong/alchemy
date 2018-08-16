@@ -25,31 +25,31 @@ function fromJS(jsobj) {
 }
 
 function buildNodeFromJS(jsobj) {
-    return _fromJS('', jsobj)
+    return _fromJS(jsobj)
 }
 
-function _fromJS(apath, value) {
+function _fromJS(value) {
 
     if (isPlainObject(value)) {
 
         let entries = [];
         for (let [k, v] of Object.entries(value)) {
 
-            entries.push([k, _fromJS(apath + '.' + k, v)]);
+            entries.push([k, _fromJS(v)]);
         }
 
-        return new DObjectNode(apath, ImmutableMap(entries));
+        return new DObjectNode(ImmutableMap(entries));
 
     } else if (isArrayObject(value)) {
 
         let entries = [];
         let idx = 0;
         for (let v of value) {
-            entries.push(_fromJS(apath + '#' + idx, v));
+            entries.push(_fromJS(v));
             idx += 1;
         }
 
-        return new DListNode(apath, ImmutableList(entries));
+        return new DListNode(ImmutableList(entries));
     } else {
         return value;
     }

@@ -3,8 +3,7 @@ import { forwardCursor } from "./path";
 import { isImmutableMap, isImmutableList } from "./utils";
 
 class DNode {
-    constructor(path, object) {
-        this.path = path;
+    constructor(object) {
         this.object = object;
         // successors
     }
@@ -207,18 +206,18 @@ function _setValue(node, path, value) {
 
         name = cursor.name;
 
-        stack.push([node, cursor.path, name]);
+        stack.push([node, name]);
 
         node = node.object.get(name);
 
         cursor = cursor.next();
     }
 
-    let newnode, oldnode, oldpath;
+    let newnode, oldnode;
 
     // 末端节点
     let idx = stack.length - 1;
-    [oldnode, oldpath, name] = stack[idx];
+    [oldnode, name] = stack[idx];
 
 
     let oldobj = oldnode.object;
@@ -228,7 +227,7 @@ function _setValue(node, path, value) {
     }
 
     // 对象的值已经发生改变
-    newnode = new oldnode.constructor(oldpath, newobj);
+    newnode = new oldnode.constructor(newobj);
     newnode.succeed(oldnode);
 
     // [change1, change2, ..., {new:..., old:...}, ... ]
@@ -240,10 +239,10 @@ function _setValue(node, path, value) {
     idx -= 1;
 
     while (idx >= 0) {
-        [oldnode, oldpath, name] = stack[idx];
+        [oldnode, name] = stack[idx];
 
         newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new oldnode.constructor(oldpath, newobj);
+        newnode = new oldnode.constructor(newobj);
         newnode.succeed(oldnode);
 
         changeset = [
@@ -268,7 +267,7 @@ function _delete(node, path) {
 
         const name = cur.name;
 
-        stack.push([node, cur.path, name]);
+        stack.push([node, name]);
 
         node = node.object.get(name);
     }
@@ -279,7 +278,7 @@ function _delete(node, path) {
 
     // 末端节点
     let idx = stack.length - 1;
-    [oldnode, oldpath, name] = stack[idx];
+    [oldnode, name] = stack[idx];
 
 
     let oldobj = oldnode.object;
@@ -298,7 +297,7 @@ function _delete(node, path) {
 
     // 对象的值已经发生改变
 
-    newnode = new oldnode.constructor(oldpath, newobj);
+    newnode = new oldnode.constructor(newobj);
     newnode.succeed(oldnode);
 
     // [change1, change2, ..., {new:..., old:...}, ... ]
@@ -309,10 +308,10 @@ function _delete(node, path) {
     idx -= 1;
 
     while (idx >= 0) {
-        [oldnode, oldpath, name] = stack[idx];
+        [oldnode, name] = stack[idx];
 
         newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new oldnode.constructor(oldpath, newobj);
+        newnode = new oldnode.constructor(newobj);
         newnode.succeed(oldnode);
 
         changeset = [

@@ -176,7 +176,7 @@ function _patch(changeset, tgtNode, origNode) {
     }
 
     // 对象的值已经发生改变
-    let newNode = new tgtNode.constructor(tgtNode.path, tgtObj);
+    let newNode = new tgtNode.constructor(tgtObj);
     newNode.succeed(tgtNode);
 
     return newNode;
