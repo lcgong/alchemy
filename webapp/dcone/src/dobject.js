@@ -14,8 +14,6 @@ import {
 } from './cone';
 
 
-
-
 function branch(dobj) {
 
     const stub = dobj.__stub;
@@ -150,34 +148,8 @@ class DStub {
     }
 }
 
-const DObjectProxyHandler = {
-    get: function(target, name, receiver) {
-        if (name in target || typeof name === 'symbol' || name === 'inspect') {
-            return Reflect.get(...arguments);
-        }
 
-        return getValueOfStubObject(target.__stub, name);
-    },
-    set: function(target, name, value, receiver) {
-        if (name === '__stub') { //  name.startsWith('__')
-            return Reflect.set(...arguments);
-        }
-
-        setValueOfStubObject(target.__stub, name, value);
-
-        return true;
-    },
-    deleteProperty(target, name) {
-
-        deletePropertyOfStubObject(target.__stub, name)
-
-        return true;
-    }
-};
-
-
-
-class AbstractDObject {
+class DObjectProxy {
 
     constructor(stub) {
 
@@ -185,12 +157,38 @@ class AbstractDObject {
     }
 }
 
-class DObject extends AbstractDObject {
+class DObject extends DObjectProxy {
 
     constructor(stub) {
 
         super(stub);
-        return new Proxy(this, DObjectProxyHandler);
+
+        return new Proxy(this, {
+            get: function(target, name, receiver) {
+                if (name in target || typeof name === 'symbol' || name === 'inspect') {
+                    return Reflect.get(...arguments);
+                }
+
+                return getValueOfStubObject(target.__stub, name);
+            },
+
+            set: function(target, name, value, receiver) {
+                if (name === '__stub') { //  name.startsWith('__')
+                    return Reflect.set(...arguments);
+                }
+
+                setValueOfStubObject(target.__stub, name, value);
+
+                return true;
+            },
+
+            deleteProperty(target, name) {
+
+                deletePropertyOfStubObject(target.__stub, name)
+
+                return true;
+            }
+        });
     }
 
     toString() {
@@ -202,7 +200,7 @@ class DObject extends AbstractDObject {
     }
 }
 
-class DList extends AbstractDObject {
+class DList extends DObjectProxy {
 
     constructor(cone, root, node, path) {
 
@@ -214,7 +212,7 @@ class DList extends AbstractDObject {
 
 // https://github.com/lcgong/alchemy/blob/62804efc8443b71123e9bfad555fe1a331b01d6b/qmarkit/src/dobject/dobject.js
 
-const DListProxyHandler = {
+const DObjectProxyHandler = {
     get: function(target, idx, receiver) {
         if (idx in target || typeof idx === 'symbol' || idx === 'inspect') {
             return Reflect.get(...arguments);
