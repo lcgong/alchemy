@@ -3,8 +3,8 @@
 import { snapshot } from "./snapshot";
 
 import {
-    DObject,
-    DList,
+    isObject,
+    isList,
     branch,
     createDObject,
     DObjectCone,
@@ -34,12 +34,11 @@ function toJS(dobj) {
 export default {
     fromJS,
     toJS,
-    DObject,
-    DList,
-    snapshot,
+    isObject,
+    isList,
+    branch,
     branch,
     keys,
     size
 };
 
-// export { fromJS, DObject, DList, snapshot, keys };

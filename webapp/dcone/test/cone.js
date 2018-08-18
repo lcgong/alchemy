@@ -1,6 +1,40 @@
-import { Cone, isIdenticalIn, _getValue } from "../src/cone";
+import {
+    Cone,
+    isIdenticalIn,
+    _getValue,
+    setConeIndexedItem,
+    deleteConeIndexedItem,
+    removeConeListItem,
+    unshiftConeListItem,
+    pushConeListItem,
+    popConeListItem,
+    shiftConeListItem,
+
+} from "../src/cone";
 import { loadNodeFromJS } from "../src/jsobj";
 
+// test("setValue", () => {
+//     let cone, cone1, change, cone2;
+
+//     cone1 = new Cone(loadNodeFromJS({ a: { b: { c: 100 }, x:200 } }));
+//     cone2 = cone1.branch();
+
+//     change = deleteConeIndexedItem(cone2, '.a.b', 'c');
+//     console.log(111, change);
+//     console.log(111, JSON.stringify(change.changeset));
+//     console.log(111, cone2);
+
+//     change = deleteConeIndexedItem(cone2, '.a', 'b');
+//     console.log(222, change);
+//     console.log(222, JSON.stringify(change.changeset));
+//     console.log(222, cone2);
+
+//     // change = cone2.delete('.a.b');
+
+//     // console.log(111, cone1.getValue('.a.b'));
+//     // console.log(111, cone2.getValue('.a.b'));
+
+// });
 
 test("setValue", () => {
     let cone, cone1, change, cone2;
@@ -8,7 +42,7 @@ test("setValue", () => {
     cone = new Cone(loadNodeFromJS({ a: { b: { c: 100 } } }));
     cone1 = cone.branch();
 
-    change = cone.setValue('.a.b.c', 120);
+    change = setConeIndexedItem(cone, '.a.b', 'c', 120);
     expect(_getValue(change.newRoot, '.a.b.c')).toBe(120);
     expect(_getValue(change.oldRoot, '.a.b.c')).toBe(100);
     expect(change.changeset).toEqual([
@@ -36,7 +70,7 @@ test("delete", () => {
     cone = new Cone(loadNodeFromJS({ a: { b: { c: 100 } } }));
     cone1 = cone.branch();
 
-    change = cone.delete('.a.b.c');
+    change = deleteConeIndexedItem(cone, '.a.b', 'c');
     expect(_getValue(change.newRoot, '.a.b.c')).toBeUndefined(); // deleted
     expect(_getValue(change.oldRoot, '.a.b.c')).toBe(100);
     expect(change.changeset).toEqual([
@@ -53,12 +87,12 @@ test("delete", () => {
     expect(cone1.getValue('.a').successors[0]).toBe(cone2.getValue('.a'));
     expect(cone1.getValue('').successors[0]).toBe(cone2.getValue(''));
 
-    change = cone.delete('.a.b');
+    change = deleteConeIndexedItem(cone, '.a', 'b');
     expect(cone.getValue('.a.b')).toBeUndefined()
 
     cone3 = cone.branch();
 
-    change = cone.delete('.a.b');
+    change = deleteConeIndexedItem(cone, '.a', 'b');
     expect(change.changeset.length).toBe(0);
 
     expect(cone3.getValue('.a.b')).toBeUndefined();
@@ -101,7 +135,8 @@ test("cone fromJS", () => {
     // -----------------------------------------------------------------------
     cone2 = cone1.branch();
 
-    change = cone2.setValue('.a.b.c', 100); // 设置相同的值或对象，不应该发生变化
+    // 设置相同的值或对象，不应该发生变化
+    change = setConeIndexedItem(cone2, '.a.b', 'c', 100);
     expect(change.newRoot).toBeUndefined(); // no change
     expect(change.changeset.length).toBe(0); // no change
 
@@ -110,7 +145,8 @@ test("cone fromJS", () => {
     // ----------------------------------------------------------------------
     cone3 = cone1.branch();
 
-    change = cone3.setValue('.a.b.c', 120);
+    change = setConeIndexedItem(cone3, '.a.b', 'c', 120);
+
     expect(change).not.toBeUndefined();
     expect(cone3.root).not.toBe(cone1.root); // it's new root because of the changged
 
@@ -152,7 +188,9 @@ test("changed event", (done) => { // 使用jest的异步测试，利用jest的do
         done(); // jest: asynchronous testing
     });
 
-    let change = cone.setValue('.a.b.c', 120); // 发生变更，会触发变更事件
+    // 发生变更，会触发变更事件
+    let change = setConeIndexedItem(cone, '.a.b', 'c', 120);
+
     cone.emitChangeEvent(change);
 
     setTimeout(() => { done.fail('no change event'); }, 500);
@@ -180,7 +218,7 @@ test("changed event", (done) => { // 使用jest的异步测试，利用jest的do
         done(); // jest: asynchronous testing
     });
 
-    let change = cone.setValue('.a.b.c', 120); // 发生变更，会触发变更事件
+    let change = setConeIndexedItem(cone, '.a.b', 'c', 120);
     cone.emitChangeEvent(change);
 
     setTimeout(() => { done.fail('no change event'); }, 500);
@@ -211,8 +249,10 @@ test("delete event", (done) => { // 使用jest的异步测试，利用jest的don
         done(); // jest: asynchronous testing
     });
 
-    let change = cone.delete('.a.b');
+    let change = deleteConeIndexedItem(cone, '.a', 'b');
     cone.emitChangeEvent(change);
 
     setTimeout(() => { done.fail('no change event'); }, 500);
 });
+
+

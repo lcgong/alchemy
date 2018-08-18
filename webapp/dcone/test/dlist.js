@@ -1,128 +1,126 @@
 /*jshint esversion: 6 */
 
-import dobject from "../../dobject";
+
+import D from "../src";
+
 
 test("dlist get and set", () => {
 
-    let obj = dobject.fromJS([10, 20, 30]);
+    let obj = D.fromJS([10, 20, 30]);
 
     expect(obj[1]).toBe(20);
-    expect(obj[9]).toBeUndefined();
+    expect(obj[9]).toBeUndefined(); // outside of list's size
+
+    expect(obj.first).toBe(10);
+    expect(obj.last).toBe(30);
 
     obj[2] = obj[2] + 5;
     expect(obj[2]).toBe(35);
+
     obj[2] += 3;
     expect(obj[2]).toBe(38);
+
     obj[2] -= 8;
     expect(obj[2]).toBe(30);
 });
 
 test("dlist of dobject", () => {
 
-    let obj = dobject.fromJS([{ a: 123 }, { a: 456 }, 789]);
+    let obj = D.fromJS([{ a: 123 }, { a: 456 }, 789]);
 
-    expect(obj[0]).toBeInstanceOf(dobject.DObject);
+    expect(D.isObject(obj[0])).toBeTruthy();
+    expect(D.isObject(obj[1])).toBeTruthy();
+    expect(D.isObject(obj[2])).toBeFalsy();
+
     expect(obj[0].a).toBe(123);
     expect(obj[1].a).toBe(456);
+
     expect(obj[2]).toBe(789);
 
-    obj = dobject.fromJS({ a: 123, b: [{ a: 456 }, 789] });
+    obj = D.fromJS({ a: 123, b: [{ a: 456 }, 789] });
 
-    expect(obj).toBeInstanceOf(dobject.DObject);
-    expect(obj.b).toBeInstanceOf(dobject.DList);
-    expect(obj.b[0]).toBeInstanceOf(dobject.DObject);
+    expect(D.isList(obj.b)).toBeTruthy();
+    expect(D.isObject(obj.b[0])).toBeTruthy();
     expect(obj.b[0].a).toBe(456);
     expect(obj.b[1]).toBe(789);
 
 });
 
+test("iterator of dlist ", () => {
 
-test("cache the immutable object of list", () => {
-    let obj = dobject.fromJS([10, 20, 30]);
+    let obj = D.fromJS([10, 20, 30]);
 
-    // expect(obj.__object).toBeUndefined()
-    expect(obj[3]).toBeUndefined();
-    expect(obj.__object).toBeDefined();
-
-    obj.push(40);
-    expect(obj.__object).toBeUndefined(); // clear cache
-    expect(obj[3]).toBe(40); // access to get and cache
-    expect(obj.__object).toBeDefined();
+    expect([...obj]).toEqual([10, 20, 30]);
 });
 
+
 test("push/pop", () => {
-    let obj = dobject.fromJS([10, 20, 30]);
+    let obj = D.fromJS([10, 20, 30]);
 
     expect(obj.push(40, 50)).toBe(obj);
+    expect([...obj]).toEqual([10, 20, 30, 40, 50]);
+
     expect(obj.push(60)).toBe(obj);
-    expect(obj[-1]).toBe(60);
-    expect(obj[-2]).toBe(50);
-    expect(obj[-3]).toBe(40);
+    expect([...obj]).toEqual([10, 20, 30, 40, 50, 60]);
 
     expect(obj.pop()).toBe(obj);
-    expect(obj[-1]).toBe(50);
+    expect([...obj]).toEqual([10, 20, 30, 40, 50]);
 
     expect(obj.pop()).toBe(obj);
-    expect(obj[-1]).toBe(40);
+    expect([...obj]).toEqual([10, 20, 30, 40]);
 });
 
 test("unshift/shift", () => {
-    let obj = dobject.fromJS([10, 20, 30]);
+    let obj = D.fromJS([10, 20, 30]);
 
-    expect(obj.unshift(50, 40)).toBe(obj);
+    expect(obj.unshift(40, 50)).toBe(obj);
+    expect([...obj]).toEqual([40, 50, 10, 20, 30]);
+
     expect(obj.unshift(60)).toBe(obj);
-    expect(obj[0]).toBe(60);
-    expect(obj[1]).toBe(50);
-    expect(obj[2]).toBe(40);
+    expect([...obj]).toEqual([60, 40, 50, 10, 20, 30]);
 
     expect(obj.shift()).toBe(obj);
-    expect(obj[0]).toBe(50);
+    expect([...obj]).toEqual([40, 50, 10, 20, 30]);
 
     expect(obj.shift()).toBe(obj);
-    expect(obj[0]).toBe(40);
+    expect([...obj]).toEqual([50, 10, 20, 30]);
 });
 
-test("insert and remove", () => {
+test("dlist's insert", () => {
 
-    let obj = dobject.fromJS([10, 20, 30, 40, 50]);
+    let obj = D.fromJS([10, 20, 30]);
 
-    obj.insert(2, 250); // insert the third position
-    obj.insert(-2, 350);
-    expect(obj[1]).toBe(20);
-    expect(obj[2]).toBe(250);
-    expect(obj[3]).toBe(30);
+    obj.insert(2, 200);
+    expect([...obj]).toEqual([10, 20, 200, 30]);
 
-    expect(obj[-4]).toBe(30);
-    expect(obj[-3]).toBe(350);
-    expect(obj[-2]).toBe(40);
-    expect(obj[-1]).toBe(50);
+    obj.insert(0, 5);
+    expect([...obj]).toEqual([5, 10, 20, 200, 30]);
 
-    // 
-    obj = dobject.fromJS([10, 20, 30, 40, 50]);
+
+    obj.insert(obj.size, 300);
+    expect([...obj]).toEqual([5, 10, 20, 200, 30, 300]);
+
+    obj.insert(99, 900); // Because the index is outsize of the size
+    console.log([...obj]);
+    expect([...obj]).toEqual([5, 10, 20, 200, 30, 300, 900]);
+
+});
+
+test("dlist's remove", () => {
+
+    let obj = D.fromJS([10, 20, 30, 40, 50]);
     obj.remove(1);
-    expect(obj[1]).toBe(30);
-    obj.remove(-2);
-    expect(obj[-1]).toBe(50);
-    expect(obj[2]).toBe(50);
+    expect([...obj]).toEqual([10, 30, 40, 50]);
 
-    obj = dobject.fromJS([10, 20, 30, 40, 50]);
-    obj.remove(-1);
-    expect(obj[3]).toBe(40);
-    expect(obj[4]).toBeUndefined();
     obj.remove(0);
-    expect(obj[0]).toBe(20);
+    expect([...obj]).toEqual([30, 40, 50]);
 
-});
+    obj.remove(obj.size - 1);
+    expect([...obj]).toEqual([30, 40]);
 
-test("iterable", () => {
+    obj.remove(obj.size);
+    expect([...obj]).toEqual([30, 40]);
 
-    let obj;
-
-    obj = dobject.fromJS([10, 20, 30]);
-    let data = [];
-    for (let i of obj) {
-        data.push(i);
-    }
-
-    expect(data).toEqual([10, 20, 30]); // deep equality
+    obj.remove(99);
+    expect([...obj]).toEqual([30, 40]);
 });

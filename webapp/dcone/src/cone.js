@@ -72,36 +72,6 @@ class Cone {
     }
 
     /**
-     * 按照path设置值.
-     * @param {*} path 
-     * @param {*} value 
-     */
-    setValue(path, value) {
-
-        const root = this.root;
-
-        let result = _setValue(root, path, value);
-        if (result.newRoot !== undefined) { // root为undifined表示没有变化
-            result.oldRoot = root;
-            this.root = result.newRoot;
-        }
-        
-        return result;
-    }
-
-    delete(path) {
-        const root = this.root;
-
-        let result = _delete(this.root, path)
-        if (result.newRoot !== undefined) { // root为undifined表示没有变化
-            result.oldRoot = root;
-            this.root = result.newRoot;
-        }
-        
-        return result;
-    }
-
-    /**
      * 
      */
     branch() {
@@ -184,66 +154,55 @@ function _getValue(node, path) {
     return node;
 }
 
-/**
- * 按照path设置值.
- * 
- * @param {DNode} node 
- * @param {*} cursor 
- * @param {*} value 
- * @param {*} changed 
- */
-function _setValue(node, path, value) {
+
+function applyNodeIndexedItem(node, path, index, updateFn) {
 
     let stack = [];
-    let name;
 
-    
+    // 形成更新栈
     for (let cur = forwardCursor(path); cur !== undefined; cur = cur.next()) {
 
-        name = cur.name;
-
+        const name = cur.name;
         stack.push([node, name]);
         node = node.object.get(name);
+    }
 
-        if (!(node instanceof DNode)) { // 直到末端不是节点
-            break;
+
+    const oldobj = node.object;
+    const result = updateFn(oldobj, index); // result: {object, changeset}
+    if (result.object === oldobj) {
+        // 如果前后对象还是同一个，那么就没有任何变化
+        return { changeset: [] };
+    }
+
+    // changeset: [change1, ..., {new:..., old:...}, ... ]
+    for (const [idx, chg] of result.changeset) {
+        if (chg.new === undefined && chg.old !== undefined) {
+            // 如果删除DNode，该node的successors为[]，表示已删除，没有后继
+            const deleted = chg.old;
+            if (deleted instanceof DNode) {
+                deleted.successors = [];
+            }
         }
     }
 
-    let newnode, oldnode;
-
-    // 末端节点
-    let idx = stack.length - 1;
-    [oldnode, name] = stack[idx];
-
-
-    let oldobj = oldnode.object;
-    let newobj = oldobj.set(name, value);
-    if (newobj === oldobj) {
-        return { changeset: [] }; // no change
-    }
-
     // 对象的值已经发生改变
-    newnode = new oldnode.constructor(newobj);
-    newnode.succeed(oldnode);
+    let newnode = new node.constructor(result.object);
+    newnode.succeed(node);
 
-    // [change1, change2, ..., {new:..., old:...}, ... ]
-    let changeset = [
-        [name, { new: value, old: oldobj.get(name) }]
-    ];
-
-
-    idx -= 1;
+    let changeset = result.changeset;
+    let idx = stack.length - 1;
+    // idx -= 1;
 
     while (idx >= 0) {
-        [oldnode, name] = stack[idx];
+        const [node, index] = stack[idx];
 
-        newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new oldnode.constructor(newobj);
-        newnode.succeed(oldnode);
+        const newobj = node.object.set(index, newnode); // set new child node
+        newnode = new node.constructor(newobj);
+        newnode.succeed(node);
 
         changeset = [
-            [name, changeset]
+            [index, changeset]
         ];
 
         idx -= 1;
@@ -255,73 +214,46 @@ function _setValue(node, path, value) {
     };
 }
 
+function applyConeIndexedItem(cone, path, index, updateFn) {
+    const root = cone.root;
+    const result = applyNodeIndexedItem(root, path, index, updateFn);
 
-function _delete(node, path) {
-
-    let stack = [];
-
-    for (let cur = forwardCursor(path); cur != undefined; cur = cur.next()) {
-
-        const name = cur.name;
-
-        stack.push([node, name]);
-
-        node = node.object.get(name);
+    if (result.newRoot !== undefined) { // root为undifined表示没有变化
+        result.oldRoot = root;
+        cone.root = result.newRoot;
     }
 
-    let name;
+    return result;
+}
 
-    let newnode, oldnode, oldpath;
-
-    // 末端节点
-    let idx = stack.length - 1;
-    [oldnode, name] = stack[idx];
-
-
-    let oldobj = oldnode.object;
-
-    let deleted = oldobj.get(name);
-    let newobj = oldobj.delete(name);
-    if (newobj === oldobj) {
+function setConeIndexedItem(cone, path, index, value) {
+    return applyConeIndexedItem(cone, path, index, (object, index) => {
         return {
-            changeset: [],
-        }; // no change
-    }
+            object: object.set(index, value),
+            changeset: [
+                [index, {
+                    new: value,
+                    old: object.get(index) // the deleted
+                }]
+            ]
+        }
 
-    if (deleted instanceof DNode) { // 如果删除属性的值是DNode，以[]表示已经删除
-        deleted.successors = [];
-    }
+    });
+}
 
-    // 对象的值已经发生改变
+function deleteConeIndexedItem(cone, path, index) {
 
-    newnode = new oldnode.constructor(newobj);
-    newnode.succeed(oldnode);
+    return applyConeIndexedItem(cone, path, index, (object, index) => {
+        return {
+            object: object.delete(index), // newobj after deleting
+            changeset: [
+                [index, {
+                    old: object.get(index) // the deleted
+                }]
+            ]
+        }
 
-    // [change1, change2, ..., {new:..., old:...}, ... ]
-    let changeset = [
-        [name, { old: deleted }]
-    ];
-
-    idx -= 1;
-
-    while (idx >= 0) {
-        [oldnode, name] = stack[idx];
-
-        newobj = oldnode.object.set(name, newnode); // set new child node
-        newnode = new oldnode.constructor(newobj);
-        newnode.succeed(oldnode);
-
-        changeset = [
-            [name, changeset]
-        ];
-
-        idx -= 1;
-    }
-
-    return {
-        newRoot: newnode,
-        changeset: changeset
-    };
+    });
 }
 
 
@@ -360,5 +292,8 @@ export {
     Cone,
     isIdenticalIn,
     pathJoin,
-    _getValue
+    _getValue,
+    setConeIndexedItem,
+    deleteConeIndexedItem,
+    applyConeIndexedItem
 };

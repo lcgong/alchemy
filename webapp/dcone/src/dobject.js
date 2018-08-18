@@ -10,9 +10,20 @@ import {
     DObjectNode,
     DListNode,
     _getValue,
-    pathJoin
+    pathJoin,
+    setConeIndexedItem,
+    deleteConeIndexedItem
 } from './cone';
 
+import {
+    insertConeListItem,
+    removeConeListItem,
+    clearConeList,
+    unshiftConeListItem,
+    pushConeListItem,
+    popConeListItem,
+    shiftConeListItem,
+} from './coneList';
 
 function branch(dobj) {
 
@@ -65,9 +76,9 @@ function getNodeFromStub(stub) {
     }
 }
 
-function getValueOfStubObject(stub, name) {
+function getValueOfStubObject(stub, name, notSetValue) {
     const node = stub.node;
-    const value = node.object.get(name);
+    const value = node.object.get(name, notSetValue);
 
     if (value instanceof DNode) {
         const path = pathJoin(stub.path, name);
@@ -77,17 +88,6 @@ function getValueOfStubObject(stub, name) {
     return value;
 }
 
-
-function setValueOfStubObject(stub, name, value) {
-    const path = pathJoin(stub.path, name);
-    let change = stub.cone.setValue(pathJoin(path, name), value);
-}
-
-
-function deletePropertyOfStubObject(stub, name) {
-
-    let change = stub.cone.delete(pathJoin(stub.path, name));
-}
 
 function createDObject(cone, root, path, node) {
 
@@ -172,19 +172,21 @@ class DObject extends DObjectProxy {
                 return getValueOfStubObject(target.__stub, name);
             },
 
-            set: function(target, name, value, receiver) {
+            set: function(target, index, value, receiver) {
                 if (name === '__stub') { //  name.startsWith('__')
                     return Reflect.set(...arguments);
                 }
 
-                setValueOfStubObject(target.__stub, name, value);
+                const { cone, path } = target.__stub;
+                setConeIndexedItem(cone, path, index, value);
 
                 return true;
             },
 
-            deleteProperty(target, name) {
+            deleteProperty(target, index) {
 
-                deletePropertyOfStubObject(target.__stub, name)
+                const { cone, path } = target.__stub;
+                deleteConeIndexedItem(cone, path, index);
 
                 return true;
             }
@@ -201,133 +203,134 @@ class DObject extends DObjectProxy {
 }
 
 class DList extends DObjectProxy {
+    constructor(stub) {
 
-    constructor(cone, root, node, path) {
+        super(stub);
 
-        super(cone, root, node, path);
-        return new Proxy(this, DObjectProxyHandler);
-    }
+        return new Proxy(this, {
+            get: function(target, idx, receiver) {
+                if (idx in target || typeof idx === 'symbol' || idx === 'inspect') {
+                    return Reflect.get(...arguments);
+                }
 
-}
+                return target.get(idx);
+            },
+            set: function(target, index, value, receiver) {
+                if (name === '__stub') { //  name.startsWith('__')
+                    return Reflect.set(...arguments);
+                }
 
-// https://github.com/lcgong/alchemy/blob/62804efc8443b71123e9bfad555fe1a331b01d6b/qmarkit/src/dobject/dobject.js
-
-const DObjectProxyHandler = {
-    get: function(target, idx, receiver) {
-        if (idx in target || typeof idx === 'symbol' || idx === 'inspect') {
-            return Reflect.get(...arguments);
-        }
-
-        if (typeof idx !== 'number') { // array index as string
-            idx = parseInt(idx);
-        }
-
-        return target.get(idx);
-    },
-    set: function(target, index, value, receiver) {
-        if (index.startsWith('__')) {
-            return Reflect.set(...arguments);
-        }
-        target.set(index, value);
-        return true; // required to indicate success
-    }
-};
-
-class DList2 extends DObject {
-    constructor(cone, path) {
-
-        super(cone, path);
-        return new Proxy(this, DListProxyHandler);
-    }
-
-
-    get(index, notSetValue) {
-
-        return getIndexedValue(this, index, notSetValue);
+                target.set(index, value);
+                return true; // required to indicate success
+            },
+            deleteProperty(target, index) {
+                this.remove(index);
+                return true;
+            }
+        });
     }
 
     [Symbol.iterator]() {
-        const immutableList = getImmutableObject(this);
-        const iterator = immutableList.__iterator(1); // 1 means Iterator.VALUES
-
+        
+        const listIter = this.__stub.node.object[Symbol.iterator]();
         return {
-            next: () => {
-                const nextValue = iterator.next();
-                // console.log(8888, nextValue);
-                return nextValue;
-            }
+            next: listIter.next,
         }
     }
 
+    get(index, notSetValue) {
+        return getValueOfStubObject(this.__stub, index, notSetValue);
+    }
+
     set(index, value) {
-        updateImmutable(this, (immutable) => {
-            return immutable.set(index, value);
-        });
+        const { cone, path } = this.__stub;
+        setConeIndexedItem(cone, path, index, value);
+
+        return this;
+    }
+
+    get size() {
+        return this.__stub.node.object.count()
+    }
+
+    get first() {
+        return this.__stub.node.object.first()
+    }
+
+    get last() {
+        return this.__stub.node.object.last()
+    }
+
+    insert(index, value) {
+        const { cone, path } = this.__stub;
+        const change = insertConeListItem(cone, path, index, value);
 
         return this;
     }
 
     remove(index) {
-        updateImmutable(this, (immutable) => {
-            return immutable.remove(index);
-        });
-
-        return this;
-    }
-
-    insert(index, value) {
-        updateImmutable(this, (immutable) => {
-            return immutable.insert(index, value);
-        });
+        const { cone, path } = this.__stub;
+        const change = removeConeListItem(cone, path, index);
 
         return this;
     }
 
     clear() {
-        updateImmutable(this, (immutable) => {
-            return immutable.clear();
-        });
+        const { cone, path } = this.__stub;
+        const change = clearConeList(cone, path);
+
+        return this;
+    }
+
+    unshift( /*...values*/ ) {
+        const { cone, path } = this.__stub;
+
+        const values = arguments;
+        unshiftConeListItem(cone, path, values)
 
         return this;
     }
 
     push( /*...values*/ ) {
-        updateImmutable(this, (immutable) => {
-            return immutable.push(...arguments);
-        });
+        const { cone, path } = this.__stub;
 
-        return this;
-    }
-
-    pop() {
-        updateImmutable(this, (immutable) => {
-            return immutable.pop();
-        });
-        return this;
-    }
-
-    unshift( /*...values*/ ) {
-        updateImmutable(this, (immutable) => {
-            return immutable.unshift(...arguments);
-        });
+        const values = arguments;
+        pushConeListItem(cone, path, values)
 
         return this;
     }
 
     shift() {
-        updateImmutable(this, (immutable) => {
-            return immutable.shift();
-        });
+        const { cone, path } = this.__stub;
+        shiftConeListItem(cone, path)
 
         return this;
     }
+
+    pop() {
+        const { cone, path } = this.__stub;
+        popConeListItem(cone, path)
+
+        return this;
+    }
+
 }
 
+
+function isObject(obj){
+    return obj instanceof DObject;
+}
+
+function isList(obj) {
+    return obj instanceof DList;
+}
 
 export {
     DObjectCone,
     DList,
     DObject,
+    isObject,
+    isList,
     branch,
     createDObject,
     keys,
