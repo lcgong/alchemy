@@ -1,4 +1,9 @@
-import { Cone } from "../src/cone";
+import {
+    Cone,
+    setConeIndexedItem,
+    deleteConeIndexedItem
+} from "../src/cone";
+
 import { diff, merge } from "../src/merge";
 import { loadNodeFromJS } from "../src/jsobj";
 
@@ -7,9 +12,10 @@ test("setValue", () => {
     let cone, cone1, cone2, cone3;
 
     cone = new Cone(loadNodeFromJS({
-        a: { 
-            b: { c: 100 }, 
-            d: [1,2,3] },
+        a: {
+            b: { c: 100 },
+            d: [1, 2, 3]
+        },
         x: 123
 
     }));
@@ -18,11 +24,16 @@ test("setValue", () => {
     cone2 = cone.branch();
     cone3 = cone.branch();
 
-    cone2.setValue('.a.b.c', 120);
-    cone2.setValue('.y', 456);
-    cone2.delete('.x');
+    // cone2.set('.a.b.c', 120);
+    setConeIndexedItem(cone2, '.a.b', 'c', 120);
+    // cone2.set('.y', 456);
+    setConeIndexedItem(cone2, '', 'y', 456);
+    // cone2.delete('.x');
+    deleteConeIndexedItem(cone2, '', 'x');
 
-    cone3.setValue('.a.d#0', 456);
+
+    // cone3.set('.a.d#0', 456);
+    setConeIndexedItem(cone2, '.a.d', 0, 456);
 
 
     let chgs;
@@ -45,8 +56,7 @@ test("case 2: list", () => {
     cone1 = cone.branch();
     cone2 = cone.branch();
 
-
-    cone2.setValue('.a#1.b', 15);
+    setConeIndexedItem(cone2, '.a#1', 'b', 15);
 
     let chgs;
     chgs = diff(cone2.root, cone1.root);
