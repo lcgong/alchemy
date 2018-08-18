@@ -4,13 +4,8 @@ import {
     _getValue,
     setConeIndexedItem,
     deleteConeIndexedItem,
-    removeConeListItem,
-    unshiftConeListItem,
-    pushConeListItem,
-    popConeListItem,
-    shiftConeListItem,
-
 } from "../src/cone";
+
 import { loadNodeFromJS } from "../src/jsobj";
 
 // test("setValue", () => {

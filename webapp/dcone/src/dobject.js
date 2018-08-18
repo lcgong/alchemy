@@ -285,8 +285,7 @@ class DList extends DObjectProxy {
     unshift( /*...values*/ ) {
         const { cone, path } = this.__stub;
 
-        const values = arguments;
-        unshiftConeListItem(cone, path, values)
+        unshiftConeListItem(cone, path, ...arguments)
 
         return this;
     }
@@ -294,8 +293,7 @@ class DList extends DObjectProxy {
     push( /*...values*/ ) {
         const { cone, path } = this.__stub;
 
-        const values = arguments;
-        pushConeListItem(cone, path, values)
+        pushConeListItem(cone, path, ...arguments)
 
         return this;
     }

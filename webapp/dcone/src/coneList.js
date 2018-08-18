@@ -55,7 +55,7 @@ function clearConeList(cone, path) {
 }
 
 
-function unshiftConeListItem(cone, path, values) {
+function unshiftConeListItem(cone, path, ...values) {
 
 
     return applyConeIndexedItem(cone, path, null, (object, index) => {
@@ -93,7 +93,7 @@ function shiftConeListItem(cone, path) {
 }
 
 
-function pushConeListItem(cone, path, values) {
+function pushConeListItem(cone, path, ...values) {
 
     return applyConeIndexedItem(cone, path, null, (object, index) => {
         const changeset = [];
