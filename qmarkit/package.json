@@ -46,7 +46,7 @@
     "fs-extra": "3.0.1",
     "html-webpack-plugin": "2.29.0",
     "jest": "^23.1.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "node-sass-chokidar": "^0.0.3",
     "npm-run-all": "^4.1.2",
     "object-assign": "4.1.1",
