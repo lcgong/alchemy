@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "axios": "^0.17.1",
+    "axios": "^0.21.1",
     "immutable": "^3.8.2",
     "immutablediff": "^0.4.4",
     "markdown-it": "^8.4.0",
