@@ -1,6 +1,6 @@
 aioetcd3==1.9
 aiogrpc==1.5
-aiohttp==3.2.1
+aiohttp==3.7.4
 aiohttp-debugtoolbar==0.5.0
 aiohttp-devtools==0.9
 aiohttp-jinja2==1.0.0
