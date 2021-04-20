@@ -34,7 +34,7 @@ passlib==1.7.1
 pathtools==0.1.2
 pluggy==0.6.0
 protobuf==3.5.2.post1
-py==1.5.3
+py==1.10.0
 pycparser==2.18
 pylint==1.8.4
 pytest==3.5.1
