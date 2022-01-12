@@ -6,7 +6,7 @@
     "axios": "^0.17.1",
     "immutable": "^3.8.2",
     "immutablediff": "^0.4.4",
-    "markdown-it": "^8.4.0",
+    "markdown-it": "^12.3.2",
     "material-ui": "^0.20.0",
     "react": "^16.2.0",
     "react-dev-utils": "^5.0.0",
